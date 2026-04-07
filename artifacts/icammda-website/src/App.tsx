@@ -13,6 +13,7 @@ import EventDetail from "@/pages/public/EventDetail";
 import Team from "@/pages/public/Team";
 import Contact from "@/pages/public/Contact";
 import Research from "@/pages/public/Research";
+import ELearning from "@/pages/public/ELearning";
 import Careers from "@/pages/public/Careers";
 
 import Dashboard from "@/pages/admin/Dashboard";
@@ -141,6 +142,7 @@ function ClerkProviderWithRoutes() {
             <Route path="/events" component={() => <NewsEvents defaultTab="events" />} />
             <Route path="/events/:slug" component={EventDetail} />
             <Route path="/research" component={Research} />
+            <Route path="/e-learning" component={ELearning} />
             <Route path="/careers" component={Careers} />
             <Route path="/team" component={Team} />
             <Route path="/contact" component={Contact} />
