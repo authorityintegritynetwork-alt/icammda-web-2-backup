@@ -13,6 +13,7 @@ import Events from "@/pages/public/Events";
 import EventDetail from "@/pages/public/EventDetail";
 import Team from "@/pages/public/Team";
 import Contact from "@/pages/public/Contact";
+import Research from "@/pages/public/Research";
 
 import Dashboard from "@/pages/admin/Dashboard";
 import PostsList from "@/pages/admin/PostsList";
@@ -137,6 +138,7 @@ function ClerkProviderWithRoutes() {
             <Route path="/news/:slug" component={NewsDetail} />
             <Route path="/events" component={Events} />
             <Route path="/events/:slug" component={EventDetail} />
+            <Route path="/research" component={Research} />
             <Route path="/team" component={Team} />
             <Route path="/contact" component={Contact} />
 
