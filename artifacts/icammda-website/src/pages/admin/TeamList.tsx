@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { Link } from "wouter";
-import { Plus, Edit, Trash2, Users } from "lucide-react";
+import { useState, useRef } from "react";
+import { Plus, Edit, Trash2, Users, Upload, X, Loader2 } from "lucide-react";
 import {
   useListTeamMembers,
   useCreateTeamMember,
@@ -21,6 +20,37 @@ import AdminLayout from "@/components/AdminLayout";
 
 const ROLES = ["director", "researcher", "postdoc", "staff"];
 const roleLabel: Record<string, string> = { director: "Director", researcher: "Researcher", postdoc: "Postdoctoral Scientist", staff: "Staff" };
+
+const AVATAR_PALETTE = [
+  { bg: "#164e63", text: "#a5f3fc" },
+  { bg: "#134e4a", text: "#99f6e4" },
+  { bg: "#312e81", text: "#c7d2fe" },
+  { bg: "#4c1d95", text: "#ddd6fe" },
+  { bg: "#78350f", text: "#fde68a" },
+  { bg: "#1e3a8a", text: "#bfdbfe" },
+  { bg: "#831843", text: "#fbcfe8" },
+  { bg: "#14532d", text: "#bbf7d0" },
+];
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function getAvatarColor(name: string) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) & 0xffff;
+  return AVATAR_PALETTE[hash % AVATAR_PALETTE.length];
+}
+
+function getPhotoSrc(photoUrl: string | null | undefined): string | null {
+  if (!photoUrl) return null;
+  if (photoUrl.startsWith("/objects/")) {
+    return `/api/storage/objects/${photoUrl.slice("/objects/".length)}`;
+  }
+  return photoUrl;
+}
 
 interface FormState {
   name: string;
@@ -44,6 +74,9 @@ export default function TeamList() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<number | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const openCreate = () => { setEditing(null); setForm(EMPTY); setDialogOpen(true); };
   const openEdit = (member: NonNullable<typeof members>[0]) => {
@@ -58,6 +91,47 @@ export default function TeamList() {
       displayOrder: String(member.displayOrder ?? 0),
     });
     setDialogOpen(true);
+  };
+
+  const handlePhotoUpload = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Photo must be smaller than 5 MB.");
+      return;
+    }
+
+    setUploading(true);
+    setUploadProgress(10);
+    try {
+      const urlRes = await fetch("/api/storage/uploads/request-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
+      });
+      if (!urlRes.ok) throw new Error("Failed to get upload URL");
+      const { uploadURL, objectPath } = await urlRes.json();
+
+      setUploadProgress(30);
+
+      const uploadRes = await fetch(uploadURL, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      if (!uploadRes.ok) throw new Error("Upload failed");
+
+      setUploadProgress(100);
+      setForm((f) => ({ ...f, photoUrl: objectPath }));
+    } catch (err) {
+      alert("Photo upload failed. Please try again or paste a URL manually.");
+      console.error(err);
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -87,6 +161,8 @@ export default function TeamList() {
   };
 
   const saving = createMember.isPending || updateMember.isPending;
+  const currentPhotoSrc = getPhotoSrc(form.photoUrl);
+  const avatarColor = form.name ? getAvatarColor(form.name) : AVATAR_PALETTE[0];
 
   return (
     <AdminLayout title="Team">
@@ -123,43 +199,50 @@ export default function TeamList() {
                 </tr>
               </thead>
               <tbody>
-                {members.map((member) => (
-                  <tr key={member.id} className="border-b border-border last:border-0 hover:bg-muted/20 transition-colors" data-testid={`member-row-${member.id}`}>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        {member.photoUrl ? (
-                          <img src={member.photoUrl} alt={member.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
-                        ) : (
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                            <Users size={14} className="text-primary/50" />
-                          </div>
-                        )}
-                        <span className="font-medium text-foreground" data-testid={`member-name-row-${member.id}`}>{member.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 hidden sm:table-cell text-muted-foreground text-xs">{member.title}</td>
-                    <td className="px-4 py-3 hidden md:table-cell">
-                      <Badge variant="secondary" className="text-xs">{roleLabel[member.role] || member.role}</Badge>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 justify-end">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => openEdit(member)} data-testid={`edit-member-${member.id}`}>
-                          <Edit size={13} />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0 hover:text-destructive"
-                          onClick={() => handleDelete(member.id, member.name)}
-                          disabled={deleteMember.isPending}
-                          data-testid={`delete-member-${member.id}`}
-                        >
-                          <Trash2 size={13} />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {members.map((member) => {
+                  const photoSrc = getPhotoSrc(member.photoUrl);
+                  const color = getAvatarColor(member.name);
+                  return (
+                    <tr key={member.id} className="border-b border-border last:border-0 hover:bg-muted/20 transition-colors" data-testid={`member-row-${member.id}`}>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          {photoSrc ? (
+                            <img src={photoSrc} alt={member.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+                          ) : (
+                            <div
+                              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold"
+                              style={{ background: color.bg, color: color.text }}
+                            >
+                              {getInitials(member.name)}
+                            </div>
+                          )}
+                          <span className="font-medium text-foreground" data-testid={`member-name-row-${member.id}`}>{member.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 hidden sm:table-cell text-muted-foreground text-xs">{member.title}</td>
+                      <td className="px-4 py-3 hidden md:table-cell">
+                        <Badge variant="secondary" className="text-xs">{roleLabel[member.role] || member.role}</Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-1 justify-end">
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => openEdit(member)} data-testid={`edit-member-${member.id}`}>
+                            <Edit size={13} />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 hover:text-destructive"
+                            onClick={() => handleDelete(member.id, member.name)}
+                            disabled={deleteMember.isPending}
+                            data-testid={`delete-member-${member.id}`}
+                          >
+                            <Trash2 size={13} />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}
@@ -193,10 +276,74 @@ export default function TeamList() {
               <Label htmlFor="memberEmail" className="mb-1.5 block">Email</Label>
               <Input id="memberEmail" type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} data-testid="member-email-input" />
             </div>
+
             <div>
-              <Label htmlFor="memberPhoto" className="mb-1.5 block">Photo URL</Label>
-              <Input id="memberPhoto" type="url" value={form.photoUrl} onChange={(e) => setForm((f) => ({ ...f, photoUrl: e.target.value }))} placeholder="https://..." data-testid="member-photo-input" />
+              <Label className="mb-2 block">Photo</Label>
+              <div className="flex items-start gap-4">
+                <div
+                  className="w-16 h-16 rounded-xl overflow-hidden shrink-0 flex items-center justify-center font-bold text-lg border border-border/40"
+                  style={currentPhotoSrc ? undefined : { background: avatarColor.bg, color: avatarColor.text }}
+                >
+                  {currentPhotoSrc ? (
+                    <img src={currentPhotoSrc} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    form.name ? getInitials(form.name) : <Users size={20} className="opacity-40" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handlePhotoUpload(file);
+                      e.target.value = "";
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    disabled={uploading}
+                    onClick={() => fileInputRef.current?.click()}
+                    data-testid="upload-photo-btn"
+                  >
+                    {uploading ? (
+                      <><Loader2 size={13} className="mr-1.5 animate-spin" /> Uploading {uploadProgress}%</>
+                    ) : (
+                      <><Upload size={13} className="mr-1.5" /> Upload Photo</>
+                    )}
+                  </Button>
+                  <div className="flex gap-2">
+                    <Input
+                      id="memberPhoto"
+                      type="url"
+                      value={form.photoUrl}
+                      onChange={(e) => setForm((f) => ({ ...f, photoUrl: e.target.value }))}
+                      placeholder="Or paste a URL…"
+                      className="text-xs"
+                      data-testid="member-photo-input"
+                    />
+                    {form.photoUrl && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-9 w-9 p-0 shrink-0"
+                        onClick={() => setForm((f) => ({ ...f, photoUrl: "" }))}
+                      >
+                        <X size={13} />
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">JPG, PNG, WebP · max 5 MB</p>
+                </div>
+              </div>
             </div>
+
             <div>
               <Label htmlFor="memberBio" className="mb-1.5 block">Bio</Label>
               <Textarea id="memberBio" rows={3} value={form.bio} onChange={(e) => setForm((f) => ({ ...f, bio: e.target.value }))} className="resize-none" data-testid="member-bio-input" />
@@ -207,7 +354,7 @@ export default function TeamList() {
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} data-testid="member-dialog-cancel">Cancel</Button>
-              <Button type="submit" disabled={saving} data-testid="member-dialog-save">
+              <Button type="submit" disabled={saving || uploading} data-testid="member-dialog-save">
                 {saving ? "Saving..." : editing !== null ? "Update Member" : "Add Member"}
               </Button>
             </DialogFooter>

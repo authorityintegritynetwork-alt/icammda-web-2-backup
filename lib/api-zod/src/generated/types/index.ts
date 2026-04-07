@@ -30,3 +30,5 @@ export * from "./updatePostBody";
 export * from "./updateResearchGroupBody";
 export * from "./updateResearchMemberBody";
 export * from "./updateTeamMemberBody";
+export * from "./uploadUrlRequest";
+export * from "./uploadUrlResponse";
