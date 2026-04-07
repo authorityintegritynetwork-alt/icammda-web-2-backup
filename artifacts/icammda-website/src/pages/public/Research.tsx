@@ -1,6 +1,8 @@
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 import { FlaskConical, Microscope, Bug, Droplets, Brain, Heart, Users } from "lucide-react";
+import { useListResearchGroups, useListResearchMembers } from "@workspace/api-client-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const researchAreas = [
   {
@@ -41,51 +43,6 @@ const researchAreas = [
   },
 ];
 
-const researchGroups = [
-  {
-    name: "Malaria Modelling Research Group",
-    members: [
-      { name: "Afeez ABIDEMI (Ph.D)", role: "Post-doctoral Scientist", email: "afeez.abidemi@icammda.org" },
-      { name: "Oluwaseun MOGBOJURI", role: "PhD Scholar", email: "oluwaseun.mogbojuri@icammda.org" },
-      { name: "Dolapo ONIYELU", role: "PhD Scholar", email: "dolapo.oniyelu@icammda.org" },
-      { name: "Aaron Onyebuchi NWANA", role: "PhD Scholar", email: "aaron.nwana@icammda.org" },
-      { name: "Idowu Isaac OLASUPO", role: "PhD Scholar", email: "idowu.olasupo@icammda.org" },
-      { name: "Samuel Abidemi OSIKOYA", role: "PhD Scholar", email: "samuel.osikoya@icammda.org" },
-      { name: "Oluwasegun KOSOKO", role: "PhD Scholar", email: null },
-      { name: "Steven IKEDIASHI", role: "MSc Scholar", email: "steven.ikediashi@icammda.org" },
-      { name: "Happiness ISMAIL", role: "MSc Scholar", email: "happiness.ismail@icammda.org" },
-    ],
-  },
-  {
-    name: "Neglected Tropical Diseases Research Group",
-    members: [
-      { name: "Ronke OLORUNFEMI", role: "PhD Scholar", email: null },
-      { name: "Samson OLAGBAMI", role: "MSc Scholar", email: "samson.olagbami@icammda.org" },
-    ],
-  },
-  {
-    name: "Cerebrospinal Meningitis Research Group",
-    members: [
-      { name: "Gabriel OGBAN", role: "PhD Scholar", email: null },
-    ],
-  },
-  {
-    name: "Lassa Fever Modelling Research Group",
-    members: [
-      { name: "Itunu Olayinka OMOSUYI", role: "PhD Student", email: null },
-      { name: "Sodiq OROGUN", role: "MSc Student", email: null },
-    ],
-  },
-];
-
-const visitingScholars = [
-  { name: "Dolapo BAKARE", affiliation: "NYSC" },
-  { name: "Faith OSAMOKA (Ph.D)", affiliation: "FUOYE" },
-  { name: "Omodasola ADEBISI", affiliation: "University of Ibadan" },
-  { name: "Testimony OBALADE", affiliation: "Obafemi Awolowo University" },
-  { name: "Charis AKANBI", affiliation: "Bowen University" },
-];
-
 function getInitials(name: string) {
   return name
     .replace(/\(.*?\)/g, "")
@@ -97,7 +54,57 @@ function getInitials(name: string) {
     .join("");
 }
 
+function MemberCard({ member, variant = "cyan" }: { member: { id: number; name: string; role: string; email?: string | null; photoUrl?: string | null; affiliation?: string | null }; variant?: "cyan" | "violet" }) {
+  const colors = variant === "violet"
+    ? "from-violet-600/30 to-violet-800/40 border-violet-500/20 text-violet-300"
+    : "from-cyan-600/30 to-cyan-800/40 border-cyan-500/20 text-cyan-300";
+
+  return (
+    <div className="flex items-center gap-4 bg-muted/40 rounded-xl p-4 border border-border/60">
+      {member.photoUrl ? (
+        <img
+          src={member.photoUrl}
+          alt={member.name}
+          className="w-11 h-11 rounded-full object-cover shrink-0 border border-border"
+        />
+      ) : (
+        <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${colors.split(" ").slice(0, 2).join(" ")} border ${colors.split(" ")[2]} flex items-center justify-center shrink-0`}>
+          <span className={`${colors.split(" ")[3]} text-xs font-bold`}>{getInitials(member.name)}</span>
+        </div>
+      )}
+      <div className="min-w-0">
+        <p className="text-foreground text-sm font-medium leading-snug truncate">{member.name}</p>
+        <p className="text-muted-foreground text-xs mt-0.5">{member.role}{member.affiliation ? ` · ${member.affiliation}` : ""}</p>
+        {member.email && (
+          <a
+            href={`mailto:${member.email}`}
+            className="text-cyan-600 text-[10px] hover:text-cyan-500 transition-colors truncate block mt-0.5"
+          >
+            {member.email}
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function GroupSkeleton() {
+  return (
+    <div className="space-y-3">
+      <Skeleton className="h-6 w-64 rounded" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-xl" />)}
+      </div>
+    </div>
+  );
+}
+
 export default function Research() {
+  const { data: groups, isLoading: groupsLoading } = useListResearchGroups();
+  const { data: visitingMembers, isLoading: visitorsLoading } = useListResearchMembers({ visiting: true } as Parameters<typeof useListResearchMembers>[0]);
+
+  const visitors = (visitingMembers ?? []).filter((m) => m.groupId == null || m.isVisiting);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <PublicNav />
@@ -130,7 +137,7 @@ export default function Research() {
               At ICAMMDA, our research is driven by a shared purpose: to transform data and models into practical solutions that improve health outcomes and strengthen health systems across Africa.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              We are at the forefront of using science for impact. By combining mathematical modelling, epidemiology, computer science, and advanced analytics, we tackle some of the region's most urgent public health challenges — from infectious diseases like malaria, cholera, and Lassa fever to broader health system issues such as resource allocation and pandemic preparedness.
+              By combining mathematical modelling, epidemiology, computer science, and advanced analytics, we tackle some of the region's most urgent public health challenges — from infectious diseases like malaria, cholera, and Lassa fever to broader health system issues such as resource allocation and pandemic preparedness.
             </p>
             <p className="text-muted-foreground leading-relaxed">
               Our vision is to build a future where African health decisions are powered by local data, local expertise, and homegrown innovation — creating lasting impact for generations to come.
@@ -187,71 +194,63 @@ export default function Research() {
         </div>
 
         <div className="space-y-14">
-          {researchGroups.map((group) => (
-            <div key={group.name}>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 flex items-center justify-center shrink-0">
-                  <Users className="w-3.5 h-3.5 text-cyan-400" />
-                </div>
-                <h3 className="text-foreground font-semibold text-lg">{group.name}</h3>
-                <div className="flex-1 h-px bg-border" />
-                <span className="text-muted-foreground text-xs">{group.members.length} member{group.members.length !== 1 ? "s" : ""}</span>
-              </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {group.members.map((member) => (
-                  <div
-                    key={member.name}
-                    className="flex items-center gap-4 bg-muted/40 rounded-xl p-4 border border-border/60"
-                  >
-                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-cyan-600/30 to-cyan-800/40 border border-cyan-500/20 flex items-center justify-center shrink-0">
-                      <span className="text-cyan-300 text-xs font-bold">{getInitials(member.name)}</span>
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-foreground text-sm font-medium leading-snug truncate">{member.name}</p>
-                      <p className="text-muted-foreground text-xs mt-0.5">{member.role}</p>
-                      {member.email && (
-                        <a
-                          href={`mailto:${member.email}`}
-                          className="text-cyan-600 text-[10px] hover:text-cyan-500 transition-colors truncate block mt-0.5"
-                        >
-                          {member.email}
-                        </a>
-                      )}
-                    </div>
+          {groupsLoading ? (
+            <>
+              <GroupSkeleton />
+              <GroupSkeleton />
+            </>
+          ) : !groups || groups.length === 0 ? (
+            <p className="text-muted-foreground text-sm">No research groups have been added yet.</p>
+          ) : (
+            groups.map((group) => (
+              <div key={group.id}>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-7 h-7 rounded-lg bg-cyan-500/15 flex items-center justify-center shrink-0">
+                    <Users className="w-3.5 h-3.5 text-cyan-400" />
                   </div>
-                ))}
+                  <h3 className="text-foreground font-semibold text-lg">{group.name}</h3>
+                  <div className="flex-1 h-px bg-border" />
+                  <span className="text-muted-foreground text-xs">{group.members.length} member{group.members.length !== 1 ? "s" : ""}</span>
+                </div>
+                {group.description && <p className="text-muted-foreground text-sm mb-4 -mt-2">{group.description}</p>}
+                {group.members.length === 0 ? (
+                  <p className="text-muted-foreground text-xs italic">No members yet.</p>
+                ) : (
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {group.members.map((member) => (
+                      <MemberCard key={member.id} member={member} variant="cyan" />
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* ── Visiting Scholars ── */}
-        <div className="mt-14">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-7 h-7 rounded-lg bg-cyan-500/15 flex items-center justify-center shrink-0">
-              <Users className="w-3.5 h-3.5 text-cyan-400" />
-            </div>
-            <h3 className="text-foreground font-semibold text-lg">Visiting Scholars &amp; Interns</h3>
-            <div className="flex-1 h-px bg-border" />
-            <span className="text-muted-foreground text-xs">{visitingScholars.length} members</span>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {visitingScholars.map((scholar) => (
-              <div
-                key={scholar.name}
-                className="flex items-center gap-4 bg-muted/40 rounded-xl p-4 border border-border/60"
-              >
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-violet-600/20 to-violet-800/30 border border-violet-500/20 flex items-center justify-center shrink-0">
-                  <span className="text-violet-300 text-xs font-bold">{getInitials(scholar.name)}</span>
-                </div>
-                <div className="min-w-0">
-                  <p className="text-foreground text-sm font-medium leading-snug">{scholar.name}</p>
-                  <p className="text-muted-foreground text-xs mt-0.5">{scholar.affiliation}</p>
-                </div>
+        {(visitorsLoading || (visitors && visitors.length > 0)) && (
+          <div className="mt-14">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-7 h-7 rounded-lg bg-violet-500/15 flex items-center justify-center shrink-0">
+                <Users className="w-3.5 h-3.5 text-violet-400" />
               </div>
-            ))}
+              <h3 className="text-foreground font-semibold text-lg">Visiting Scholars &amp; Interns</h3>
+              <div className="flex-1 h-px bg-border" />
+              {!visitorsLoading && <span className="text-muted-foreground text-xs">{visitors.length} member{visitors.length !== 1 ? "s" : ""}</span>}
+            </div>
+            {visitorsLoading ? (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-xl" />)}
+              </div>
+            ) : (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {visitors.map((member) => (
+                  <MemberCard key={member.id} member={member} variant="violet" />
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </section>
 
       <PublicFooter />

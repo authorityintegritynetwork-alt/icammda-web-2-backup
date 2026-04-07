@@ -316,6 +316,151 @@ export const DeleteTeamMemberParams = zod.object({
 });
 
 /**
+ * @summary List all research groups with their members
+ */
+export const ListResearchGroupsResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  order: zod.number(),
+  members: zod.array(
+    zod.object({
+      id: zod.number(),
+      groupId: zod.number().nullish(),
+      name: zod.string(),
+      role: zod.string(),
+      affiliation: zod.string().nullish(),
+      email: zod.string().nullish(),
+      photoUrl: zod.string().nullish(),
+      isVisiting: zod.boolean(),
+      order: zod.number(),
+      createdAt: zod.coerce.date(),
+      updatedAt: zod.coerce.date(),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const ListResearchGroupsResponse = zod.array(
+  ListResearchGroupsResponseItem,
+);
+
+/**
+ * @summary Create a research group
+ */
+export const CreateResearchGroupBody = zod.object({
+  name: zod.string(),
+  description: zod.string().nullish(),
+  order: zod.number().optional(),
+});
+
+/**
+ * @summary Update a research group
+ */
+export const UpdateResearchGroupParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateResearchGroupBody = zod.object({
+  name: zod.string().optional(),
+  description: zod.string().nullish(),
+  order: zod.number().optional(),
+});
+
+export const UpdateResearchGroupResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  order: zod.number(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a research group
+ */
+export const DeleteResearchGroupParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary List research members (optionally filter visiting scholars)
+ */
+export const ListResearchMembersQueryParams = zod.object({
+  visiting: zod.coerce.boolean().optional(),
+});
+
+export const ListResearchMembersResponseItem = zod.object({
+  id: zod.number(),
+  groupId: zod.number().nullish(),
+  name: zod.string(),
+  role: zod.string(),
+  affiliation: zod.string().nullish(),
+  email: zod.string().nullish(),
+  photoUrl: zod.string().nullish(),
+  isVisiting: zod.boolean(),
+  order: zod.number(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const ListResearchMembersResponse = zod.array(
+  ListResearchMembersResponseItem,
+);
+
+/**
+ * @summary Create a research member
+ */
+export const CreateResearchMemberBody = zod.object({
+  groupId: zod.number().nullish(),
+  name: zod.string(),
+  role: zod.string(),
+  affiliation: zod.string().nullish(),
+  email: zod.string().nullish(),
+  photoUrl: zod.string().nullish(),
+  isVisiting: zod.boolean().optional(),
+  order: zod.number().optional(),
+});
+
+/**
+ * @summary Update a research member
+ */
+export const UpdateResearchMemberParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateResearchMemberBody = zod.object({
+  groupId: zod.number().nullish(),
+  name: zod.string().optional(),
+  role: zod.string().optional(),
+  affiliation: zod.string().nullish(),
+  email: zod.string().nullish(),
+  photoUrl: zod.string().nullish(),
+  isVisiting: zod.boolean().optional(),
+  order: zod.number().optional(),
+});
+
+export const UpdateResearchMemberResponse = zod.object({
+  id: zod.number(),
+  groupId: zod.number().nullish(),
+  name: zod.string(),
+  role: zod.string(),
+  affiliation: zod.string().nullish(),
+  email: zod.string().nullish(),
+  photoUrl: zod.string().nullish(),
+  isVisiting: zod.boolean(),
+  order: zod.number(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a research member
+ */
+export const DeleteResearchMemberParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
  * @summary List all partners
  */
 export const ListPartnersResponseItem = zod.object({

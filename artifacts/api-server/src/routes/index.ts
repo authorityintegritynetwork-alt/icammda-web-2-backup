@@ -5,6 +5,7 @@ import eventsRouter from "./events";
 import teamRouter from "./team";
 import partnersRouter from "./partners";
 import statsRouter from "./stats";
+import researchRouter from "./research";
 
 const router: IRouter = Router();
 
@@ -14,5 +15,6 @@ router.use(eventsRouter);
 router.use(teamRouter);
 router.use(partnersRouter);
 router.use(statsRouter);
+router.use(researchRouter);
 
 export default router;

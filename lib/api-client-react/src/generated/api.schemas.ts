@@ -209,6 +209,89 @@ export interface UpdatePartnerBody {
   order?: number;
 }
 
+export interface ResearchGroup {
+  id: number;
+  name: string;
+  /** @nullable */
+  description?: string | null;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ResearchMember {
+  id: number;
+  /** @nullable */
+  groupId?: number | null;
+  name: string;
+  role: string;
+  /** @nullable */
+  affiliation?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  photoUrl?: string | null;
+  isVisiting: boolean;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ResearchGroupWithMembers {
+  id: number;
+  name: string;
+  /** @nullable */
+  description?: string | null;
+  order: number;
+  members: ResearchMember[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateResearchGroupBody {
+  name: string;
+  /** @nullable */
+  description?: string | null;
+  order?: number;
+}
+
+export interface UpdateResearchGroupBody {
+  name?: string;
+  /** @nullable */
+  description?: string | null;
+  order?: number;
+}
+
+export interface CreateResearchMemberBody {
+  /** @nullable */
+  groupId?: number | null;
+  name: string;
+  role: string;
+  /** @nullable */
+  affiliation?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  photoUrl?: string | null;
+  isVisiting?: boolean;
+  order?: number;
+}
+
+export interface UpdateResearchMemberBody {
+  /** @nullable */
+  groupId?: number | null;
+  name?: string;
+  role?: string;
+  /** @nullable */
+  affiliation?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  photoUrl?: string | null;
+  isVisiting?: boolean;
+  order?: number;
+}
+
 export interface SiteStats {
   totalPosts: number;
   totalEvents: number;
@@ -226,4 +309,8 @@ export type ListPostsParams = {
 export type ListEventsParams = {
   type?: string;
   published?: boolean;
+};
+
+export type ListResearchMembersParams = {
+  visiting?: boolean;
 };

@@ -18,6 +18,8 @@ tags:
     description: Team members
   - name: partners
     description: Partner organizations
+  - name: research
+    description: Research groups and members
   - name: stats
     description: Website statistics
 paths:
@@ -317,6 +319,168 @@ paths:
       operationId: deleteTeamMember
       tags: [team]
       summary: Delete a team member
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /research-groups:
+    get:
+      operationId: listResearchGroups
+      tags: [research]
+      summary: List all research groups with their members
+      responses:
+        "200":
+          description: List of research groups with members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResearchGroupWithMembers"
+    post:
+      operationId: createResearchGroup
+      tags: [research]
+      summary: Create a research group
+      security:
+        - clerkAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResearchGroupBody"
+      responses:
+        "201":
+          description: Created research group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchGroup"
+
+  /research-groups/{id}:
+    patch:
+      operationId: updateResearchGroup
+      tags: [research]
+      summary: Update a research group
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateResearchGroupBody"
+      responses:
+        "200":
+          description: Updated research group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchGroup"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteResearchGroup
+      tags: [research]
+      summary: Delete a research group
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /research-members:
+    get:
+      operationId: listResearchMembers
+      tags: [research]
+      summary: List research members (optionally filter visiting scholars)
+      parameters:
+        - name: visiting
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of research members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResearchMember"
+    post:
+      operationId: createResearchMember
+      tags: [research]
+      summary: Create a research member
+      security:
+        - clerkAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResearchMemberBody"
+      responses:
+        "201":
+          description: Created research member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchMember"
+
+  /research-members/{id}:
+    patch:
+      operationId: updateResearchMember
+      tags: [research]
+      summary: Update a research member
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateResearchMemberBody"
+      responses:
+        "200":
+          description: Updated research member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchMember"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteResearchMember
+      tags: [research]
+      summary: Delete a research member
       security:
         - clerkAuth: []
       parameters:
@@ -802,6 +966,160 @@ components:
           type: ["string", "null"]
         description:
           type: ["string", "null"]
+        order:
+          type: integer
+
+    ResearchGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        order:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - order
+        - createdAt
+        - updatedAt
+
+    ResearchMember:
+      type: object
+      properties:
+        id:
+          type: integer
+        groupId:
+          type: ["integer", "null"]
+        name:
+          type: string
+        role:
+          type: string
+        affiliation:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        photoUrl:
+          type: ["string", "null"]
+        isVisiting:
+          type: boolean
+        order:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - role
+        - isVisiting
+        - order
+        - createdAt
+        - updatedAt
+
+    ResearchGroupWithMembers:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        order:
+          type: integer
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResearchMember"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - order
+        - members
+        - createdAt
+        - updatedAt
+
+    CreateResearchGroupBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        order:
+          type: integer
+      required:
+        - name
+
+    UpdateResearchGroupBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        order:
+          type: integer
+
+    CreateResearchMemberBody:
+      type: object
+      properties:
+        groupId:
+          type: ["integer", "null"]
+        name:
+          type: string
+        role:
+          type: string
+        affiliation:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        photoUrl:
+          type: ["string", "null"]
+        isVisiting:
+          type: boolean
+        order:
+          type: integer
+      required:
+        - name
+        - role
+
+    UpdateResearchMemberBody:
+      type: object
+      properties:
+        groupId:
+          type: ["integer", "null"]
+        name:
+          type: string
+        role:
+          type: string
+        affiliation:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        photoUrl:
+          type: ["string", "null"]
+        isVisiting:
+          type: boolean
         order:
           type: integer
 

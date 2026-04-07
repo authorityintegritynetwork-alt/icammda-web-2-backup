@@ -7,6 +7,7 @@ import {
   Calendar,
   Users,
   Handshake,
+  FlaskConical,
   LogOut,
   Menu,
   X,
@@ -18,6 +19,7 @@ const navItems = [
   { href: "/admin/posts", label: "Posts", icon: FileText },
   { href: "/admin/events", label: "Events", icon: Calendar },
   { href: "/admin/team", label: "Team", icon: Users },
+  { href: "/admin/research", label: "Research", icon: FlaskConical },
   { href: "/admin/partners", label: "Partners", icon: Handshake },
 ];
 

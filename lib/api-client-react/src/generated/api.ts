@@ -20,18 +20,26 @@ import type {
   CreateEventBody,
   CreatePartnerBody,
   CreatePostBody,
+  CreateResearchGroupBody,
+  CreateResearchMemberBody,
   CreateTeamMemberBody,
   Event,
   HealthStatus,
   ListEventsParams,
   ListPostsParams,
+  ListResearchMembersParams,
   Partner,
   Post,
+  ResearchGroup,
+  ResearchGroupWithMembers,
+  ResearchMember,
   SiteStats,
   TeamMember,
   UpdateEventBody,
   UpdatePartnerBody,
   UpdatePostBody,
+  UpdateResearchGroupBody,
+  UpdateResearchMemberBody,
   UpdateTeamMemberBody,
 } from "./api.schemas";
 
@@ -1314,6 +1322,697 @@ export const useDeleteTeamMember = <
   TContext
 > => {
   return useMutation(getDeleteTeamMemberMutationOptions(options));
+};
+
+/**
+ * @summary List all research groups with their members
+ */
+export const getListResearchGroupsUrl = () => {
+  return `/api/research-groups`;
+};
+
+export const listResearchGroups = async (
+  options?: RequestInit,
+): Promise<ResearchGroupWithMembers[]> => {
+  return customFetch<ResearchGroupWithMembers[]>(getListResearchGroupsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListResearchGroupsQueryKey = () => {
+  return [`/api/research-groups`] as const;
+};
+
+export const getListResearchGroupsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listResearchGroups>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listResearchGroups>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListResearchGroupsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listResearchGroups>>
+  > = ({ signal }) => listResearchGroups({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listResearchGroups>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListResearchGroupsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listResearchGroups>>
+>;
+export type ListResearchGroupsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all research groups with their members
+ */
+
+export function useListResearchGroups<
+  TData = Awaited<ReturnType<typeof listResearchGroups>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listResearchGroups>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListResearchGroupsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a research group
+ */
+export const getCreateResearchGroupUrl = () => {
+  return `/api/research-groups`;
+};
+
+export const createResearchGroup = async (
+  createResearchGroupBody: CreateResearchGroupBody,
+  options?: RequestInit,
+): Promise<ResearchGroup> => {
+  return customFetch<ResearchGroup>(getCreateResearchGroupUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createResearchGroupBody),
+  });
+};
+
+export const getCreateResearchGroupMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createResearchGroup>>,
+    TError,
+    { data: BodyType<CreateResearchGroupBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createResearchGroup>>,
+  TError,
+  { data: BodyType<CreateResearchGroupBody> },
+  TContext
+> => {
+  const mutationKey = ["createResearchGroup"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createResearchGroup>>,
+    { data: BodyType<CreateResearchGroupBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createResearchGroup(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateResearchGroupMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createResearchGroup>>
+>;
+export type CreateResearchGroupMutationBody = BodyType<CreateResearchGroupBody>;
+export type CreateResearchGroupMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a research group
+ */
+export const useCreateResearchGroup = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createResearchGroup>>,
+    TError,
+    { data: BodyType<CreateResearchGroupBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createResearchGroup>>,
+  TError,
+  { data: BodyType<CreateResearchGroupBody> },
+  TContext
+> => {
+  return useMutation(getCreateResearchGroupMutationOptions(options));
+};
+
+/**
+ * @summary Update a research group
+ */
+export const getUpdateResearchGroupUrl = (id: number) => {
+  return `/api/research-groups/${id}`;
+};
+
+export const updateResearchGroup = async (
+  id: number,
+  updateResearchGroupBody: UpdateResearchGroupBody,
+  options?: RequestInit,
+): Promise<ResearchGroup> => {
+  return customFetch<ResearchGroup>(getUpdateResearchGroupUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateResearchGroupBody),
+  });
+};
+
+export const getUpdateResearchGroupMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateResearchGroup>>,
+    TError,
+    { id: number; data: BodyType<UpdateResearchGroupBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateResearchGroup>>,
+  TError,
+  { id: number; data: BodyType<UpdateResearchGroupBody> },
+  TContext
+> => {
+  const mutationKey = ["updateResearchGroup"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateResearchGroup>>,
+    { id: number; data: BodyType<UpdateResearchGroupBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateResearchGroup(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateResearchGroupMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateResearchGroup>>
+>;
+export type UpdateResearchGroupMutationBody = BodyType<UpdateResearchGroupBody>;
+export type UpdateResearchGroupMutationError = ErrorType<void>;
+
+/**
+ * @summary Update a research group
+ */
+export const useUpdateResearchGroup = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateResearchGroup>>,
+    TError,
+    { id: number; data: BodyType<UpdateResearchGroupBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateResearchGroup>>,
+  TError,
+  { id: number; data: BodyType<UpdateResearchGroupBody> },
+  TContext
+> => {
+  return useMutation(getUpdateResearchGroupMutationOptions(options));
+};
+
+/**
+ * @summary Delete a research group
+ */
+export const getDeleteResearchGroupUrl = (id: number) => {
+  return `/api/research-groups/${id}`;
+};
+
+export const deleteResearchGroup = async (
+  id: number,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeleteResearchGroupUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteResearchGroupMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteResearchGroup>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteResearchGroup>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["deleteResearchGroup"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteResearchGroup>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteResearchGroup(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteResearchGroupMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteResearchGroup>>
+>;
+
+export type DeleteResearchGroupMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete a research group
+ */
+export const useDeleteResearchGroup = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteResearchGroup>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteResearchGroup>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getDeleteResearchGroupMutationOptions(options));
+};
+
+/**
+ * @summary List research members (optionally filter visiting scholars)
+ */
+export const getListResearchMembersUrl = (
+  params?: ListResearchMembersParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/research-members?${stringifiedParams}`
+    : `/api/research-members`;
+};
+
+export const listResearchMembers = async (
+  params?: ListResearchMembersParams,
+  options?: RequestInit,
+): Promise<ResearchMember[]> => {
+  return customFetch<ResearchMember[]>(getListResearchMembersUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListResearchMembersQueryKey = (
+  params?: ListResearchMembersParams,
+) => {
+  return [`/api/research-members`, ...(params ? [params] : [])] as const;
+};
+
+export const getListResearchMembersQueryOptions = <
+  TData = Awaited<ReturnType<typeof listResearchMembers>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListResearchMembersParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listResearchMembers>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListResearchMembersQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listResearchMembers>>
+  > = ({ signal }) =>
+    listResearchMembers(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listResearchMembers>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListResearchMembersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listResearchMembers>>
+>;
+export type ListResearchMembersQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List research members (optionally filter visiting scholars)
+ */
+
+export function useListResearchMembers<
+  TData = Awaited<ReturnType<typeof listResearchMembers>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListResearchMembersParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listResearchMembers>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListResearchMembersQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a research member
+ */
+export const getCreateResearchMemberUrl = () => {
+  return `/api/research-members`;
+};
+
+export const createResearchMember = async (
+  createResearchMemberBody: CreateResearchMemberBody,
+  options?: RequestInit,
+): Promise<ResearchMember> => {
+  return customFetch<ResearchMember>(getCreateResearchMemberUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createResearchMemberBody),
+  });
+};
+
+export const getCreateResearchMemberMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createResearchMember>>,
+    TError,
+    { data: BodyType<CreateResearchMemberBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createResearchMember>>,
+  TError,
+  { data: BodyType<CreateResearchMemberBody> },
+  TContext
+> => {
+  const mutationKey = ["createResearchMember"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createResearchMember>>,
+    { data: BodyType<CreateResearchMemberBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createResearchMember(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateResearchMemberMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createResearchMember>>
+>;
+export type CreateResearchMemberMutationBody =
+  BodyType<CreateResearchMemberBody>;
+export type CreateResearchMemberMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a research member
+ */
+export const useCreateResearchMember = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createResearchMember>>,
+    TError,
+    { data: BodyType<CreateResearchMemberBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createResearchMember>>,
+  TError,
+  { data: BodyType<CreateResearchMemberBody> },
+  TContext
+> => {
+  return useMutation(getCreateResearchMemberMutationOptions(options));
+};
+
+/**
+ * @summary Update a research member
+ */
+export const getUpdateResearchMemberUrl = (id: number) => {
+  return `/api/research-members/${id}`;
+};
+
+export const updateResearchMember = async (
+  id: number,
+  updateResearchMemberBody: UpdateResearchMemberBody,
+  options?: RequestInit,
+): Promise<ResearchMember> => {
+  return customFetch<ResearchMember>(getUpdateResearchMemberUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateResearchMemberBody),
+  });
+};
+
+export const getUpdateResearchMemberMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateResearchMember>>,
+    TError,
+    { id: number; data: BodyType<UpdateResearchMemberBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateResearchMember>>,
+  TError,
+  { id: number; data: BodyType<UpdateResearchMemberBody> },
+  TContext
+> => {
+  const mutationKey = ["updateResearchMember"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateResearchMember>>,
+    { id: number; data: BodyType<UpdateResearchMemberBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateResearchMember(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateResearchMemberMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateResearchMember>>
+>;
+export type UpdateResearchMemberMutationBody =
+  BodyType<UpdateResearchMemberBody>;
+export type UpdateResearchMemberMutationError = ErrorType<void>;
+
+/**
+ * @summary Update a research member
+ */
+export const useUpdateResearchMember = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateResearchMember>>,
+    TError,
+    { id: number; data: BodyType<UpdateResearchMemberBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateResearchMember>>,
+  TError,
+  { id: number; data: BodyType<UpdateResearchMemberBody> },
+  TContext
+> => {
+  return useMutation(getUpdateResearchMemberMutationOptions(options));
+};
+
+/**
+ * @summary Delete a research member
+ */
+export const getDeleteResearchMemberUrl = (id: number) => {
+  return `/api/research-members/${id}`;
+};
+
+export const deleteResearchMember = async (
+  id: number,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeleteResearchMemberUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteResearchMemberMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteResearchMember>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteResearchMember>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["deleteResearchMember"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteResearchMember>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteResearchMember(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteResearchMemberMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteResearchMember>>
+>;
+
+export type DeleteResearchMemberMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete a research member
+ */
+export const useDeleteResearchMember = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteResearchMember>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteResearchMember>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getDeleteResearchMemberMutationOptions(options));
 };
 
 /**

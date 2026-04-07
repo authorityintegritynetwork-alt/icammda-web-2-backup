@@ -22,6 +22,7 @@ import EventsList from "@/pages/admin/EventsList";
 import EventForm from "@/pages/admin/EventForm";
 import TeamList from "@/pages/admin/TeamList";
 import PartnersList from "@/pages/admin/PartnersList";
+import ResearchAdmin from "@/pages/admin/ResearchAdmin";
 
 import NotFound from "@/pages/not-found";
 import { setBaseUrl, setAuthTokenGetter } from "@workspace/api-client-react";
@@ -106,6 +107,7 @@ function AdminRoutes() {
           <Route path="/admin/events/:id/edit" component={EventForm} />
           <Route path="/admin/team" component={TeamList} />
           <Route path="/admin/partners" component={PartnersList} />
+          <Route path="/admin/research" component={ResearchAdmin} />
           <Route component={NotFound} />
         </Switch>
       </Show>
