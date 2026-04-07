@@ -42,10 +42,10 @@ export default function PartnersList() {
     setEditing(partner.id);
     setForm({
       name: partner.name,
-      website: partner.website ?? "",
+      website: partner.websiteUrl ?? "",
       logoUrl: partner.logoUrl ?? "",
       description: partner.description ?? "",
-      displayOrder: String(partner.displayOrder ?? 0),
+      displayOrder: String(partner.order ?? 0),
     });
     setDialogOpen(true);
   };
@@ -54,13 +54,13 @@ export default function PartnersList() {
     e.preventDefault();
     const payload = {
       name: form.name,
-      website: form.website || undefined,
+      websiteUrl: form.website || undefined,
       logoUrl: form.logoUrl || undefined,
       description: form.description || undefined,
-      displayOrder: parseInt(form.displayOrder, 10) || 0,
+      order: parseInt(form.displayOrder, 10) || 0,
     };
     if (editing !== null) {
-      await updatePartner.mutateAsync({ id: editing, ...payload });
+      await updatePartner.mutateAsync({ id: editing, data: payload });
     } else {
       await createPartner.mutateAsync(payload);
     }

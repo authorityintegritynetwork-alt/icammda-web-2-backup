@@ -44,9 +44,14 @@ router.patch("/partners/:id", requireAuth, async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  const updates = Object.fromEntries(Object.entries(parsed.data).filter(([, v]) => v !== undefined));
+  if (Object.keys(updates).length === 0) {
+    res.status(400).json({ error: "No fields to update" });
+    return;
+  }
   const [partner] = await db
     .update(partnersTable)
-    .set(parsed.data)
+    .set(updates)
     .where(eq(partnersTable.id, id))
     .returning();
   if (!partner) {

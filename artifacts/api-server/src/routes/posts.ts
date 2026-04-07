@@ -83,9 +83,14 @@ router.patch("/posts/:id", requireAuth, async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  const updates = Object.fromEntries(Object.entries(parsed.data).filter(([, v]) => v !== undefined));
+  if (Object.keys(updates).length === 0) {
+    res.status(400).json({ error: "No fields to update" });
+    return;
+  }
   const [post] = await db
     .update(postsTable)
-    .set(parsed.data)
+    .set(updates)
     .where(eq(postsTable.id, id))
     .returning();
   if (!post) {

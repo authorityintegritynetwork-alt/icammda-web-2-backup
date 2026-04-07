@@ -146,7 +146,7 @@ export default function TeamList() {
       displayOrder: parseInt(form.displayOrder, 10) || 0,
     };
     if (editing !== null) {
-      await updateMember.mutateAsync({ id: editing, ...payload });
+      await updateMember.mutateAsync({ id: editing, data: payload });
     } else {
       await createMember.mutateAsync(payload);
     }

@@ -97,7 +97,7 @@ export default function ResearchAdmin() {
     e.preventDefault();
     const payload = { name: groupForm.name, description: groupForm.description || null, order: parseInt(groupForm.order, 10) || 0 };
     if (editingGroup !== null) {
-      await updateGroup.mutateAsync({ id: editingGroup, ...payload });
+      await updateGroup.mutateAsync({ id: editingGroup, data: payload });
     } else {
       await createGroup.mutateAsync(payload);
     }
@@ -146,7 +146,7 @@ export default function ResearchAdmin() {
       order: parseInt(memberForm.order, 10) || 0,
     };
     if (editingMember !== null) {
-      await updateMember.mutateAsync({ id: editingMember, ...payload });
+      await updateMember.mutateAsync({ id: editingMember, data: payload });
     } else {
       await createMember.mutateAsync(payload);
     }

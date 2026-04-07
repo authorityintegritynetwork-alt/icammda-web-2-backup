@@ -44,9 +44,14 @@ router.patch("/team/:id", requireAuth, async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  const updates = Object.fromEntries(Object.entries(parsed.data).filter(([, v]) => v !== undefined));
+  if (Object.keys(updates).length === 0) {
+    res.status(400).json({ error: "No fields to update" });
+    return;
+  }
   const [member] = await db
     .update(teamTable)
-    .set(parsed.data)
+    .set(updates)
     .where(eq(teamTable.id, id))
     .returning();
   if (!member) {

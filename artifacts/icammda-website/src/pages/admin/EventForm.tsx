@@ -100,7 +100,7 @@ export default function EventForm() {
     };
 
     if (isEdit && eventId) {
-      await updateEvent.mutateAsync({ id: eventId, ...payload });
+      await updateEvent.mutateAsync({ id: eventId, data: payload });
     } else {
       await createEvent.mutateAsync(payload);
     }

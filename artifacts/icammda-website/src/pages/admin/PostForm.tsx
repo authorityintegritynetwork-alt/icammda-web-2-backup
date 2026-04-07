@@ -82,7 +82,7 @@ export default function PostForm() {
     };
 
     if (isEdit && postId) {
-      await updatePost.mutateAsync({ id: postId, ...payload });
+      await updatePost.mutateAsync({ id: postId, data: payload });
     } else {
       await createPost.mutateAsync(payload);
     }

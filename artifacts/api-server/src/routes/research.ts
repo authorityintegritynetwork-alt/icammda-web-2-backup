@@ -51,7 +51,9 @@ router.patch("/research-groups/:id", requireAuth, async (req, res): Promise<void
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const parsed = UpdateResearchGroupBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [group] = await db.update(researchGroupsTable).set(parsed.data).where(eq(researchGroupsTable.id, id)).returning();
+  const updates = Object.fromEntries(Object.entries(parsed.data).filter(([, v]) => v !== undefined));
+  if (Object.keys(updates).length === 0) { res.status(400).json({ error: "No fields to update" }); return; }
+  const [group] = await db.update(researchGroupsTable).set(updates).where(eq(researchGroupsTable.id, id)).returning();
   if (!group) { res.status(404).json({ error: "Research group not found" }); return; }
   res.json(group);
 });
@@ -101,7 +103,9 @@ router.patch("/research-members/:id", requireAuth, async (req, res): Promise<voi
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const parsed = UpdateResearchMemberBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [member] = await db.update(researchMembersTable).set(parsed.data).where(eq(researchMembersTable.id, id)).returning();
+  const updates = Object.fromEntries(Object.entries(parsed.data).filter(([, v]) => v !== undefined));
+  if (Object.keys(updates).length === 0) { res.status(400).json({ error: "No fields to update" }); return; }
+  const [member] = await db.update(researchMembersTable).set(updates).where(eq(researchMembersTable.id, id)).returning();
   if (!member) { res.status(404).json({ error: "Research member not found" }); return; }
   res.json(member);
 });
