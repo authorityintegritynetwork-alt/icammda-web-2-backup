@@ -49,12 +49,10 @@ export default function About() {
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative bg-[#07101e] overflow-hidden pt-32 pb-24">
-        <div className="absolute top-0 right-1/4 w-[500px] h-[300px] bg-cyan-500/8 rounded-full blur-[120px] pointer-events-none" />
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.02]"
-          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "60px 60px" }}
-        />
+      <section className="relative overflow-hidden pt-32 pb-24">
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/section-bg.png')" }} />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#07101e]/97 via-[#07101e]/92 to-[#07101e]/80" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
           <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">Who We Are</p>
           <h1 className="font-serif text-white text-5xl sm:text-6xl md:text-7xl leading-tight mb-6" data-testid="about-title">
@@ -68,6 +66,18 @@ export default function About() {
 
       {/* ═══════════ OVERVIEW ═══════════ */}
       <section className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-10 py-20" data-testid="about-overview">
+        {/* Research desk image — full width visual */}
+        <div className="rounded-2xl overflow-hidden mb-12 relative aspect-[21/8]">
+          <img src="/research-desk.png" alt="ICAMMDA Research Environment" className="w-full h-full object-cover object-top" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#07101e]/80 via-[#07101e]/20 to-transparent" />
+          <div className="absolute inset-0 flex items-center px-8">
+            <div className="max-w-xs">
+              <p className="text-white font-serif text-xl leading-snug mb-2">Where Mathematics<br />Meets Medicine.</p>
+              <p className="text-white/50 text-xs leading-relaxed">Our laboratory hosts world-class computing, simulation, and modelling resources.</p>
+            </div>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-3 gap-10">
           <div className="md:col-span-2">
             <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-4">Our Context</p>

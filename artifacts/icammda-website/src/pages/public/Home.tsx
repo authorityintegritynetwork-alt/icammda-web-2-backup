@@ -43,18 +43,16 @@ export default function Home() {
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative bg-[#07101e] overflow-hidden min-h-screen flex items-center" data-testid="hero-section">
-        {/* Subtle ambient glow — matching logo blue */}
-        <div className="absolute top-1/3 left-1/4 w-[700px] h-[500px] bg-cyan-600/8 rounded-full blur-[180px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-cyan-500/6 rounded-full blur-[120px] pointer-events-none" />
-        {/* Very subtle grid */}
+      <section className="relative overflow-hidden min-h-screen flex items-center" data-testid="hero-section">
+        {/* Full-bleed scientific background image */}
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
-            backgroundSize: "64px 64px"
-          }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/hero-bg.png')" }}
         />
+        {/* Left-strong overlay: very dark on text side, letting image breathe on right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#07101e]/97 via-[#07101e]/85 to-[#07101e]/45" />
+        {/* Bottom fade to page bg */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#07101e] to-transparent" />
         {/* Subtle top accent line */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
 
@@ -200,8 +198,13 @@ export default function Home() {
 
       {/* ═══════════ ACTIVITIES (dark) ═══════════ */}
       <section className="relative overflow-hidden" data-testid="activities-section">
-        <div className="absolute inset-0 bg-[#07101e]" />
-        <div className="absolute top-0 left-1/2 w-[600px] h-[400px] bg-cyan-600/5 rounded-full blur-[130px] pointer-events-none -translate-x-1/2" />
+        {/* Africa epidemiological network background */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/section-bg.png')" }}
+        />
+        {/* Strong dark overlay — image visible but subdued */}
+        <div className="absolute inset-0 bg-[#07101e]/88" />
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-24 md:py-28">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>

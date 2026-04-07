@@ -34,11 +34,11 @@ export default function Events() {
       <PublicNav />
 
       {/* Hero */}
-      <section className="relative bg-[#07101e] overflow-hidden pt-32 pb-20">
-        <div className="absolute top-0 right-1/3 w-[500px] h-[250px] bg-cyan-500/8 rounded-full blur-[120px] pointer-events-none" />
+      <section className="relative overflow-hidden pt-32 pb-20">
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/section-bg.png')" }} />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#07101e]/97 via-[#07101e]/92 to-[#07101e]/80" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.02]"
-          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "60px 60px" }}
         />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
           <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">Programs</p>

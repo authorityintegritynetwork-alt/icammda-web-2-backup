@@ -6,3 +6,21 @@ id = "Zy_AhIbULzZKE6lXRlujm"
 uri = "file://artifacts/icammda-website/src/assets/images/hero-bg.png"
 type = "image"
 title = "African research center visualization"
+
+[[generated]]
+id = "V90Ky1r0fBswIOPxIgI9X"
+uri = "file://artifacts/icammda-website/public/hero-bg.png"
+type = "image"
+title = "icammda hero scientific background"
+
+[[generated]]
+id = "xtgm2qgxAh5SDMej1OF3l"
+uri = "file://artifacts/icammda-website/public/section-bg.png"
+type = "image"
+title = "epidemiology network section background"
+
+[[generated]]
+id = "mKUXbDuKGJs37WSqEkKnJ"
+uri = "file://artifacts/icammda-website/public/research-desk.png"
+type = "image"
+title = "research desk mathematical health"
