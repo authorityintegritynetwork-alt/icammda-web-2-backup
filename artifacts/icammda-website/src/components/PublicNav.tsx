@@ -5,8 +5,7 @@ import { Menu, X } from "lucide-react";
 const links = [
   { href: "/about", label: "About" },
   { href: "/research", label: "Research" },
-  { href: "/news", label: "News" },
-  { href: "/events", label: "Events" },
+  { href: "/news", label: "News & Events" },
   { href: "/team", label: "Team" },
   { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" },
@@ -58,7 +57,9 @@ export default function PublicNav() {
                 key={l.href}
                 href={l.href}
                 className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  location === l.href || location.startsWith(l.href + "/")
+                  location === l.href ||
+                  location.startsWith(l.href + "/") ||
+                  (l.href === "/news" && (location === "/events" || location.startsWith("/events/")))
                     ? "text-cyan-400 bg-cyan-400/8"
                     : "text-white/65 hover:text-white hover:bg-white/6"
                 }`}
@@ -97,7 +98,9 @@ export default function PublicNav() {
                 href={l.href}
                 onClick={() => setOpen(false)}
                 className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  location === l.href
+                  location === l.href ||
+                  location.startsWith(l.href + "/") ||
+                  (l.href === "/news" && (location === "/events" || location.startsWith("/events/")))
                     ? "text-cyan-400 bg-cyan-400/10"
                     : "text-white/65 hover:text-white"
                 }`}

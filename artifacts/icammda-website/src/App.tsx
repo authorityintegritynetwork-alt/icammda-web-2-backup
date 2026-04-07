@@ -7,9 +7,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 import Home from "@/pages/public/Home";
 import About from "@/pages/public/About";
-import News from "@/pages/public/News";
+import NewsEvents from "@/pages/public/NewsEvents";
 import NewsDetail from "@/pages/public/NewsDetail";
-import Events from "@/pages/public/Events";
 import EventDetail from "@/pages/public/EventDetail";
 import Team from "@/pages/public/Team";
 import Contact from "@/pages/public/Contact";
@@ -137,9 +136,9 @@ function ClerkProviderWithRoutes() {
             {/* Public Routes */}
             <Route path="/" component={Home} />
             <Route path="/about" component={About} />
-            <Route path="/news" component={News} />
+            <Route path="/news" component={NewsEvents} />
             <Route path="/news/:slug" component={NewsDetail} />
-            <Route path="/events" component={Events} />
+            <Route path="/events" component={() => <NewsEvents defaultTab="events" />} />
             <Route path="/events/:slug" component={EventDetail} />
             <Route path="/research" component={Research} />
             <Route path="/careers" component={Careers} />
