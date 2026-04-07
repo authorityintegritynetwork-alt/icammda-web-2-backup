@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const links = [
-  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/news", label: "News" },
   { href: "/events", label: "Events" },
@@ -15,75 +13,104 @@ const links = [
 export default function PublicNav() {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const isHome = location === "/";
 
   return (
-    <header className="sticky top-0 z-50 bg-[hsl(222,47%,14%)] shadow-md" data-testid="public-nav">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled || open || !isHome
+          ? "bg-[#0a0c14]/95 backdrop-blur-md border-b border-white/8 shadow-lg shadow-black/20"
+          : "bg-transparent"
+      }`}
+      data-testid="public-nav"
+    >
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2 group" data-testid="nav-logo">
-            <div className="w-8 h-8 rounded bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-sm">IC</span>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 group" data-testid="nav-logo">
+            <div className="relative w-8 h-8 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500 opacity-90" />
+              <span className="relative text-white font-bold text-xs tracking-tight z-10">IC</span>
             </div>
-            <span className="text-white font-bold text-sm leading-tight hidden sm:block">
-              ICAMMDA
-            </span>
+            <div className="hidden sm:block">
+              <p className="text-white font-semibold text-sm leading-none tracking-wide">ICAMMDA</p>
+              <p className="text-white/40 text-[9px] leading-none tracking-widest uppercase mt-0.5">Applied Mathematical Modelling</p>
+            </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-0.5">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                  location === l.href
-                    ? "text-primary bg-primary/10"
-                    : "text-slate-300 hover:text-white hover:bg-white/10"
+                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  location === l.href || location.startsWith(l.href + "/")
+                    ? "text-teal-400 bg-teal-400/10"
+                    : "text-white/70 hover:text-white hover:bg-white/8"
                 }`}
                 data-testid={`nav-link-${l.label.toLowerCase()}`}
               >
                 {l.label}
               </Link>
             ))}
-            <Link href="/sign-in">
-              <Button size="sm" variant="outline" className="ml-2 border-primary text-primary hover:bg-primary hover:text-white" data-testid="nav-admin-link">
-                Admin
-              </Button>
+            <Link
+              href="/sign-in"
+              className="ml-3 px-4 py-2 rounded-lg text-sm font-semibold text-teal-400 border border-teal-400/30 hover:bg-teal-400 hover:text-black transition-all duration-200"
+              data-testid="nav-admin-link"
+            >
+              Admin
             </Link>
           </nav>
 
+          {/* Mobile menu button */}
           <button
-            className="md:hidden text-slate-300 hover:text-white"
+            className="md:hidden w-9 h-9 flex items-center justify-center text-white/80 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
             onClick={() => setOpen(!open)}
             data-testid="nav-mobile-toggle"
-            aria-label="Toggle menu"
           >
-            {open ? <X size={22} /> : <Menu size={22} />}
+            {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {open && (
-        <div className="md:hidden bg-[hsl(222,47%,12%)] border-t border-white/10 px-4 py-3 space-y-1">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className={`block px-3 py-2 rounded text-sm font-medium ${
-                location === l.href
-                  ? "text-primary bg-primary/10"
-                  : "text-slate-300 hover:text-white"
-              }`}
-              data-testid={`mobile-nav-link-${l.label.toLowerCase()}`}
-            >
-              {l.label}
-            </Link>
-          ))}
-          <Link href="/sign-in" onClick={() => setOpen(false)}>
-            <span className="block px-3 py-2 rounded text-sm font-medium text-primary hover:text-white hover:bg-primary/20">
-              Admin Login
-            </span>
-          </Link>
+        <div className="md:hidden border-t border-white/8 bg-[#0a0c14]">
+          <nav className="px-5 py-4 space-y-1">
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  location === l.href
+                    ? "text-teal-400 bg-teal-400/10"
+                    : "text-white/70 hover:text-white"
+                }`}
+                data-testid={`mobile-nav-link-${l.label.toLowerCase()}`}
+              >
+                {l.label}
+              </Link>
+            ))}
+            <div className="pt-2 border-t border-white/10">
+              <Link
+                href="/sign-in"
+                onClick={() => setOpen(false)}
+                className="flex items-center px-3 py-2.5 rounded-lg text-sm font-semibold text-teal-400"
+              >
+                Admin Login
+              </Link>
+            </div>
+          </nav>
         </div>
       )}
     </header>
