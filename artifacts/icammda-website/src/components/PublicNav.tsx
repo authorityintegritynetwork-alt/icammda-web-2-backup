@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { Show } from "@clerk/react";
 import { Menu, X } from "lucide-react";
 
 const links = [
@@ -69,13 +70,15 @@ export default function PublicNav() {
                 {l.label}
               </Link>
             ))}
-            <Link
-              href="/sign-in"
-              className="ml-4 px-4 py-2 rounded-lg text-sm font-semibold text-[#07101e] bg-cyan-400 hover:bg-cyan-300 transition-all duration-200"
-              data-testid="nav-admin-link"
-            >
-              Admin
-            </Link>
+            <Show when="signed-in">
+              <Link
+                href="/admin"
+                className="ml-4 px-4 py-2 rounded-lg text-sm font-semibold text-[#07101e] bg-cyan-400 hover:bg-cyan-300 transition-all duration-200"
+                data-testid="nav-admin-link"
+              >
+                Admin
+              </Link>
+            </Show>
           </nav>
 
           {/* Mobile menu button */}
@@ -110,15 +113,17 @@ export default function PublicNav() {
                 {l.label}
               </Link>
             ))}
-            <div className="pt-2 border-t border-white/10">
-              <Link
-                href="/sign-in"
-                onClick={() => setOpen(false)}
-                className="flex items-center px-3 py-2.5 rounded-lg text-sm font-semibold text-cyan-400"
-              >
-                Admin Login
-              </Link>
-            </div>
+            <Show when="signed-in">
+              <div className="pt-2 border-t border-white/10">
+                <Link
+                  href="/admin"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center px-3 py-2.5 rounded-lg text-sm font-semibold text-cyan-400"
+                >
+                  Admin Panel
+                </Link>
+              </div>
+            </Show>
           </nav>
         </div>
       )}

@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ArrowUpRight, BookOpen, Users, BarChart3, Cpu, Calendar, ChevronRight, Microscope, Globe, Database, FlaskConical } from "lucide-react";
+import { ArrowUpRight, BookOpen, Users, BarChart3, Cpu, Calendar, ChevronRight, Microscope, Globe, Database, FlaskConical, ChevronDown, ExternalLink, Building2, GraduationCap, Mail } from "lucide-react";
 import { format } from "date-fns";
 import { useGetRecentPosts, useGetUpcomingEvents, useListPartners } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -7,10 +7,10 @@ import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 
 const activities = [
-  { icon: BookOpen, label: "Book Reading" },
-  { icon: Users, label: "Journal Club" },
-  { icon: BarChart3, label: "Progress Reports" },
-  { icon: Cpu, label: "Software Hub" },
+  { icon: BookOpen, label: "Book Reading",    desc: "Study key texts in modelling" },
+  { icon: Users,    label: "Journal Club",     desc: "Critique cutting-edge publications" },
+  { icon: BarChart3, label: "Progress Reports", desc: "Research milestone reviews" },
+  { icon: Cpu,      label: "Software Hub",     desc: "R, Python, NetLogo & simulation" },
 ];
 
 const statsData = [
@@ -116,21 +116,37 @@ export default function Home() {
               {/* Floating activity badges */}
               <div className="absolute top-0 -left-6 space-y-2.5">
                 {activities.map((act, i) => (
-                  <div
+                  <a
                     key={act.label}
-                    className="glass-dark rounded-xl px-4 py-2.5 flex items-center gap-3 border border-white/6"
+                    href="#activities"
+                    className="glass-dark rounded-xl px-4 py-2.5 flex items-center gap-3 border border-white/6 hover:border-cyan-500/25 transition-all duration-200 group"
                     style={{ animationDelay: `${i * 0.4}s` }}
                   >
-                    <div className="w-7 h-7 rounded-lg bg-cyan-500/15 flex items-center justify-center shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-cyan-500/15 flex items-center justify-center shrink-0 group-hover:bg-cyan-500/25 transition-colors">
                       <act.icon size={13} className="text-cyan-400" />
                     </div>
-                    <span className="text-white/60 text-xs font-medium">{act.label}</span>
-                  </div>
+                    <div>
+                      <p className="text-white/70 text-xs font-semibold leading-none">{act.label}</p>
+                      <p className="text-white/30 text-[9px] mt-0.5 leading-none">{act.desc}</p>
+                    </div>
+                  </a>
                 ))}
               </div>
             </div>
           </div>
         </div>
+
+        {/* Scroll indicator */}
+        <a
+          href="#mission"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/25 hover:text-white/50 transition-colors group"
+          aria-label="Scroll down"
+        >
+          <span className="text-[9px] font-semibold tracking-widest uppercase">Explore</span>
+          <div className="w-7 h-7 rounded-full border border-white/15 flex items-center justify-center group-hover:border-white/30 transition-colors animate-bounce">
+            <ChevronDown size={13} />
+          </div>
+        </a>
       </section>
 
       {/* ═══════════ RESEARCH FOCUS ═══════════ */}
@@ -156,7 +172,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════ MISSION ═══════════ */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-24 md:py-28" data-testid="mission-section">
+      <section id="mission" className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-24 md:py-28 scroll-mt-16" data-testid="mission-section">
         <div className="grid lg:grid-cols-5 gap-16 items-center">
           <div className="lg:col-span-3">
             <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-4">Our Mission</p>
@@ -197,7 +213,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════ ACTIVITIES (dark) ═══════════ */}
-      <section className="relative overflow-hidden" data-testid="activities-section">
+      <section id="activities" className="relative overflow-hidden scroll-mt-16" data-testid="activities-section">
         {/* Africa epidemiological network background */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -359,28 +375,76 @@ export default function Home() {
       </section>
 
       {/* ═══════════ PARTNERS ═══════════ */}
-      {partners && partners.length > 0 && (
-        <section className="border-t border-border/60 bg-muted/20" data-testid="partners-section">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-14">
-            <p className="text-center text-muted-foreground/40 text-[10px] font-bold tracking-widest uppercase mb-9">Partner &amp; Collaborating Institutions</p>
-            <div className="flex flex-wrap justify-center items-center gap-2.5">
+      <section className="border-t border-border/60" data-testid="partners-section">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-16">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
+            <div>
+              <p className="text-cyan-600 text-[10px] font-bold tracking-widest uppercase mb-2">Global Network</p>
+              <h2 className="font-serif text-foreground text-2xl">Partner &amp; Collaborating Institutions</h2>
+            </div>
+            <Link
+              href="/contact"
+              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border text-sm font-medium text-muted-foreground hover:text-cyan-700 hover:border-cyan-300 hover:bg-cyan-50 transition-all duration-200 shrink-0"
+            >
+              <Mail size={13} /> Partner with us <ArrowUpRight size={12} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </Link>
+          </div>
+
+          {partners && partners.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               {partners.map((p) => (
                 <div
                   key={p.id}
-                  className="group bg-white hover:bg-cyan-50 border border-border/60 hover:border-cyan-200 rounded-xl px-5 py-2.5 transition-all duration-200 hover-lift"
+                  className="group flex flex-col items-center justify-center gap-3 bg-card border border-card-border hover:border-cyan-200 rounded-2xl p-5 text-center transition-all duration-200 hover-lift"
                   data-testid={`partner-${p.id}`}
                 >
                   {p.logoUrl ? (
-                    <img src={p.logoUrl} alt={p.name} className="h-5 object-contain opacity-55 group-hover:opacity-90 transition-opacity" />
+                    <img src={p.logoUrl} alt={p.name} className="h-8 object-contain opacity-55 group-hover:opacity-90 transition-opacity" />
                   ) : (
-                    <span className="text-xs font-semibold text-foreground/55 group-hover:text-cyan-700 transition-colors">{p.name}</span>
+                    <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center shrink-0">
+                      <Building2 size={16} className="text-muted-foreground group-hover:text-cyan-600 transition-colors" />
+                    </div>
+                  )}
+                  <p className="text-xs font-semibold text-foreground/65 group-hover:text-cyan-700 transition-colors leading-snug">
+                    {p.name}
+                  </p>
+                  {p.websiteUrl && (
+                    <a
+                      href={p.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-muted-foreground/50 flex items-center gap-0.5 hover:text-cyan-600 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Visit <ExternalLink size={9} />
+                    </a>
                   )}
                 </div>
               ))}
+
+              {/* Become a partner card */}
+              <Link href="/contact">
+                <div className="group flex flex-col items-center justify-center gap-2 border-2 border-dashed border-border hover:border-cyan-300 rounded-2xl p-5 text-center transition-all duration-200 cursor-pointer h-full min-h-[120px]">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center">
+                    <GraduationCap size={16} className="text-cyan-600" />
+                  </div>
+                  <p className="text-xs font-semibold text-muted-foreground group-hover:text-cyan-700 transition-colors leading-snug">
+                    Become a Partner
+                  </p>
+                </div>
+              </Link>
             </div>
-          </div>
-        </section>
-      )}
+          ) : (
+            <div className="text-center py-12 border border-dashed border-border rounded-2xl">
+              <Building2 size={28} className="text-muted-foreground/30 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground mb-4">Partner institutions will appear here.</p>
+              <Link href="/contact" className="inline-flex items-center gap-2 text-sm text-cyan-600 font-semibold hover:text-cyan-500 transition-colors">
+                Get in touch <ArrowUpRight size={13} />
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
 
       <PublicFooter />
     </div>
