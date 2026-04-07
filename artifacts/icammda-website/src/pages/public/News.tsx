@@ -22,14 +22,14 @@ export default function News() {
       <PublicNav />
 
       {/* Hero */}
-      <section className="relative bg-[#0a0c14] overflow-hidden pt-32 pb-20">
-        <div className="absolute top-0 left-1/3 w-[500px] h-[250px] bg-teal-500/8 rounded-full blur-[120px] pointer-events-none" />
+      <section className="relative bg-[#07101e] overflow-hidden pt-32 pb-20">
+        <div className="absolute top-0 left-1/3 w-[500px] h-[250px] bg-cyan-500/8 rounded-full blur-[120px] pointer-events-none" />
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.02]"
           style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "60px 60px" }}
         />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
-          <p className="text-teal-400 text-xs font-bold tracking-widest uppercase mb-4">Updates</p>
+          <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">Updates</p>
           <h1 className="font-serif text-white text-5xl sm:text-6xl md:text-7xl leading-tight mb-4" data-testid="news-page-title">
             News &amp;<br /><em className="text-gradient">Updates</em>
           </h1>
@@ -49,8 +49,8 @@ export default function News() {
               onClick={() => setActiveCategory(cat)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
                 activeCategory === cat
-                  ? "bg-teal-500 text-black border-teal-500 font-semibold"
-                  : "border-border text-muted-foreground hover:border-teal-300 hover:text-teal-700"
+                  ? "bg-cyan-500 text-black border-cyan-500 font-semibold"
+                  : "border-border text-muted-foreground hover:border-cyan-300 hover:text-cyan-700"
               }`}
               data-testid={`filter-${cat.toLowerCase().replace(/\s+/g, '-')}`}
             >
@@ -77,7 +77,7 @@ export default function News() {
                 >
                   {/* Placeholder colored top */}
                   {!post.imageUrl && (
-                    <div className={`h-2 ${idx % 3 === 0 ? "bg-gradient-to-r from-teal-400 to-cyan-500" : idx % 3 === 1 ? "bg-gradient-to-r from-cyan-500 to-teal-600" : "bg-gradient-to-r from-teal-600 to-teal-400"}`} />
+                    <div className={`h-2 ${idx % 3 === 0 ? "bg-gradient-to-r from-cyan-400 to-cyan-500" : idx % 3 === 1 ? "bg-gradient-to-r from-cyan-500 to-cyan-600" : "bg-gradient-to-r from-cyan-600 to-cyan-400"}`} />
                   )}
                   {post.imageUrl && (
                     <div className="aspect-video overflow-hidden">
@@ -85,14 +85,14 @@ export default function News() {
                     </div>
                   )}
                   <div className="p-6 flex-1 flex flex-col">
-                    <span className="text-[10px] font-bold tracking-widest uppercase text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full w-fit mb-3">{post.category}</span>
-                    <h2 className="font-serif text-foreground text-lg leading-snug group-hover:text-teal-700 transition-colors mb-3 flex-1" data-testid={`news-title-${post.id}`}>
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-cyan-600 bg-cyan-50 px-2.5 py-1 rounded-full w-fit mb-3">{post.category}</span>
+                    <h2 className="font-serif text-foreground text-lg leading-snug group-hover:text-cyan-700 transition-colors mb-3 flex-1" data-testid={`news-title-${post.id}`}>
                       {post.title}
                     </h2>
                     {post.excerpt && <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2 mb-4">{post.excerpt}</p>}
                     <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border/60 mt-auto">
                       <span>{format(new Date(post.createdAt), "MMM d, yyyy")}</span>
-                      <span className="flex items-center gap-1 text-teal-600 font-medium group-hover:gap-2 transition-all" data-testid={`read-more-${post.id}`}>
+                      <span className="flex items-center gap-1 text-cyan-600 font-medium group-hover:gap-2 transition-all" data-testid={`read-more-${post.id}`}>
                         Read <ArrowUpRight size={11} />
                       </span>
                     </div>

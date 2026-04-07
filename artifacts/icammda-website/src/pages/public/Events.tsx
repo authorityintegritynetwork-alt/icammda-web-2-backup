@@ -11,7 +11,7 @@ const TYPES = ["All", "Webinar", "Workshop", "Symposium", "Training", "Conferenc
 
 const typeColor: Record<string, string> = {
   Webinar: "bg-cyan-50 text-cyan-700",
-  Workshop: "bg-teal-50 text-teal-700",
+  Workshop: "bg-cyan-50 text-cyan-700",
   Symposium: "bg-violet-50 text-violet-700",
   Training: "bg-amber-50 text-amber-700",
   Conference: "bg-rose-50 text-rose-700",
@@ -34,14 +34,14 @@ export default function Events() {
       <PublicNav />
 
       {/* Hero */}
-      <section className="relative bg-[#0a0c14] overflow-hidden pt-32 pb-20">
-        <div className="absolute top-0 right-1/3 w-[500px] h-[250px] bg-teal-500/8 rounded-full blur-[120px] pointer-events-none" />
+      <section className="relative bg-[#07101e] overflow-hidden pt-32 pb-20">
+        <div className="absolute top-0 right-1/3 w-[500px] h-[250px] bg-cyan-500/8 rounded-full blur-[120px] pointer-events-none" />
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.02]"
           style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "60px 60px" }}
         />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
-          <p className="text-teal-400 text-xs font-bold tracking-widest uppercase mb-4">Programs</p>
+          <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">Programs</p>
           <h1 className="font-serif text-white text-5xl sm:text-6xl md:text-7xl leading-tight mb-4" data-testid="events-page-title">
             Events &amp;<br /><em className="text-gradient">Programs</em>
           </h1>
@@ -61,8 +61,8 @@ export default function Events() {
               onClick={() => setActiveType(t)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
                 activeType === t
-                  ? "bg-teal-500 text-black border-teal-500 font-semibold"
-                  : "border-border text-muted-foreground hover:border-teal-300 hover:text-teal-700"
+                  ? "bg-cyan-500 text-black border-cyan-500 font-semibold"
+                  : "border-border text-muted-foreground hover:border-cyan-300 hover:text-cyan-700"
               }`}
               data-testid={`event-filter-${t.toLowerCase()}`}
             >
@@ -93,13 +93,13 @@ export default function Events() {
                             <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                           </div>
                         ) : (
-                          <div className="h-2 bg-gradient-to-r from-teal-400 to-cyan-500" />
+                          <div className="h-2 bg-gradient-to-r from-cyan-400 to-cyan-500" />
                         )}
                         <div className="p-6 flex-1 flex flex-col">
-                          <span className={`text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full w-fit mb-3 ${typeColor[event.eventType] || "bg-teal-50 text-teal-700"}`}>
+                          <span className={`text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full w-fit mb-3 ${typeColor[event.eventType] || "bg-cyan-50 text-cyan-700"}`}>
                             {event.eventType}
                           </span>
-                          <h3 className="font-serif text-foreground text-lg leading-snug group-hover:text-teal-700 transition-colors mb-3 flex-1" data-testid={`event-title-${event.id}`}>
+                          <h3 className="font-serif text-foreground text-lg leading-snug group-hover:text-cyan-700 transition-colors mb-3 flex-1" data-testid={`event-title-${event.id}`}>
                             {event.title}
                           </h3>
                           <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2 mb-4">
@@ -108,20 +108,20 @@ export default function Events() {
                           <div className="flex flex-wrap gap-3 text-xs text-muted-foreground pt-3 border-t border-border/60 mt-auto">
                             {event.startDate && (
                               <span className="flex items-center gap-1">
-                                <Calendar size={11} className="text-teal-500" />
+                                <Calendar size={11} className="text-cyan-500" />
                                 {format(new Date(event.startDate), "MMM d, yyyy")}
                               </span>
                             )}
                             {event.location && (
                               <span className="flex items-center gap-1">
-                                <MapPin size={11} className="text-teal-500" />
+                                <MapPin size={11} className="text-cyan-500" />
                                 {event.location}
                               </span>
                             )}
                           </div>
                           {event.formType !== "none" && (
                             <div className="mt-3">
-                              <span className="text-[10px] font-semibold text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full">Registration Open</span>
+                              <span className="text-[10px] font-semibold text-cyan-600 bg-cyan-50 px-2.5 py-1 rounded-full">Registration Open</span>
                             </div>
                           )}
                         </div>
@@ -143,10 +143,10 @@ export default function Events() {
                   {past.map((event) => (
                     <Link key={event.id} href={`/events/${event.slug}`}>
                       <article className="group bg-muted/40 border border-border/60 rounded-2xl p-5 hover-lift cursor-pointer" data-testid={`past-event-card-${event.id}`}>
-                        <span className={`text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full w-fit mb-3 block opacity-60 ${typeColor[event.eventType] || "bg-teal-50 text-teal-700"}`}>
+                        <span className={`text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full w-fit mb-3 block opacity-60 ${typeColor[event.eventType] || "bg-cyan-50 text-cyan-700"}`}>
                           {event.eventType}
                         </span>
-                        <h3 className="font-serif text-foreground/70 text-sm leading-snug group-hover:text-teal-700 transition-colors" data-testid={`past-event-title-${event.id}`}>
+                        <h3 className="font-serif text-foreground/70 text-sm leading-snug group-hover:text-cyan-700 transition-colors" data-testid={`past-event-title-${event.id}`}>
                           {event.title}
                         </h3>
                         {event.startDate && (

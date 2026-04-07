@@ -35,7 +35,7 @@ export default function NewsDetail() {
         <PublicNav />
         <div className="max-w-3xl mx-auto px-5 py-32 text-center" data-testid="post-not-found">
           <p className="font-serif text-2xl text-foreground mb-3">Post not found.</p>
-          <Link href="/news" className="text-teal-600 hover:underline text-sm">← Back to News</Link>
+          <Link href="/news" className="text-cyan-600 hover:underline text-sm">← Back to News</Link>
         </div>
         <PublicFooter />
       </div>
@@ -47,23 +47,23 @@ export default function NewsDetail() {
       <PublicNav />
 
       {/* Hero */}
-      <section className="bg-[#0a0c14] pt-28 pb-16">
+      <section className="bg-[#07101e] pt-28 pb-16">
         <div className="max-w-3xl mx-auto px-5 sm:px-8">
-          <Link href="/news" className="inline-flex items-center gap-2 text-white/40 hover:text-teal-400 text-xs font-medium mb-8 transition-colors" data-testid="back-to-news">
+          <Link href="/news" className="inline-flex items-center gap-2 text-white/40 hover:text-cyan-400 text-xs font-medium mb-8 transition-colors" data-testid="back-to-news">
             <ArrowLeft size={13} /> Back to News
           </Link>
-          <span className="text-[10px] font-bold tracking-widest uppercase text-teal-400 bg-teal-400/10 px-2.5 py-1 rounded-full">{post.category}</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase text-cyan-400 bg-cyan-400/10 px-2.5 py-1 rounded-full">{post.category}</span>
           <h1 className="font-serif text-white text-3xl sm:text-4xl md:text-5xl leading-tight mt-4 mb-6" data-testid="news-detail-title">
             {post.title}
           </h1>
           <div className="flex flex-wrap items-center gap-5 text-white/35 text-xs">
             <span className="flex items-center gap-1.5">
-              <Calendar size={12} className="text-teal-400/60" />
+              <Calendar size={12} className="text-cyan-400/60" />
               {format(new Date(post.createdAt), "MMMM d, yyyy")}
             </span>
             {post.authorName && (
               <span className="flex items-center gap-1.5">
-                <User size={12} className="text-teal-400/60" />
+                <User size={12} className="text-cyan-400/60" />
                 {post.authorName}
               </span>
             )}
@@ -79,7 +79,7 @@ export default function NewsDetail() {
           </div>
         )}
         <div
-          className="prose prose-slate prose-headings:font-serif prose-headings:font-normal prose-a:text-teal-600 max-w-none"
+          className="prose prose-slate prose-headings:font-serif prose-headings:font-normal prose-a:text-cyan-600 max-w-none"
           dangerouslySetInnerHTML={{ __html: post.content }}
           data-testid="news-detail-content"
         />
@@ -89,13 +89,13 @@ export default function NewsDetail() {
       {related && related.length > 0 && (
         <section className="border-t border-border/60 bg-muted/30">
           <div className="max-w-3xl mx-auto px-5 sm:px-8 py-14">
-            <p className="text-teal-600 text-xs font-bold tracking-widest uppercase mb-6">More Reading</p>
+            <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-6">More Reading</p>
             <div className="grid sm:grid-cols-2 gap-5">
               {related.map((p) => (
                 <Link key={p.id} href={`/news/${p.slug}`}>
                   <div className="group bg-card border border-card-border rounded-2xl p-5 hover-lift cursor-pointer">
-                    <span className="text-[10px] font-bold tracking-widest uppercase text-teal-600 mb-2 block">{p.category}</span>
-                    <p className="font-serif text-foreground text-sm leading-snug group-hover:text-teal-700 transition-colors">{p.title}</p>
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-cyan-600 mb-2 block">{p.category}</span>
+                    <p className="font-serif text-foreground text-sm leading-snug group-hover:text-cyan-700 transition-colors">{p.title}</p>
                     <p className="text-muted-foreground text-xs mt-2">{format(new Date(p.createdAt), "MMM d, yyyy")}</p>
                   </div>
                 </Link>

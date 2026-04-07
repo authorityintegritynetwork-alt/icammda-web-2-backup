@@ -11,7 +11,7 @@ interface CustomField { name: string; label: string; type: string; required: boo
 
 const typeColor: Record<string, string> = {
   Webinar: "bg-cyan-50 text-cyan-700",
-  Workshop: "bg-teal-50 text-teal-700",
+  Workshop: "bg-cyan-50 text-cyan-700",
   Symposium: "bg-violet-50 text-violet-700",
   Training: "bg-amber-50 text-amber-700",
   Conference: "bg-rose-50 text-rose-700",
@@ -33,7 +33,7 @@ function CustomForm({ fields }: { fields: CustomField[] }) {
   if (submitted) {
     return (
       <div className="flex flex-col items-center justify-center text-center py-10" data-testid="registration-success">
-        <div className="w-14 h-14 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mb-4">
+        <div className="w-14 h-14 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center mb-4">
           <CheckCircle size={26} />
         </div>
         <p className="font-serif text-foreground text-xl mb-2">Registration Received!</p>
@@ -56,7 +56,7 @@ function CustomForm({ fields }: { fields: CustomField[] }) {
               value={values[field.name] ?? ""}
               onChange={(e) => setValues((v) => ({ ...v, [field.name]: e.target.value }))}
               rows={3}
-              className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 transition-all resize-none"
+              className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-400 transition-all resize-none"
             />
           ) : (
             <input
@@ -65,7 +65,7 @@ function CustomForm({ fields }: { fields: CustomField[] }) {
               required={field.required}
               value={values[field.name] ?? ""}
               onChange={(e) => setValues((v) => ({ ...v, [field.name]: e.target.value }))}
-              className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 transition-all"
+              className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-400 transition-all"
             />
           )}
         </div>
@@ -73,7 +73,7 @@ function CustomForm({ fields }: { fields: CustomField[] }) {
       <button
         type="submit"
         disabled={submitting}
-        className="group w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-400 disabled:opacity-60 text-black font-semibold px-6 py-3 rounded-xl text-sm transition-all duration-200 mt-2"
+        className="group w-full flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 disabled:opacity-60 text-black font-semibold px-6 py-3 rounded-xl text-sm transition-all duration-200 mt-2"
         data-testid="custom-form-submit"
       >
         {submitting ? (
@@ -122,7 +122,7 @@ export default function EventDetail() {
         <PublicNav />
         <div className="max-w-5xl mx-auto px-5 py-32 text-center" data-testid="event-not-found">
           <p className="font-serif text-2xl text-foreground mb-3">Event not found.</p>
-          <Link href="/events" className="text-teal-600 hover:underline text-sm">← Back to Events</Link>
+          <Link href="/events" className="text-cyan-600 hover:underline text-sm">← Back to Events</Link>
         </div>
         <PublicFooter />
       </div>
@@ -134,12 +134,12 @@ export default function EventDetail() {
       <PublicNav />
 
       {/* Hero */}
-      <section className="bg-[#0a0c14] pt-28 pb-16">
+      <section className="bg-[#07101e] pt-28 pb-16">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
-          <Link href="/events" className="inline-flex items-center gap-2 text-white/40 hover:text-teal-400 text-xs font-medium mb-8 transition-colors" data-testid="back-to-events">
+          <Link href="/events" className="inline-flex items-center gap-2 text-white/40 hover:text-cyan-400 text-xs font-medium mb-8 transition-colors" data-testid="back-to-events">
             <ArrowLeft size={13} /> Back to Events
           </Link>
-          <span className={`text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full ${typeColor[event.eventType] || "bg-teal-50 text-teal-700"}`}>
+          <span className={`text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full ${typeColor[event.eventType] || "bg-cyan-50 text-cyan-700"}`}>
             {event.eventType}
           </span>
           <h1 className="font-serif text-white text-3xl sm:text-4xl md:text-5xl leading-tight mt-4 mb-6" data-testid="event-detail-title">
@@ -148,7 +148,7 @@ export default function EventDetail() {
           <div className="flex flex-wrap items-center gap-5 text-white/35 text-xs">
             {event.startDate && (
               <span className="flex items-center gap-1.5">
-                <Calendar size={12} className="text-teal-400/60" />
+                <Calendar size={12} className="text-cyan-400/60" />
                 {format(new Date(event.startDate), "EEEE, MMMM d, yyyy")}
                 {event.endDate && event.endDate !== event.startDate && (
                   <> — {format(new Date(event.endDate), "MMMM d, yyyy")}</>
@@ -157,7 +157,7 @@ export default function EventDetail() {
             )}
             {event.location && (
               <span className="flex items-center gap-1.5">
-                <MapPin size={12} className="text-teal-400/60" />
+                <MapPin size={12} className="text-cyan-400/60" />
                 {event.location}
               </span>
             )}
@@ -176,7 +176,7 @@ export default function EventDetail() {
               </div>
             )}
             <div
-              className="prose prose-slate prose-headings:font-serif prose-headings:font-normal prose-a:text-teal-600 max-w-none"
+              className="prose prose-slate prose-headings:font-serif prose-headings:font-normal prose-a:text-cyan-600 max-w-none"
               dangerouslySetInnerHTML={{ __html: event.description }}
               data-testid="event-detail-content"
             />
@@ -190,7 +190,7 @@ export default function EventDetail() {
               <div className="space-y-3 text-sm">
                 {event.startDate && (
                   <div className="flex gap-3">
-                    <Calendar size={14} className="text-teal-500 mt-0.5 shrink-0" />
+                    <Calendar size={14} className="text-cyan-500 mt-0.5 shrink-0" />
                     <div>
                       <p className="text-foreground font-medium">{format(new Date(event.startDate), "MMMM d, yyyy")}</p>
                       {event.endDate && event.endDate !== event.startDate && (
@@ -201,7 +201,7 @@ export default function EventDetail() {
                 )}
                 {event.location && (
                   <div className="flex gap-3">
-                    <MapPin size={14} className="text-teal-500 mt-0.5 shrink-0" />
+                    <MapPin size={14} className="text-cyan-500 mt-0.5 shrink-0" />
                     <p className="text-foreground">{event.location}</p>
                   </div>
                 )}
@@ -225,7 +225,7 @@ export default function EventDetail() {
                       href={event.googleFormUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-teal-600 hover:underline mt-3"
+                      className="inline-flex items-center gap-1.5 text-xs text-cyan-600 hover:underline mt-3"
                     >
                       Open in Google Forms <ExternalLink size={11} />
                     </a>

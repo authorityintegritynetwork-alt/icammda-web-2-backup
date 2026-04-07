@@ -6,7 +6,7 @@ import PublicFooter from "@/components/PublicFooter";
 
 const ROLE_CONFIG: Record<string, { label: string; icon: typeof Users; bg: string; tag: string }> = {
   director: { label: "Director", icon: User, bg: "bg-amber-50/60 border-amber-200/50", tag: "bg-amber-50 text-amber-700" },
-  researcher: { label: "Researchers", icon: GraduationCap, bg: "bg-teal-50/60 border-teal-200/50", tag: "bg-teal-50 text-teal-700" },
+  researcher: { label: "Researchers", icon: GraduationCap, bg: "bg-cyan-50/60 border-cyan-200/50", tag: "bg-cyan-50 text-cyan-700" },
   postdoc: { label: "Postdoctoral Fellows", icon: GraduationCap, bg: "bg-cyan-50/60 border-cyan-200/50", tag: "bg-cyan-50 text-cyan-700" },
   staff: { label: "Staff", icon: Briefcase, bg: "bg-violet-50/60 border-violet-200/50", tag: "bg-violet-50 text-violet-700" },
 };
@@ -26,14 +26,14 @@ export default function Team() {
       <PublicNav />
 
       {/* Hero */}
-      <section className="relative bg-[#0a0c14] overflow-hidden pt-32 pb-20">
-        <div className="absolute top-0 right-1/4 w-[500px] h-[250px] bg-teal-500/8 rounded-full blur-[120px] pointer-events-none" />
+      <section className="relative bg-[#07101e] overflow-hidden pt-32 pb-20">
+        <div className="absolute top-0 right-1/4 w-[500px] h-[250px] bg-cyan-500/8 rounded-full blur-[120px] pointer-events-none" />
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.02]"
           style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "60px 60px" }}
         />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
-          <p className="text-teal-400 text-xs font-bold tracking-widest uppercase mb-4">People</p>
+          <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">People</p>
           <h1 className="font-serif text-white text-5xl sm:text-6xl md:text-7xl leading-tight mb-4" data-testid="team-page-title">
             Our<br /><em className="text-gradient">Team</em>
           </h1>
@@ -64,7 +64,7 @@ export default function Team() {
               <div key={role} data-testid={`team-group-${role}`}>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-[#0a0c14] text-teal-400 flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-[#07101e] text-cyan-400 flex items-center justify-center">
                       <Icon size={13} />
                     </div>
                     <h2 className="font-serif text-foreground text-2xl">{config.label}</h2>

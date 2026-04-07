@@ -25,24 +25,27 @@ export default function PublicNav() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${
         scrolled || open || !isHome
-          ? "bg-[#0a0c14]/95 backdrop-blur-md border-b border-white/8 shadow-lg shadow-black/20"
+          ? "bg-[#07101e]/96 backdrop-blur-md border-b border-white/8 shadow-2xl shadow-black/30"
           : "bg-transparent"
       }`}
       data-testid="public-nav"
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group" data-testid="nav-logo">
-            <div className="relative w-8 h-8 flex items-center justify-center">
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500 opacity-90" />
-              <span className="relative text-white font-bold text-xs tracking-tight z-10">IC</span>
+          {/* Logo — real ICAMMDA logo */}
+          <Link href="/" className="flex items-center gap-3 group" data-testid="nav-logo">
+            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-cyan-400/30 group-hover:border-cyan-400/60 transition-colors shrink-0">
+              <img
+                src="/icammda-logo-circle.png"
+                alt="ICAMMDA"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="hidden sm:block">
-              <p className="text-white font-semibold text-sm leading-none tracking-wide">ICAMMDA</p>
-              <p className="text-white/40 text-[9px] leading-none tracking-widest uppercase mt-0.5">Applied Mathematical Modelling</p>
+              <p className="text-white font-bold text-sm leading-none tracking-wider">ICAMMDA</p>
+              <p className="text-white/35 text-[9px] leading-none tracking-widest uppercase mt-1">Fed. Univ. Oye-Ekiti</p>
             </div>
           </Link>
 
@@ -54,8 +57,8 @@ export default function PublicNav() {
                 href={l.href}
                 className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   location === l.href || location.startsWith(l.href + "/")
-                    ? "text-teal-400 bg-teal-400/10"
-                    : "text-white/70 hover:text-white hover:bg-white/8"
+                    ? "text-cyan-400 bg-cyan-400/8"
+                    : "text-white/65 hover:text-white hover:bg-white/6"
                 }`}
                 data-testid={`nav-link-${l.label.toLowerCase()}`}
               >
@@ -64,7 +67,7 @@ export default function PublicNav() {
             ))}
             <Link
               href="/sign-in"
-              className="ml-3 px-4 py-2 rounded-lg text-sm font-semibold text-teal-400 border border-teal-400/30 hover:bg-teal-400 hover:text-black transition-all duration-200"
+              className="ml-4 px-4 py-2 rounded-lg text-sm font-semibold text-[#07101e] bg-cyan-400 hover:bg-cyan-300 transition-all duration-200"
               data-testid="nav-admin-link"
             >
               Admin
@@ -73,7 +76,7 @@ export default function PublicNav() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden w-9 h-9 flex items-center justify-center text-white/80 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+            className="md:hidden w-9 h-9 flex items-center justify-center text-white/70 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
             onClick={() => setOpen(!open)}
             data-testid="nav-mobile-toggle"
           >
@@ -84,7 +87,7 @@ export default function PublicNav() {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="md:hidden border-t border-white/8 bg-[#0a0c14]">
+        <div className="md:hidden border-t border-white/8 bg-[#07101e]">
           <nav className="px-5 py-4 space-y-1">
             {links.map((l) => (
               <Link
@@ -93,8 +96,8 @@ export default function PublicNav() {
                 onClick={() => setOpen(false)}
                 className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   location === l.href
-                    ? "text-teal-400 bg-teal-400/10"
-                    : "text-white/70 hover:text-white"
+                    ? "text-cyan-400 bg-cyan-400/10"
+                    : "text-white/65 hover:text-white"
                 }`}
                 data-testid={`mobile-nav-link-${l.label.toLowerCase()}`}
               >
@@ -105,7 +108,7 @@ export default function PublicNav() {
               <Link
                 href="/sign-in"
                 onClick={() => setOpen(false)}
-                className="flex items-center px-3 py-2.5 rounded-lg text-sm font-semibold text-teal-400"
+                className="flex items-center px-3 py-2.5 rounded-lg text-sm font-semibold text-cyan-400"
               >
                 Admin Login
               </Link>

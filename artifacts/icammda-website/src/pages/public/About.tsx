@@ -49,14 +49,14 @@ export default function About() {
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative bg-[#0a0c14] overflow-hidden pt-32 pb-24">
-        <div className="absolute top-0 right-1/4 w-[500px] h-[300px] bg-teal-500/8 rounded-full blur-[120px] pointer-events-none" />
+      <section className="relative bg-[#07101e] overflow-hidden pt-32 pb-24">
+        <div className="absolute top-0 right-1/4 w-[500px] h-[300px] bg-cyan-500/8 rounded-full blur-[120px] pointer-events-none" />
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.02]"
           style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "60px 60px" }}
         />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
-          <p className="text-teal-400 text-xs font-bold tracking-widest uppercase mb-4">Who We Are</p>
+          <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">Who We Are</p>
           <h1 className="font-serif text-white text-5xl sm:text-6xl md:text-7xl leading-tight mb-6" data-testid="about-title">
             About<br /><em className="text-gradient">ICAMMDA</em>
           </h1>
@@ -70,7 +70,7 @@ export default function About() {
       <section className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-10 py-20" data-testid="about-overview">
         <div className="grid md:grid-cols-3 gap-10">
           <div className="md:col-span-2">
-            <p className="text-teal-600 text-xs font-bold tracking-widest uppercase mb-4">Our Context</p>
+            <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-4">Our Context</p>
             <p className="text-foreground text-lg leading-relaxed mb-4">
               ICAMMDA is a member of the <strong>West Africa Mathematical Modelling Capacity Development (WAMCAD)</strong> — an Anglophone–Francophone–Lusophone scientific partnership with a bold vision: train a critical mass of modelling scientists retained within West Africa.
             </p>
@@ -78,12 +78,12 @@ export default function About() {
               Situated in the ICT Centre of Federal University Oye-Ekiti, our state-of-the-art computing and simulation laboratory hosts seminars, workshops, and trainings on modelling, data analytics, and computational skills.
             </p>
           </div>
-          <div className="bg-[#0a0c14] rounded-2xl p-6">
-            <p className="text-teal-400 text-[10px] font-bold tracking-widest uppercase mb-4">WAMCAD Members</p>
+          <div className="bg-[#07101e] rounded-2xl p-6">
+            <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4">WAMCAD Members</p>
             <ul className="space-y-3">
               {wamcadPartners.map((partner) => (
                 <li key={partner} className="flex items-start gap-2.5">
-                  <div className="w-1 h-1 rounded-full bg-teal-400 mt-2 shrink-0" />
+                  <div className="w-1 h-1 rounded-full bg-cyan-400 mt-2 shrink-0" />
                   <span className="text-white/60 text-xs leading-relaxed">{partner}</span>
                 </li>
               ))}
@@ -95,7 +95,7 @@ export default function About() {
       {/* ═══════════ DIRECTOR ═══════════ */}
       <section className="bg-muted/40 border-y border-border/60" data-testid="director-section">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-10 py-20">
-          <p className="text-teal-600 text-xs font-bold tracking-widest uppercase mb-10">Leadership</p>
+          <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-10">Leadership</p>
 
           <div className="grid md:grid-cols-3 gap-10 items-start">
             {/* Photo */}
@@ -105,23 +105,23 @@ export default function About() {
               ) : director?.photoUrl ? (
                 <img src={director.photoUrl} alt={director.name} className="w-48 h-56 rounded-2xl object-cover" data-testid="director-photo" />
               ) : (
-                <div className="w-48 h-56 rounded-2xl bg-[#0a0c14] flex items-center justify-center">
-                  <Users size={48} className="text-teal-400/30" />
+                <div className="w-48 h-56 rounded-2xl bg-[#07101e] flex items-center justify-center">
+                  <Users size={48} className="text-cyan-400/30" />
                 </div>
               )}
               <div className="mt-4 text-center md:text-left">
-                <p className="font-serif text-foreground text-lg" data-testid="director-name">
+                <div className="font-serif text-foreground text-lg" data-testid="director-name">
                   {isLoading ? <Skeleton className="h-5 w-44" /> : director?.name ?? "Prof Emmanuel Afolabi Bakare"}
-                </p>
-                <p className="text-teal-600 text-xs font-semibold mt-1">
+                </div>
+                <div className="text-cyan-600 text-xs font-semibold mt-1">
                   {isLoading ? <Skeleton className="h-3 w-28 mt-1" /> : director?.title ?? "Director, ICAMMDA"}
-                </p>
+                </div>
               </div>
             </div>
 
             {/* Letter */}
             <div className="md:col-span-2 relative">
-              <div className="absolute -top-4 -left-4 text-8xl font-serif text-teal-100 leading-none select-none pointer-events-none">"</div>
+              <div className="absolute -top-4 -left-4 text-8xl font-serif text-cyan-100 leading-none select-none pointer-events-none">"</div>
               <div className="relative space-y-4 text-muted-foreground leading-relaxed text-sm">
                 <p className="text-foreground font-medium">Dear Visitor,</p>
                 <p>
@@ -136,7 +136,7 @@ export default function About() {
                 <p className="font-medium text-foreground">
                   Warm regards,<br />
                   <strong>Prof Emmanuel Afolabi Bakare</strong><br />
-                  <span className="text-teal-600 font-normal text-xs">Director, ICAMMDA · Federal University Oye-Ekiti</span>
+                  <span className="text-cyan-600 font-normal text-xs">Director, ICAMMDA · Federal University Oye-Ekiti</span>
                 </p>
               </div>
             </div>
@@ -147,7 +147,7 @@ export default function About() {
       {/* ═══════════ STRUCTURE ═══════════ */}
       <section className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-10 py-20" data-testid="structure-section">
         <div className="mb-12">
-          <p className="text-teal-600 text-xs font-bold tracking-widest uppercase mb-3">Our Structure</p>
+          <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-3">Our Structure</p>
           <h2 className="font-serif text-foreground text-4xl md:text-5xl">Four Core Units</h2>
         </div>
 
@@ -155,7 +155,7 @@ export default function About() {
           {units.map((unit) => (
             <div key={unit.title} className="group bg-card border border-card-border rounded-2xl p-7 hover-lift transition-all" data-testid={`unit-${unit.number}`}>
               <div className="flex items-start justify-between mb-5">
-                <div className="w-11 h-11 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                <div className="w-11 h-11 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center">
                   <unit.icon size={19} />
                 </div>
                 <span className="text-muted-foreground/30 font-mono text-sm font-bold">{unit.number}</span>
@@ -168,15 +168,15 @@ export default function About() {
       </section>
 
       {/* ═══════════ CTA ═══════════ */}
-      <section className="bg-[#0a0c14] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/8 to-transparent pointer-events-none" />
+      <section className="bg-[#07101e] relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/8 to-transparent pointer-events-none" />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10 py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
             <h2 className="font-serif text-white text-3xl md:text-4xl mb-2">Meet the team<br />behind the science.</h2>
             <p className="text-white/40 text-sm">Researchers, scientists, and staff driving ICAMMDA's mission.</p>
           </div>
           <Link href="/team">
-            <button className="group flex items-center gap-2 bg-teal-500 hover:bg-teal-400 text-black font-semibold px-7 py-3.5 rounded-xl text-sm transition-all duration-200 whitespace-nowrap">
+            <button className="group flex items-center gap-2 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold px-7 py-3.5 rounded-xl text-sm transition-all duration-200 whitespace-nowrap">
               Meet Our Team
               <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>

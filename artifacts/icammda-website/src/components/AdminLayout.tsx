@@ -35,11 +35,11 @@ export default function AdminLayout({ children, title }: Props) {
   const handleSignOut = () => signOut({ redirectUrl: "/" });
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-[#080a12] text-white">
+    <div className="flex flex-col h-full bg-[#07101e] text-white">
       {/* Logo */}
       <div className="px-5 py-5 border-b border-white/8 flex items-center gap-3">
         <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
-          <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500" />
+          <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-500" />
           <span className="relative text-black font-bold text-xs z-10">IC</span>
         </div>
         <div>
@@ -59,14 +59,14 @@ export default function AdminLayout({ children, title }: Props) {
               onClick={() => setSidebarOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                 active
-                  ? "bg-teal-500/15 text-teal-400 border border-teal-500/20"
+                  ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/20"
                   : "text-white/50 hover:bg-white/5 hover:text-white/80 border border-transparent"
               }`}
               data-testid={`admin-nav-${label.toLowerCase()}`}
             >
               <Icon size={15} />
               {label}
-              {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-teal-400" />}
+              {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400" />}
             </Link>
           );
         })}
@@ -130,7 +130,7 @@ export default function AdminLayout({ children, title }: Props) {
           <div className="ml-auto">
             <Link
               href="/"
-              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-teal-600 transition-colors"
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-cyan-600 transition-colors"
               data-testid="admin-view-site-link"
             >
               View Site <ExternalLink size={11} />
