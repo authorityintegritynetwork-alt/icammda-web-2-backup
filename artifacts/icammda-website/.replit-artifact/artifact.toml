@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "ICAMMDA Website"
+version = "1.0.0"
+id = "artifacts/icammda-website"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23891
+
+[services.development]
+run = "pnpm --filter @workspace/icammda-website run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/icammda-website", "run", "build" ]
+publicDir = "artifacts/icammda-website/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23891"
+BASE_PATH = "/"

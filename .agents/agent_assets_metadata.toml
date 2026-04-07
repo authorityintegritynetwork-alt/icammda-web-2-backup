@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "Zy_AhIbULzZKE6lXRlujm"
+uri = "file://artifacts/icammda-website/src/assets/images/hero-bg.png"
+type = "image"
+title = "African research center visualization"
