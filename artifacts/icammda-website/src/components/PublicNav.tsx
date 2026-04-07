@@ -45,8 +45,7 @@ export default function PublicNav() {
             </div>
             <div className="hidden sm:block">
               <p className="text-white font-bold text-sm leading-none tracking-wider">ICAMMDA</p>
-              <p className="text-white/50 text-[8.5px] leading-none mt-1">Int'l Centre for Applied Mathematical Modelling &amp; Data Analytics</p>
-              <p className="text-white/30 text-[8px] leading-none mt-0.5 tracking-wide uppercase">Federal University Oye-Ekiti</p>
+              <p className="text-white/35 text-[9px] leading-none tracking-widest uppercase mt-1">Federal University Oye-Ekiti</p>
             </div>
           </Link>
 
