@@ -128,6 +128,18 @@ function ClerkProviderWithRoutes() {
       proxyUrl={clerkProxyUrl}
       routerPush={(to) => setLocation(stripBase(to))}
       routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
+      localization={{
+        signIn: {
+          start: {
+            title: "Sign in to ICAMMDA",
+            subtitle: "Admin Portal · Federal University Oye-Ekiti",
+          },
+          password: {
+            title: "Sign in to ICAMMDA",
+            subtitle: "Admin Portal · Federal University Oye-Ekiti",
+          },
+        },
+      }}
     >
       <QueryClientProvider client={queryClient}>
         <ClerkQueryClientCacheInvalidator />
