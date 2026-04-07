@@ -1,23 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import {
   PlayCircle,
-  ChevronDown,
   BookOpen,
   GraduationCap,
   Globe,
   Activity,
   ArrowRight,
-  ExternalLink,
   Youtube,
-  Clock,
+  ChevronRight,
+  List,
 } from "lucide-react";
 
 /* ─── Types ─────────────────────────────────────────────────────────────── */
-interface YTThumbnail { url: string; width?: number; height?: number }
+interface YTThumbnail { url: string }
 interface YTSnippet {
   title: string;
   description: string;
@@ -29,29 +28,9 @@ interface YTPlaylist { id: string; snippet: YTSnippet; contentDetails: { itemCou
 interface YTPlaylistItem { id: string; snippet: YTSnippet }
 
 const CHANNEL_URL = "https://www.youtube.com/@IcammdaFuoye";
-
-/* ─── Accent cycling ────────────────────────────────────────────────────── */
-const ACCENTS = ["cyan", "violet", "amber", "green", "rose", "blue"] as const;
-type Accent = typeof ACCENTS[number];
-const accentClasses: Record<Accent, { icon: string; badge: string; play: string; hover: string }> = {
-  cyan:   { icon: "bg-cyan-500/15 text-cyan-400 border-cyan-500/20",   badge: "bg-cyan-500/10 text-cyan-300",   play: "text-cyan-400",   hover: "hover:border-cyan-500/30" },
-  violet: { icon: "bg-violet-500/15 text-violet-400 border-violet-500/20", badge: "bg-violet-500/10 text-violet-300", play: "text-violet-400", hover: "hover:border-violet-500/30" },
-  amber:  { icon: "bg-amber-500/15 text-amber-400 border-amber-500/20",  badge: "bg-amber-500/10 text-amber-300",  play: "text-amber-400",  hover: "hover:border-amber-500/30" },
-  green:  { icon: "bg-green-500/15 text-green-400 border-green-500/20",  badge: "bg-green-500/10 text-green-300",  play: "text-green-400",  hover: "hover:border-green-500/30" },
-  rose:   { icon: "bg-rose-500/15 text-rose-400 border-rose-500/20",    badge: "bg-rose-500/10 text-rose-300",    play: "text-rose-400",   hover: "hover:border-rose-500/30" },
-  blue:   { icon: "bg-blue-500/15 text-blue-400 border-blue-500/20",    badge: "bg-blue-500/10 text-blue-300",    play: "text-blue-400",   hover: "hover:border-blue-500/30" },
-};
-
-const stats = [
-  { value: "15+", label: "Playlists" },
-  { value: "50+", label: "Lectures" },
-  { value: "Free", label: "Full Access" },
-  { value: "Africa-wide", label: "Reach" },
-];
-
-/* ─── API fetchers ──────────────────────────────────────────────────────── */
 const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
 
+/* ─── API fetchers ──────────────────────────────────────────────────────── */
 async function fetchPlaylists(): Promise<YTPlaylist[]> {
   const res = await fetch(`${apiBase}/api/youtube/playlists`);
   if (!res.ok) throw new Error("Failed to load playlists");
@@ -66,79 +45,171 @@ async function fetchPlaylistItems(playlistId: string): Promise<YTPlaylistItem[]>
   return (data.items ?? []) as YTPlaylistItem[];
 }
 
-/* ─── Sub-component: expanded playlist videos ───────────────────────────── */
-function PlaylistVideos({ playlistId, accent }: { playlistId: string; accent: Accent }) {
-  const ac = accentClasses[accent];
+/* ─── Stat bar ──────────────────────────────────────────────────────────── */
+const stats = [
+  { value: "15+", label: "Playlists" },
+  { value: "50+", label: "Lectures" },
+  { value: "Free", label: "Full Access" },
+  { value: "Africa-wide", label: "Reach" },
+];
+
+/* ─── Player + Sidebar ───────────────────────────────────────────────────── */
+function PlaylistPlayer({ playlist }: { playlist: YTPlaylist }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const { data: videos, isLoading } = useQuery({
-    queryKey: ["youtube-playlist", playlistId],
-    queryFn: () => fetchPlaylistItems(playlistId),
+    queryKey: ["youtube-playlist", playlist.id],
+    queryFn: () => fetchPlaylistItems(playlist.id),
     staleTime: 5 * 60 * 1000,
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-2">
-        {[1, 2, 3].map((i) => <Skeleton key={i} className="h-14 rounded-xl bg-white/5" />)}
-      </div>
-    );
-  }
+  // Reset to first video when playlist changes
+  useEffect(() => { setActiveIndex(0); }, [playlist.id]);
 
-  if (!videos || videos.length === 0) {
-    return <p className="text-white/30 text-sm italic">No videos in this playlist yet.</p>;
-  }
+  const activeVideo = videos?.[activeIndex];
+  const activeVideoId = activeVideo?.snippet?.resourceId?.videoId;
 
   return (
-    <div className="space-y-2">
-      {videos.map((v, idx) => {
-        const videoId = v.snippet.resourceId?.videoId;
-        const thumb = v.snippet.thumbnails?.medium?.url ?? v.snippet.thumbnails?.default?.url;
-        return (
+    <div className="flex flex-col lg:flex-row gap-0 rounded-2xl overflow-hidden border border-white/10 bg-[#07101e]">
+      {/* Player */}
+      <div className="flex-1 min-w-0 flex flex-col">
+        {/* Embed */}
+        <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+          {isLoading || !activeVideoId ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+              <div className="w-14 h-14 rounded-full border-2 border-cyan-400/30 flex items-center justify-center">
+                <PlayCircle size={28} className="text-cyan-400/60" />
+              </div>
+            </div>
+          ) : (
+            <iframe
+              key={activeVideoId}
+              className="absolute inset-0 w-full h-full"
+              src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=0&rel=0&modestbranding=1`}
+              title={activeVideo?.snippet?.title ?? "Video"}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          )}
+        </div>
+
+        {/* Video meta */}
+        <div className="p-5 border-t border-white/8">
+          {isLoading ? (
+            <Skeleton className="h-5 w-2/3 bg-white/8 rounded-lg" />
+          ) : (
+            <>
+              <p className="text-white/40 text-[11px] font-semibold uppercase tracking-widest mb-1">
+                {playlist.snippet.title} · {activeIndex + 1} / {videos?.length ?? "…"}
+              </p>
+              <h3 className="text-white font-semibold text-base leading-snug">
+                {activeVideo?.snippet?.title ?? "Select a video"}
+              </h3>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Sidebar */}
+      <div className="w-full lg:w-72 xl:w-80 shrink-0 flex flex-col border-t lg:border-t-0 lg:border-l border-white/8">
+        {/* Sidebar header */}
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-white/8">
+          <List size={14} className="text-cyan-400" />
+          <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">
+            {videos?.length ?? "…"} Videos
+          </span>
+        </div>
+
+        {/* Video list */}
+        <div className="overflow-y-auto flex-1 max-h-[420px] lg:max-h-none">
+          {isLoading ? (
+            <div className="p-3 space-y-2">
+              {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-14 rounded-xl bg-white/5" />)}
+            </div>
+          ) : (
+            <div className="p-2 space-y-1">
+              {videos?.map((v, idx) => {
+                const videoId = v.snippet.resourceId?.videoId;
+                const thumb = v.snippet.thumbnails?.medium?.url ?? v.snippet.thumbnails?.default?.url;
+                const isActive = idx === activeIndex;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setActiveIndex(idx)}
+                    className={`w-full flex items-start gap-3 p-2.5 rounded-xl text-left transition-all duration-150 ${
+                      isActive
+                        ? "bg-cyan-500/15 border border-cyan-500/25"
+                        : "border border-transparent hover:bg-white/5"
+                    }`}
+                  >
+                    {/* Thumbnail */}
+                    <div className="relative shrink-0 w-[72px] h-[42px] rounded-lg overflow-hidden bg-white/5">
+                      {thumb ? (
+                        <img src={thumb} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <PlayCircle size={16} className="text-white/20" />
+                        </div>
+                      )}
+                      {isActive && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                          <div className="w-5 h-5 rounded-full bg-cyan-400 flex items-center justify-center">
+                            <PlayCircle size={10} className="text-[#07101e] fill-[#07101e]" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Title + index */}
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-xs font-mono mb-0.5 ${isActive ? "text-cyan-400" : "text-white/25"}`}>
+                        {String(idx + 1).padStart(2, "0")}
+                      </p>
+                      <p className={`text-xs leading-snug line-clamp-2 ${isActive ? "text-white" : "text-white/55"}`}>
+                        {v.snippet.title}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Open on YouTube */}
+        <div className="px-4 py-3 border-t border-white/8">
           <a
-            key={v.id}
-            href={videoId ? `https://www.youtube.com/watch?v=${videoId}` : "#"}
+            href={`https://www.youtube.com/playlist?list=${playlist.id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/6 group transition-all duration-200 hover:bg-white/9 ${ac.hover}`}
+            className="flex items-center gap-1.5 text-xs text-cyan-400/70 hover:text-cyan-400 transition-colors font-medium"
           >
-            {/* Thumbnail */}
-            {thumb ? (
-              <div className="w-14 h-10 rounded-lg overflow-hidden shrink-0 relative">
-                <img src={thumb} alt={v.snippet.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <PlayCircle size={16} className="text-white" />
-                </div>
-              </div>
-            ) : (
-              <div className={`w-14 h-10 rounded-lg shrink-0 flex items-center justify-center border ${ac.icon}`}>
-                <PlayCircle size={14} />
-              </div>
-            )}
-            {/* Index + title */}
-            <div className="flex-1 min-w-0">
-              <p className="text-white/70 text-sm group-hover:text-white transition-colors leading-snug line-clamp-2">
-                {v.snippet.title}
-              </p>
-            </div>
-            <span className={`shrink-0 text-[10px] font-mono ${ac.play} opacity-0 group-hover:opacity-100 transition-opacity`}>
-              {String(idx + 1).padStart(2, "0")}
-            </span>
-            <ExternalLink size={12} className="shrink-0 text-white/20 group-hover:text-white/50 transition-colors" />
+            <Youtube size={12} /> Open on YouTube <ArrowRight size={10} />
           </a>
-        );
-      })}
+        </div>
+      </div>
     </div>
   );
 }
 
 /* ─── Main Page ─────────────────────────────────────────────────────────── */
 export default function ELearning() {
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [activePlaylistId, setActivePlaylistId] = useState<string | null>(null);
 
   const { data: playlists, isLoading, isError } = useQuery({
     queryKey: ["youtube-playlists"],
     queryFn: fetchPlaylists,
     staleTime: 5 * 60 * 1000,
   });
+
+  // Auto-select first playlist
+  useEffect(() => {
+    if (playlists && playlists.length > 0 && !activePlaylistId) {
+      setActivePlaylistId(playlists[0].id);
+    }
+  }, [playlists, activePlaylistId]);
+
+  const activePlaylist = playlists?.find((p) => p.id === activePlaylistId) ?? null;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -241,23 +312,27 @@ export default function ELearning() {
         </div>
       </section>
 
-      {/* ═══════════ PLAYLISTS / COURSES ═══════════ */}
-      <section id="courses" className="relative py-20 overflow-hidden scroll-mt-16">
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15" style={{ backgroundImage: "url('/hero-bg.png')" }} />
+      {/* ═══════════ VIDEO PLAYER + PLAYLIST SWITCHER ═══════════ */}
+      <section id="courses" className="relative py-20 scroll-mt-16 overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center opacity-15" style={{ backgroundImage: "url('/hero-bg.png')" }} />
         <div className="absolute inset-0 bg-[#07101e]/92" />
-        <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
-          <div className="text-center mb-14">
+
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="text-center mb-12">
             <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-3">Curriculum</p>
             <h2 className="font-serif text-white text-3xl sm:text-4xl">Course Playlists</h2>
             <p className="text-white/40 text-sm mt-3 max-w-xl mx-auto">
-              All content is hosted on YouTube and updated automatically. Click a playlist to browse its lectures.
+              All content is hosted on YouTube and updated automatically.
             </p>
           </div>
 
           {/* Loading */}
           {isLoading && (
             <div className="space-y-4">
-              {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-20 rounded-2xl bg-white/5" />)}
+              <Skeleton className="h-[420px] rounded-2xl bg-white/5" />
+              <div className="flex gap-2 flex-wrap">
+                {[1,2,3,4].map(i => <Skeleton key={i} className="h-9 w-40 rounded-xl bg-white/5" />)}
+              </div>
             </div>
           )}
 
@@ -276,121 +351,36 @@ export default function ELearning() {
             </div>
           )}
 
-          {/* Playlist accordion */}
-          {playlists && playlists.length > 0 && (
-            <div className="space-y-3">
-              {playlists.map((pl, idx) => {
-                const accent = ACCENTS[idx % ACCENTS.length];
-                const ac = accentClasses[accent];
-                const isOpen = openId === pl.id;
-                const thumb = pl.snippet.thumbnails?.medium?.url ?? pl.snippet.thumbnails?.default?.url;
-
-                return (
-                  <div
-                    key={pl.id}
-                    className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
-                      isOpen ? "border-white/14 bg-white/7" : "border-white/8 bg-white/4 hover:bg-white/6"
-                    }`}
-                  >
-                    {/* Header */}
+          {playlists && activePlaylist && (
+            <>
+              {/* Playlist tab bar */}
+              <div className="flex gap-2 flex-wrap mb-5">
+                {playlists.map((pl) => {
+                  const isActive = pl.id === activePlaylistId;
+                  return (
                     <button
-                      className="w-full flex items-center gap-4 p-5 text-left"
-                      onClick={() => setOpenId(isOpen ? null : pl.id)}
+                      key={pl.id}
+                      onClick={() => setActivePlaylistId(pl.id)}
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-150 border ${
+                        isActive
+                          ? "bg-cyan-500/15 border-cyan-500/30 text-cyan-300"
+                          : "border-white/8 text-white/45 hover:text-white/70 hover:border-white/15 bg-white/3"
+                      }`}
                     >
-                      {/* Number */}
-                      <div className="shrink-0 w-8 h-8 rounded-full border border-white/12 flex items-center justify-center">
-                        <span className="text-white/30 text-xs font-bold font-mono">
-                          {String(idx + 1).padStart(2, "0")}
-                        </span>
-                      </div>
-
-                      {/* Thumbnail (if available) or icon */}
-                      {thumb ? (
-                        <div className="shrink-0 w-14 h-10 rounded-lg overflow-hidden">
-                          <img src={thumb} alt={pl.snippet.title} className="w-full h-full object-cover" />
-                        </div>
-                      ) : (
-                        <div className={`shrink-0 w-10 h-10 rounded-xl border flex items-center justify-center ${ac.icon}`}>
-                          <PlayCircle size={17} />
-                        </div>
-                      )}
-
-                      {/* Title */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-white font-semibold text-sm sm:text-base leading-snug line-clamp-2">
-                          {pl.snippet.title}
-                        </h3>
-                      </div>
-
-                      {/* Video count */}
-                      <span className={`hidden sm:flex shrink-0 items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full ${ac.badge}`}>
-                        <Clock size={10} />{pl.contentDetails.itemCount} video{pl.contentDetails.itemCount !== 1 ? "s" : ""}
+                      <ChevronRight size={11} className={isActive ? "text-cyan-400" : "text-white/20"} />
+                      <span className="line-clamp-1 max-w-[180px] text-left">{pl.snippet.title}</span>
+                      <span className={`shrink-0 px-1.5 py-0.5 rounded-md text-[10px] ${isActive ? "bg-cyan-500/20 text-cyan-300" : "bg-white/6 text-white/30"}`}>
+                        {pl.contentDetails.itemCount}
                       </span>
-
-                      {/* Chevron */}
-                      <ChevronDown
-                        size={17}
-                        className={`shrink-0 transition-transform duration-300 ${ac.play} ${isOpen ? "rotate-180" : ""}`}
-                      />
                     </button>
-
-                    {/* Videos */}
-                    {isOpen && (
-                      <div className="px-5 pb-5 pl-[5.5rem]">
-                        {pl.snippet.description && (
-                          <p className="text-white/40 text-xs leading-relaxed mb-4 line-clamp-3">{pl.snippet.description}</p>
-                        )}
-                        <PlaylistVideos playlistId={pl.id} accent={accent} />
-                        <a
-                          href={`https://www.youtube.com/playlist?list=${pl.id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`inline-flex items-center gap-1.5 mt-4 text-xs font-semibold transition-colors ${ac.play} hover:opacity-80`}
-                        >
-                          <Youtube size={12} /> Open full playlist on YouTube <ExternalLink size={10} />
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ═══════════ CTA ═══════════ */}
-      <section className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-10 py-20">
-        <div className="bg-gradient-to-br from-cyan-500/10 via-cyan-600/5 to-transparent border border-cyan-500/15 rounded-3xl p-10 md:p-14">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 flex items-center justify-center mb-5">
-                <GraduationCap className="w-6 h-6 text-cyan-400" />
+                  );
+                })}
               </div>
-              <h2 className="font-serif text-foreground text-2xl sm:text-3xl mb-3 leading-snug">
-                Want to contribute a lecture or seminar?
-              </h2>
-              <p className="text-muted-foreground leading-relaxed text-sm">
-                We collaborate with researchers, institutions, and practitioners worldwide to expand our curriculum. If you have expertise to share, we would love to hear from you.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3">
-              <a
-                href={CHANNEL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-cyan-400 text-[#07101e] font-semibold text-sm hover:bg-cyan-300 transition-colors"
-              >
-                <Youtube size={15} /> Visit YouTube Channel
-              </a>
-              <a
-                href="mailto:elearning@icammda.org?subject=eLearning Collaboration"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-border text-foreground text-sm font-medium hover:bg-muted/50 transition-colors"
-              >
-                Propose a Course <ArrowRight size={14} />
-              </a>
-            </div>
-          </div>
+
+              {/* Player */}
+              <PlaylistPlayer key={activePlaylistId} playlist={activePlaylist} />
+            </>
+          )}
         </div>
       </section>
 
