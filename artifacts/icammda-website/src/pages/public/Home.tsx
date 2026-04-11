@@ -69,10 +69,10 @@ export default function Home() {
               </div>
 
               <h1 className="font-serif text-white text-5xl sm:text-6xl lg:text-[4.5rem] leading-[0.93] tracking-tight mb-8" data-testid="hero-title">
-                Where African<br />
-                <em className="not-italic text-gradient">Science</em><br />
-                Meets World‑Class<br />
-                Analytics.
+                {c("home.hero.line1", "Where African")}<br />
+                <em className="not-italic text-gradient">{c("home.hero.line2.em", "Science")}</em><br />
+                {c("home.hero.line3", "Meets World‑Class")}<br />
+                {c("home.hero.line4", "Analytics.")}
               </h1>
 
               <p className="text-white/45 text-base sm:text-lg max-w-lg leading-relaxed mb-10">

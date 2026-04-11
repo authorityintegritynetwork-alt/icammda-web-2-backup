@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useGetSiteContent, useUpdateSiteContent } from "@workspace/api-client-react";
+import { useGetSiteContent, useUpdateSiteContent, getGetSiteContentQueryKey } from "@workspace/api-client-react";
 import AdminLayout from "@/components/AdminLayout";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { Save, Loader2, CheckCircle2, FileText } from "lucide-react";
 
 const PAGE_TABS = [
@@ -34,11 +35,13 @@ function ContentField({
   const [value, setValue] = useState(item.value);
   const [saved, setSaved] = useState(false);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { mutate, isPending } = useUpdateSiteContent({
     mutation: {
       onSuccess: () => {
         setSaved(true);
+        queryClient.invalidateQueries({ queryKey: getGetSiteContentQueryKey({}) });
         onSaved();
         setTimeout(() => setSaved(false), 2500);
       },

@@ -9,7 +9,7 @@ import { useGetSiteContent } from "@workspace/api-client-react";
 export function useSiteContent() {
   const { data = [] } = useGetSiteContent(
     {},
-    { query: { staleTime: 60_000 } },
+    { query: { staleTime: 5_000 } },
   );
 
   return useCallback(

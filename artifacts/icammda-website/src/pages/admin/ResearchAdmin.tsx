@@ -99,7 +99,7 @@ export default function ResearchAdmin() {
     if (editingGroup !== null) {
       await updateGroup.mutateAsync({ id: editingGroup, data: payload });
     } else {
-      await createGroup.mutateAsync(payload);
+      await createGroup.mutateAsync({ data: payload });
     }
     invalidate();
     setGroupDialog(false);
@@ -148,7 +148,7 @@ export default function ResearchAdmin() {
     if (editingMember !== null) {
       await updateMember.mutateAsync({ id: editingMember, data: payload });
     } else {
-      await createMember.mutateAsync(payload);
+      await createMember.mutateAsync({ data: payload });
     }
     invalidate();
     setMemberDialog(false);

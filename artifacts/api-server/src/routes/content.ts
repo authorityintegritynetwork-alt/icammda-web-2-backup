@@ -17,9 +17,12 @@ const DEFAULTS: {
   sortOrder: number;
 }[] = [
   // ── HOME ──
-  { key: "home.hero.eyebrow", label: "Hero Eyebrow Tag", page: "home", value: "WAMCAD Member · West Africa", type: "text", sortOrder: 1 },
-  { key: "home.hero.title", label: "Hero Main Title", page: "home", value: "Where African Science Meets World-Class Analytics.", type: "textarea", sortOrder: 2 },
-  { key: "home.hero.subtitle", label: "Hero Subtitle", page: "home", value: "International Centre for Applied Mathematical Modelling and Data Analytics — Federal University Oye-Ekiti, Nigeria. Building Africa's next generation of modelling scientists.", type: "textarea", sortOrder: 3 },
+  { key: "home.hero.eyebrow",  label: "Hero Eyebrow Tag",              page: "home", value: "WAMCAD Member · West Africa",  type: "text",     sortOrder: 1 },
+  { key: "home.hero.line1",    label: "Hero Title: Line 1",            page: "home", value: "Where African",               type: "text",     sortOrder: 2 },
+  { key: "home.hero.line2.em", label: "Hero Title: Gradient Word",     page: "home", value: "Science",                    type: "text",     sortOrder: 3 },
+  { key: "home.hero.line3",    label: "Hero Title: Line 3",            page: "home", value: "Meets World\u2011Class",      type: "text",     sortOrder: 4 },
+  { key: "home.hero.line4",    label: "Hero Title: Line 4 (closing)",  page: "home", value: "Analytics.",                 type: "text",     sortOrder: 5 },
+  { key: "home.hero.subtitle", label: "Hero Subtitle",                 page: "home", value: "International Centre for Applied Mathematical Modelling and Data Analytics — Federal University Oye-Ekiti, Nigeria. Building Africa's next generation of modelling scientists.", type: "textarea", sortOrder: 6 },
   { key: "home.stats.researchers", label: "Stat: Researchers Count", page: "home", value: "10+", type: "text", sortOrder: 4 },
   { key: "home.stats.partners", label: "Stat: Partner Institutions Count", page: "home", value: "5+", type: "text", sortOrder: 5 },
   { key: "home.stats.countries", label: "Stat: Countries Count", page: "home", value: "3+", type: "text", sortOrder: 6 },
