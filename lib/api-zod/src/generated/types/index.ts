@@ -7,13 +7,16 @@
  */
 
 export * from "./createEventBody";
+export * from "./createLinkedInPostBody";
 export * from "./createPartnerBody";
 export * from "./createPostBody";
 export * from "./createResearchGroupBody";
 export * from "./createResearchMemberBody";
 export * from "./createTeamMemberBody";
+export * from "./deleteLinkedinPostParams";
 export * from "./event";
 export * from "./healthStatus";
+export * from "./linkedInPost";
 export * from "./listEventsParams";
 export * from "./listPostsParams";
 export * from "./listResearchMembersParams";

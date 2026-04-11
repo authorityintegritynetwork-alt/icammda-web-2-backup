@@ -316,6 +316,27 @@ export interface SiteStats {
   recentPosts: number;
 }
 
+export interface LinkedInPost {
+  id: number;
+  postUrl: string;
+  embedUrl: string;
+  /** @nullable */
+  label?: string | null;
+  order: number;
+  createdAt: string;
+}
+
+export interface CreateLinkedInPostBody {
+  postUrl: string;
+  /** @nullable */
+  label?: string | null;
+  order?: number;
+}
+
+export interface DeleteLinkedinPostParams {
+  id: number;
+}
+
 export type ListPostsParams = {
   category?: string;
   published?: boolean;

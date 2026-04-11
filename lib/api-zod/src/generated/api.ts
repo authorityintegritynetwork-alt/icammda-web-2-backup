@@ -606,3 +606,34 @@ export const RequestUploadUrlResponse = zod.object({
 export const GetStorageObjectParams = zod.object({
   objectPath: zod.coerce.string(),
 });
+
+/**
+ * @summary List all LinkedIn post embeds
+ */
+export const ListLinkedinPostsResponseItem = zod.object({
+  id: zod.number(),
+  postUrl: zod.string(),
+  embedUrl: zod.string(),
+  label: zod.string().nullish(),
+  order: zod.number(),
+  createdAt: zod.coerce.date(),
+});
+export const ListLinkedinPostsResponse = zod.array(
+  ListLinkedinPostsResponseItem,
+);
+
+/**
+ * @summary Add a LinkedIn post embed
+ */
+export const CreateLinkedinPostBody = zod.object({
+  postUrl: zod.string(),
+  label: zod.string().nullish(),
+  order: zod.number().optional(),
+});
+
+/**
+ * @summary Delete a LinkedIn post embed
+ */
+export const DeleteLinkedinPostParams = zod.object({
+  id: zod.coerce.number(),
+});

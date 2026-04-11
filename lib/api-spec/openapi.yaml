@@ -24,6 +24,8 @@ tags:
     description: Website statistics
   - name: Storage
     description: Object storage upload and serving endpoints.
+  - name: linkedin
+    description: LinkedIn post embeds
 paths:
   /healthz:
     get:
@@ -658,6 +660,59 @@ paths:
         '500':
           description: Failed to serve object.
 
+  /linkedin-posts:
+    get:
+      operationId: listLinkedinPosts
+      tags: [linkedin]
+      summary: List all LinkedIn post embeds
+      responses:
+        "200":
+          description: List of LinkedIn post embeds
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LinkedInPost"
+    post:
+      operationId: createLinkedinPost
+      tags: [linkedin]
+      summary: Add a LinkedIn post embed
+      security:
+        - clerkAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLinkedInPostBody"
+      responses:
+        "201":
+          description: LinkedIn post embed created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LinkedInPost"
+
+  /linkedin-posts/{id}:
+    delete:
+      operationId: deleteLinkedinPost
+      tags: [linkedin]
+      summary: Delete a LinkedIn post embed
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+
 components:
   securitySchemes:
     clerkAuth:
@@ -1214,3 +1269,46 @@ components:
         - totalPartners
         - upcomingEvents
         - recentPosts
+
+    LinkedInPost:
+      type: object
+      properties:
+        id:
+          type: integer
+        postUrl:
+          type: string
+        embedUrl:
+          type: string
+        label:
+          type: ["string", "null"]
+        order:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - postUrl
+        - embedUrl
+        - order
+        - createdAt
+
+    CreateLinkedInPostBody:
+      type: object
+      properties:
+        postUrl:
+          type: string
+        label:
+          type: ["string", "null"]
+        order:
+          type: integer
+      required:
+        - postUrl
+
+    DeleteLinkedinPostParams:
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+        - id

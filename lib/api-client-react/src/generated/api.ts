@@ -18,6 +18,7 @@ import type {
 
 import type {
   CreateEventBody,
+  CreateLinkedInPostBody,
   CreatePartnerBody,
   CreatePostBody,
   CreateResearchGroupBody,
@@ -25,6 +26,7 @@ import type {
   CreateTeamMemberBody,
   Event,
   HealthStatus,
+  LinkedInPost,
   ListEventsParams,
   ListPostsParams,
   ListResearchMembersParams,
@@ -2748,3 +2750,248 @@ export function useGetStorageObject<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary List all LinkedIn post embeds
+ */
+export const getListLinkedinPostsUrl = () => {
+  return `/api/linkedin-posts`;
+};
+
+export const listLinkedinPosts = async (
+  options?: RequestInit,
+): Promise<LinkedInPost[]> => {
+  return customFetch<LinkedInPost[]>(getListLinkedinPostsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListLinkedinPostsQueryKey = () => {
+  return [`/api/linkedin-posts`] as const;
+};
+
+export const getListLinkedinPostsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listLinkedinPosts>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listLinkedinPosts>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListLinkedinPostsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listLinkedinPosts>>
+  > = ({ signal }) => listLinkedinPosts({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listLinkedinPosts>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListLinkedinPostsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listLinkedinPosts>>
+>;
+export type ListLinkedinPostsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all LinkedIn post embeds
+ */
+
+export function useListLinkedinPosts<
+  TData = Awaited<ReturnType<typeof listLinkedinPosts>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listLinkedinPosts>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListLinkedinPostsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Add a LinkedIn post embed
+ */
+export const getCreateLinkedinPostUrl = () => {
+  return `/api/linkedin-posts`;
+};
+
+export const createLinkedinPost = async (
+  createLinkedInPostBody: CreateLinkedInPostBody,
+  options?: RequestInit,
+): Promise<LinkedInPost> => {
+  return customFetch<LinkedInPost>(getCreateLinkedinPostUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createLinkedInPostBody),
+  });
+};
+
+export const getCreateLinkedinPostMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createLinkedinPost>>,
+    TError,
+    { data: BodyType<CreateLinkedInPostBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createLinkedinPost>>,
+  TError,
+  { data: BodyType<CreateLinkedInPostBody> },
+  TContext
+> => {
+  const mutationKey = ["createLinkedinPost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createLinkedinPost>>,
+    { data: BodyType<CreateLinkedInPostBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createLinkedinPost(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateLinkedinPostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createLinkedinPost>>
+>;
+export type CreateLinkedinPostMutationBody = BodyType<CreateLinkedInPostBody>;
+export type CreateLinkedinPostMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Add a LinkedIn post embed
+ */
+export const useCreateLinkedinPost = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createLinkedinPost>>,
+    TError,
+    { data: BodyType<CreateLinkedInPostBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createLinkedinPost>>,
+  TError,
+  { data: BodyType<CreateLinkedInPostBody> },
+  TContext
+> => {
+  return useMutation(getCreateLinkedinPostMutationOptions(options));
+};
+
+/**
+ * @summary Delete a LinkedIn post embed
+ */
+export const getDeleteLinkedinPostUrl = (id: number) => {
+  return `/api/linkedin-posts/${id}`;
+};
+
+export const deleteLinkedinPost = async (
+  id: number,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeleteLinkedinPostUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteLinkedinPostMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteLinkedinPost>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteLinkedinPost>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["deleteLinkedinPost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteLinkedinPost>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteLinkedinPost(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteLinkedinPostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteLinkedinPost>>
+>;
+
+export type DeleteLinkedinPostMutationError = ErrorType<void>;
+
+/**
+ * @summary Delete a LinkedIn post embed
+ */
+export const useDeleteLinkedinPost = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteLinkedinPost>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteLinkedinPost>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getDeleteLinkedinPostMutationOptions(options));
+};

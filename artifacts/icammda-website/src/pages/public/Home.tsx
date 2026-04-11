@@ -1,7 +1,7 @@
 import { Link } from "wouter";
-import { ArrowUpRight, BookOpen, Users, BarChart3, Cpu, Calendar, ChevronRight, Microscope, Globe, Database, FlaskConical, ChevronDown, ExternalLink, Building2, GraduationCap, Mail } from "lucide-react";
+import { ArrowUpRight, BookOpen, Users, BarChart3, Cpu, Calendar, ChevronRight, Microscope, Globe, Database, FlaskConical, ChevronDown, ExternalLink, Building2, GraduationCap, Mail, Linkedin } from "lucide-react";
 import { format } from "date-fns";
-import { useGetRecentPosts, useGetUpcomingEvents, useListPartners } from "@workspace/api-client-react";
+import { useGetRecentPosts, useGetUpcomingEvents, useListPartners, useListLinkedinPosts } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
@@ -37,6 +37,7 @@ export default function Home() {
   const { data: recentPosts, isLoading: postsLoading } = useGetRecentPosts();
   const { data: upcomingEvents, isLoading: eventsLoading } = useGetUpcomingEvents();
   const { data: partners } = useListPartners();
+  const { data: linkedinPosts } = useListLinkedinPosts();
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -373,6 +374,59 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════ LINKEDIN FEED ═══════════ */}
+      {linkedinPosts && linkedinPosts.length > 0 && (
+        <section className="border-t border-border/60 bg-gradient-to-b from-[#07101e]/3 to-transparent" data-testid="linkedin-section">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-16">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
+              <div>
+                <p className="text-cyan-600 text-[10px] font-bold tracking-widest uppercase mb-2">Social Media</p>
+                <h2 className="font-serif text-foreground text-2xl flex items-center gap-2.5">
+                  <Linkedin size={22} className="text-[#0A66C2]" />
+                  Latest from LinkedIn
+                </h2>
+              </div>
+              <a
+                href="https://www.linkedin.com/company/icammda"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border text-sm font-medium text-muted-foreground hover:text-[#0A66C2] hover:border-[#0A66C2]/30 hover:bg-[#0A66C2]/5 transition-all duration-200 shrink-0"
+              >
+                <Linkedin size={13} /> Follow us <ArrowUpRight size={12} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
+            </div>
+
+            <div className={`grid gap-6 ${linkedinPosts.length === 1 ? "grid-cols-1 max-w-lg mx-auto" : linkedinPosts.length === 2 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
+              {linkedinPosts.slice(0, 3).map((post) => (
+                <div key={post.id} className="flex flex-col gap-2">
+                  {post.label && (
+                    <p className="text-[10px] font-bold tracking-widest uppercase text-cyan-600">{post.label}</p>
+                  )}
+                  <div className="rounded-2xl overflow-hidden border border-border/60 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <iframe
+                      src={post.embedUrl}
+                      title={post.label ?? "LinkedIn Post"}
+                      className="w-full"
+                      style={{ height: "500px", border: "none" }}
+                      allowFullScreen
+                      loading="lazy"
+                    />
+                  </div>
+                  <a
+                    href={post.postUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-cyan-700 transition-colors self-start"
+                  >
+                    View on LinkedIn <ExternalLink size={10} />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ═══════════ PARTNERS ═══════════ */}
       <section className="border-t border-border/60" data-testid="partners-section">
