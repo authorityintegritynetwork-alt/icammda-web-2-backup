@@ -3,45 +3,7 @@ import PublicFooter from "@/components/PublicFooter";
 import { FlaskConical, Microscope, Bug, Droplets, Brain, Heart, Users } from "lucide-react";
 import { useListResearchGroups, useListResearchMembers } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const researchAreas = [
-  {
-    icon: Bug,
-    title: "Malaria Modelling & Forecasting",
-    description:
-      "Supporting targeted interventions and early warning systems across endemic regions through advanced compartmental and agent-based models.",
-  },
-  {
-    icon: FlaskConical,
-    title: "Vaccine Preventable Diseases (VPD)",
-    description:
-      "Harnessing data and modelling to strengthen vaccine strategies and eliminate preventable diseases through optimised immunisation programmes.",
-  },
-  {
-    icon: Microscope,
-    title: "Lassa Fever & Emerging Infections",
-    description:
-      "Developing models that help predict outbreaks and guide rapid response for Lassa fever and other emerging infectious threats in West Africa.",
-  },
-  {
-    icon: Droplets,
-    title: "Cholera Dynamics & Intervention",
-    description:
-      "Helping to predict outbreaks and optimise response strategies for cholera-prone regions, integrating environmental and epidemiological data.",
-  },
-  {
-    icon: Brain,
-    title: "Cerebrospinal Meningitis (CSM)",
-    description:
-      "Supporting surveillance, prevention, and emergency response plans for meningitis outbreaks across the meningitis belt of sub-Saharan Africa.",
-  },
-  {
-    icon: Heart,
-    title: "Neglected Tropical Diseases (NTDs)",
-    description:
-      "Creating models to guide elimination strategies for diseases that disproportionately affect underserved communities across the continent.",
-  },
-];
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 function getInitials(name: string) {
   return name
@@ -100,8 +62,18 @@ function GroupSkeleton() {
 }
 
 export default function Research() {
+  const c = useSiteContent();
   const { data: groups, isLoading: groupsLoading } = useListResearchGroups();
   const { data: visitingMembers, isLoading: visitorsLoading } = useListResearchMembers({ visiting: true } as Parameters<typeof useListResearchMembers>[0]);
+
+  const researchAreas = [
+    { icon: Bug,      title: c("research.areas.01.title", "Malaria Modelling & Forecasting"),        description: c("research.areas.01.desc", "Supporting targeted interventions and early warning systems across endemic regions through advanced compartmental and agent-based models.") },
+    { icon: FlaskConical, title: c("research.areas.02.title", "Vaccine Preventable Diseases (VPD)"), description: c("research.areas.02.desc", "Harnessing data and modelling to strengthen vaccine strategies and eliminate preventable diseases through optimised immunisation programmes.") },
+    { icon: Microscope, title: c("research.areas.03.title", "Lassa Fever & Emerging Infections"),   description: c("research.areas.03.desc", "Developing models that help predict outbreaks and guide rapid response for Lassa fever and other emerging infectious threats in West Africa.") },
+    { icon: Droplets, title: c("research.areas.04.title", "Cholera Dynamics & Intervention"),        description: c("research.areas.04.desc", "Helping to predict outbreaks and optimise response strategies for cholera-prone regions, integrating environmental and epidemiological data.") },
+    { icon: Brain,    title: c("research.areas.05.title", "Cerebrospinal Meningitis (CSM)"),          description: c("research.areas.05.desc", "Supporting surveillance, prevention, and emergency response plans for meningitis outbreaks across the meningitis belt of sub-Saharan Africa.") },
+    { icon: Heart,    title: c("research.areas.06.title", "Neglected Tropical Diseases (NTDs)"),      description: c("research.areas.06.desc", "Creating models to guide elimination strategies for diseases that disproportionately affect underserved communities across the continent.") },
+  ];
 
   const visitors = (visitingMembers ?? []).filter((m) => m.groupId == null || m.isVisiting);
 
@@ -120,7 +92,7 @@ export default function Research() {
             Research &amp;<br /><em className="text-gradient">Projects</em>
           </h1>
           <p className="text-white/45 text-lg max-w-2xl leading-relaxed">
-            Shaping public health with data, models, and insight.
+            {c("research.hero.subtitle", "Rigorous science. Real-world impact. Tackling Africa's most pressing public health challenges through data-driven models.")}
           </p>
         </div>
       </section>

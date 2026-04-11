@@ -4,33 +4,7 @@ import { useListTeamMembers } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
-
-const units = [
-  {
-    icon: FlaskConical,
-    number: "01",
-    title: "Research & Modelling Unit",
-    desc: "Developing mathematical models, epidemiological analyses, and policy-relevant research. Our work spans malaria, schistosomiasis, Lassa fever, and vaccine-preventable diseases.",
-  },
-  {
-    icon: GraduationCap,
-    number: "02",
-    title: "Capacity Building & Training",
-    desc: "Workshops, short courses, and mentorship programmes equipping African researchers with cutting-edge analytical and modelling skills.",
-  },
-  {
-    icon: Globe,
-    number: "03",
-    title: "International Partnerships",
-    desc: "Through WAMCAD and beyond, active collaborations with universities, research centres, and public health agencies across West Africa, Europe, and North America.",
-  },
-  {
-    icon: Users,
-    number: "04",
-    title: "Community & Mentorship",
-    desc: "Journal clubs to book reading circles — our community-oriented approach ensures researchers grow together and support each other's professional development.",
-  },
-];
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const wamcadPartners = [
   "University of Thies, Senegal",
@@ -41,8 +15,16 @@ const wamcadPartners = [
 ];
 
 export default function About() {
+  const c = useSiteContent();
   const { data: team, isLoading } = useListTeamMembers();
   const director = team?.find((m) => m.role === "director");
+
+  const units = [
+    { icon: FlaskConical, number: "01", title: c("about.units.01.title", "Research & Modelling Unit"), desc: c("about.units.01.desc", "Developing mathematical models, epidemiological analyses, and policy-relevant research. Our work spans malaria, schistosomiasis, Lassa fever, and vaccine-preventable diseases.") },
+    { icon: GraduationCap, number: "02", title: c("about.units.02.title", "Capacity Building & Training"), desc: c("about.units.02.desc", "Workshops, short courses, and mentorship programmes equipping African researchers with cutting-edge analytical and modelling skills.") },
+    { icon: Globe, number: "03", title: c("about.units.03.title", "International Partnerships"), desc: c("about.units.03.desc", "Through WAMCAD and beyond, active collaborations with universities, research centres, and public health agencies across West Africa, Europe, and North America.") },
+    { icon: Users, number: "04", title: c("about.units.04.title", "Community & Mentorship"), desc: c("about.units.04.desc", "Journal clubs to book reading circles — our community-oriented approach ensures researchers grow together and support each other's professional development.") },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -59,7 +41,7 @@ export default function About() {
             About<br /><em className="text-gradient">ICAMMDA</em>
           </h1>
           <p className="text-white/45 text-lg max-w-2xl leading-relaxed">
-            Empowering Africa's health future through rigorous analytics, bold innovation, and sustainable capacity building.
+            {c("about.hero.subtitle", "Empowering Africa's health future through rigorous analytics, bold innovation, and sustainable capacity building.")}
           </p>
         </div>
       </section>
@@ -82,10 +64,10 @@ export default function About() {
           <div className="md:col-span-2">
             <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-4">Our Context</p>
             <p className="text-foreground text-lg leading-relaxed mb-4">
-              ICAMMDA is a member of the <strong>West Africa Mathematical Modelling Capacity Development (WAMCAD)</strong> — an Anglophone–Francophone–Lusophone scientific partnership with a bold vision: train a critical mass of modelling scientists retained within West Africa.
+              {c("about.overview.body1", "ICAMMDA is a member of the West Africa Mathematical Modelling Capacity Development (WAMCAD) — an Anglophone–Francophone–Lusophone scientific partnership with a bold vision: train a critical mass of modelling scientists retained within West Africa.")}
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              Situated in the ICT Centre of Federal University Oye-Ekiti, our state-of-the-art computing and simulation laboratory hosts seminars, workshops, and trainings on modelling, data analytics, and computational skills.
+              {c("about.overview.body2", "Situated in the ICT Centre of Federal University Oye-Ekiti, our state-of-the-art computing and simulation laboratory hosts seminars, workshops, and trainings on modelling, data analytics, and computational skills.")}
             </p>
           </div>
           <div className="bg-[#07101e] rounded-2xl p-6">
@@ -134,15 +116,9 @@ export default function About() {
               <div className="absolute -top-4 -left-4 text-8xl font-serif text-cyan-100 leading-none select-none pointer-events-none">"</div>
               <div className="relative space-y-4 text-muted-foreground leading-relaxed text-sm">
                 <p className="text-foreground font-medium">Dear Visitor,</p>
-                <p>
-                  Welcome to the International Centre for Applied Mathematical Modelling and Data Analytics (ICAMMDA). At ICAMMDA, we believe science and data should do more than sit in reports. They should guide decisions and save lives.
-                </p>
-                <p>
-                  Our team is committed to building tools that address real public health challenges, training Africa's next generation of scientific leaders, and working closely with partners across the continent and beyond.
-                </p>
-                <p>
-                  Our passion is driven by purpose — to create solutions rooted in Africa and relevant to the world. We are building something here that will last generations, and I invite you to be part of it.
-                </p>
+                <p>{c("about.director.letter.p1", "Welcome to the International Centre for Applied Mathematical Modelling and Data Analytics (ICAMMDA). At ICAMMDA, we believe science and data should do more than sit in reports. They should guide decisions and save lives.")}</p>
+                <p>{c("about.director.letter.p2", "Our team is committed to building tools that address real public health challenges, training Africa's next generation of scientific leaders, and working closely with partners across the continent and beyond.")}</p>
+                <p>{c("about.director.letter.p3", "Our passion is driven by purpose — to create solutions rooted in Africa and relevant to the world. We are building something here that will last generations, and I invite you to be part of it.")}</p>
                 <p className="font-medium text-foreground">
                   Warm regards,<br />
                   <strong>Prof Emmanuel Afolabi Bakare</strong><br />

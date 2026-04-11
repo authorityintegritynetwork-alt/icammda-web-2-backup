@@ -5,20 +5,7 @@ import { useGetRecentPosts, useGetUpcomingEvents, useListPartners, useListLinked
 import { Skeleton } from "@/components/ui/skeleton";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
-
-const activities = [
-  { icon: BookOpen,  label: "Book Reading",     desc: "Study key texts in modelling",        href: "/e-learning" },
-  { icon: Users,     label: "Journal Club",      desc: "Critique cutting-edge publications",  href: "/research" },
-  { icon: BarChart3, label: "Progress Reports",  desc: "Research milestone reviews",          href: "/news" },
-  { icon: Cpu,       label: "Software Hub",      desc: "R, Python, NetLogo & simulation",     href: "/e-learning" },
-];
-
-const statsData = [
-  { value: "10+", label: "Researchers", icon: Microscope },
-  { value: "5+", label: "Partner Institutions", icon: Globe },
-  { value: "3+", label: "Countries", icon: Database },
-  { value: "20+", label: "Events & Trainings", icon: Calendar },
-];
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const researchAreas = [
   "Malaria Modelling",
@@ -34,10 +21,25 @@ const researchAreas = [
 ];
 
 export default function Home() {
+  const c = useSiteContent();
   const { data: recentPosts, isLoading: postsLoading } = useGetRecentPosts();
   const { data: upcomingEvents, isLoading: eventsLoading } = useGetUpcomingEvents();
   const { data: partners } = useListPartners();
   const { data: linkedinPosts } = useListLinkedinPosts();
+
+  const statsData = [
+    { value: c("home.stats.researchers", "10+"), label: "Researchers", icon: Microscope },
+    { value: c("home.stats.partners", "5+"), label: "Partner Institutions", icon: Globe },
+    { value: c("home.stats.countries", "3+"), label: "Countries", icon: Database },
+    { value: c("home.stats.events", "20+"), label: "Events & Trainings", icon: Calendar },
+  ];
+
+  const activities = [
+    { icon: BookOpen,  label: c("home.activities.01.title", "Book Reading"),    desc: c("home.activities.01.desc", "Study key texts in modelling"),       href: "/e-learning" },
+    { icon: Users,     label: c("home.activities.02.title", "Journal Club"),     desc: c("home.activities.02.desc", "Critique cutting-edge publications"), href: "/research" },
+    { icon: BarChart3, label: c("home.activities.03.title", "Progress Reports"), desc: c("home.activities.03.desc", "Research milestone reviews"),         href: "/news" },
+    { icon: Cpu,       label: c("home.activities.04.title", "Software Hub"),     desc: c("home.activities.04.desc", "R, Python, NetLogo & simulation"),    href: "/e-learning" },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -63,7 +65,7 @@ export default function Home() {
               {/* Eyebrow */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-400/30 bg-gradient-to-r from-violet-500/10 to-cyan-500/5 mb-8">
                 <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-                <span className="text-violet-300/90 text-[10px] font-semibold tracking-widest uppercase">WAMCAD Member · West Africa</span>
+                <span className="text-violet-300/90 text-[10px] font-semibold tracking-widest uppercase">{c("home.hero.eyebrow", "WAMCAD Member · West Africa")}</span>
               </div>
 
               <h1 className="font-serif text-white text-5xl sm:text-6xl lg:text-[4.5rem] leading-[0.93] tracking-tight mb-8" data-testid="hero-title">
@@ -74,7 +76,7 @@ export default function Home() {
               </h1>
 
               <p className="text-white/45 text-base sm:text-lg max-w-lg leading-relaxed mb-10">
-                International Centre for Applied Mathematical Modelling and Data Analytics — Federal University Oye-Ekiti, Nigeria. Building Africa's next generation of modelling scientists.
+                {c("home.hero.subtitle", "International Centre for Applied Mathematical Modelling and Data Analytics — Federal University Oye-Ekiti, Nigeria. Building Africa's next generation of modelling scientists.")}
               </p>
 
               <div className="flex flex-wrap gap-3">
@@ -177,17 +179,15 @@ export default function Home() {
       <section id="mission" className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-24 md:py-28 scroll-mt-16" data-testid="mission-section">
         <div className="grid lg:grid-cols-2 gap-14 items-center">
           <div>
-            <p className="text-violet-600 text-xs font-bold tracking-widest uppercase mb-4">Our Mission</p>
+            <p className="text-violet-600 text-xs font-bold tracking-widest uppercase mb-4">{c("home.mission.eyebrow", "Our Mission")}</p>
             <h2 className="font-serif text-foreground text-4xl md:text-5xl leading-tight mb-6">
-              Training a Critical Mass<br />
-              of Modelling Scientists<br />
-              <em className="text-cyan-600">across West Africa.</em>
+              {c("home.mission.title", "Training a Critical Mass of Modelling Scientists across West Africa.")}
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Our long-term goal is to train researchers who are retained within the West African region — building the next generation of modellers who work closely with National Malaria Elimination Programs and other public health institutions.
+              {c("home.mission.body1", "Our long-term goal is to train researchers who are retained within the West African region — building the next generation of modellers who work closely with National Malaria Elimination Programs and other public health institutions.")}
             </p>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              We build scientists who are internationally competitive, grant-ready, and deeply networked with partners across Africa and the globe.
+              {c("home.mission.body2", "We build scientists who are internationally competitive, grant-ready, and deeply networked with partners across Africa and the globe.")}
             </p>
             {/* Inline stats strip */}
             <div className="grid grid-cols-4 gap-4 pt-8 border-t border-border/60 mb-8">
@@ -217,12 +217,12 @@ export default function Home() {
             </div>
             {/* Floating badge — bottom left */}
             <div className="absolute -bottom-5 -left-5 bg-white rounded-2xl shadow-xl border border-border px-5 py-3.5">
-              <p className="font-serif text-2xl font-bold text-foreground">10+</p>
+              <p className="font-serif text-2xl font-bold text-foreground">{c("home.stats.researchers", "10+")}</p>
               <p className="text-[10px] text-muted-foreground mt-0.5">Active Researchers</p>
             </div>
             {/* Floating badge — top right */}
             <div className="absolute -top-5 -right-5 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl shadow-xl px-5 py-3.5 text-white">
-              <p className="font-serif text-2xl font-bold">3+</p>
+              <p className="font-serif text-2xl font-bold">{c("home.stats.countries", "3+")}</p>
               <p className="text-[10px] text-white/80 mt-0.5">Countries</p>
             </div>
           </div>
@@ -243,13 +243,12 @@ export default function Home() {
 
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-28">
           <div className="max-w-lg">
-            <p className="text-violet-400/80 text-[10px] font-bold tracking-widest uppercase mb-5">Our Community</p>
+            <p className="text-violet-400/80 text-[10px] font-bold tracking-widest uppercase mb-5">{c("home.community.eyebrow", "Our Community")}</p>
             <h2 className="font-serif text-white text-4xl md:text-5xl leading-tight mb-6">
-              Growing a Continent's<br />
-              <em className="not-italic bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">Scientific Capital.</em>
+              {c("home.community.title", "Growing a Continent's Scientific Capital.")}
             </h2>
             <p className="text-white/50 text-sm leading-relaxed mb-10 max-w-sm">
-              From Federal University Oye-Ekiti to partner institutions across West Africa, our researchers are building the next generation of modelling scientists on the continent — trained, networked, and retained in Africa.
+              {c("home.community.body", "From Federal University Oye-Ekiti to partner institutions across West Africa, our researchers are building the next generation of modelling scientists on the continent — trained, networked, and retained in Africa.")}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/team">
@@ -294,10 +293,10 @@ export default function Home() {
 
             <div className="grid grid-cols-2 gap-3">
               {[
-                { icon: BookOpen,  n: "01", title: "Book Reading",    desc: "Collaborative study of key texts in mathematical modelling and epidemiology.",  accent: "cyan" },
-                { icon: Users,     n: "02", title: "Journal Club",     desc: "Weekly critique of cutting-edge publications across data science and global health.", accent: "violet" },
-                { icon: BarChart3, n: "03", title: "Progress Reports", desc: "Regular research updates and milestone reviews across all active projects.",     accent: "violet" },
-                { icon: Cpu,       n: "04", title: "Software Hub",     desc: "Hands-on mastery in R, Python, NetLogo, and simulation environments.",          accent: "cyan" },
+                { icon: BookOpen,  n: "01", title: c("home.activities.01.title", "Book Reading"),    desc: c("home.activities.01.desc", "Collaborative study of key texts in mathematical modelling and epidemiology."),  accent: "cyan" },
+                { icon: Users,     n: "02", title: c("home.activities.02.title", "Journal Club"),     desc: c("home.activities.02.desc", "Weekly critique of cutting-edge publications across data science and global health."), accent: "violet" },
+                { icon: BarChart3, n: "03", title: c("home.activities.03.title", "Progress Reports"), desc: c("home.activities.03.desc", "Regular research updates and milestone reviews across all active projects."),     accent: "violet" },
+                { icon: Cpu,       n: "04", title: c("home.activities.04.title", "Software Hub"),     desc: c("home.activities.04.desc", "Hands-on mastery in R, Python, NetLogo, and simulation environments."),          accent: "cyan" },
               ].map((act) => (
                 <div
                   key={act.title}

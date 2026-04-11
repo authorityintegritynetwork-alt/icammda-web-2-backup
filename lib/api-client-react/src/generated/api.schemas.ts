@@ -337,6 +337,21 @@ export interface DeleteLinkedinPostParams {
   id: number;
 }
 
+export interface SiteContent {
+  id: number;
+  key: string;
+  label: string;
+  value: string;
+  page: string;
+  type: string;
+  sortOrder: number;
+  updatedAt: string;
+}
+
+export interface UpdateSiteContentBody {
+  value: string;
+}
+
 export type ListPostsParams = {
   category?: string;
   published?: boolean;
@@ -349,4 +364,11 @@ export type ListEventsParams = {
 
 export type ListResearchMembersParams = {
   visiting?: boolean;
+};
+
+export type GetSiteContentParams = {
+  /**
+   * Filter by page key (e.g. home, about, contact)
+   */
+  page?: string;
 };

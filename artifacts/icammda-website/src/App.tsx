@@ -25,6 +25,7 @@ import TeamList from "@/pages/admin/TeamList";
 import PartnersList from "@/pages/admin/PartnersList";
 import ResearchAdmin from "@/pages/admin/ResearchAdmin";
 import LinkedInAdmin from "@/pages/admin/LinkedInAdmin";
+import ContentAdmin from "@/pages/admin/ContentAdmin";
 
 import NotFound from "@/pages/not-found";
 import { setBaseUrl, setAuthTokenGetter } from "@workspace/api-client-react";
@@ -111,6 +112,7 @@ function AdminRoutes() {
           <Route path="/admin/partners" component={PartnersList} />
           <Route path="/admin/research" component={ResearchAdmin} />
           <Route path="/admin/linkedin" component={LinkedInAdmin} />
+          <Route path="/admin/content" component={ContentAdmin} />
           <Route component={NotFound} />
         </Switch>
       </Show>

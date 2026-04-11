@@ -3,6 +3,7 @@ import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
+import { useSiteContent } from "@/hooks/useSiteContent";
 import {
   PlayCircle,
   BookOpen,
@@ -45,12 +46,12 @@ async function fetchPlaylistItems(playlistId: string): Promise<YTPlaylistItem[]>
   return (data.items ?? []) as YTPlaylistItem[];
 }
 
-/* ─── Stat bar ──────────────────────────────────────────────────────────── */
-const stats = [
-  { value: "15+", label: "Playlists" },
-  { value: "50+", label: "Lectures" },
-  { value: "Free", label: "Full Access" },
-  { value: "Africa-wide", label: "Reach" },
+/* ─── Stat bar (values are overridden by DB via useSiteContent in ELearning) */
+const DEFAULT_STATS = [
+  { key: "elearning.stats.playlists", label: "Playlists",   fallback: "15+" },
+  { key: "elearning.stats.lectures",  label: "Lectures",    fallback: "50+" },
+  { key: "elearning.stats.access",    label: "Full Access", fallback: "Free" },
+  { key: "elearning.stats.reach",     label: "Reach",       fallback: "Africa-wide" },
 ];
 
 /* ─── Player + Sidebar ───────────────────────────────────────────────────── */
@@ -194,6 +195,8 @@ function PlaylistPlayer({ playlist }: { playlist: YTPlaylist }) {
 
 /* ─── Main Page ─────────────────────────────────────────────────────────── */
 export default function ELearning() {
+  const c = useSiteContent();
+  const stats = DEFAULT_STATS.map((s) => ({ value: c(s.key, s.fallback), label: s.label }));
   const [activePlaylistId, setActivePlaylistId] = useState<string | null>(null);
 
   const { data: playlists, isLoading, isError } = useQuery({
@@ -226,7 +229,7 @@ export default function ELearning() {
             Learn from<br /><em className="text-gradient">the experts</em>
           </h1>
           <p className="text-white/45 text-lg max-w-2xl leading-relaxed mb-8">
-            Explore lectures, seminars, and tutorials from ICAMMDA. Learn from experts shaping the future of public health analytics and mathematical modelling.
+            {c("elearning.hero.subtitle", "Explore lectures, seminars, and tutorials from ICAMMDA. Learn from experts shaping the future of public health analytics and mathematical modelling.")}
           </p>
           <div className="flex flex-wrap gap-3">
             <a

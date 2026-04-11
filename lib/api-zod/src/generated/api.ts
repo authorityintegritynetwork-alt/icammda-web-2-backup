@@ -637,3 +637,47 @@ export const CreateLinkedinPostBody = zod.object({
 export const DeleteLinkedinPostParams = zod.object({
   id: zod.coerce.number(),
 });
+
+/**
+ * @summary Get all site content blocks
+ */
+export const GetSiteContentQueryParams = zod.object({
+  page: zod.coerce
+    .string()
+    .optional()
+    .describe("Filter by page key (e.g. home, about, contact)"),
+});
+
+export const GetSiteContentResponseItem = zod.object({
+  id: zod.number(),
+  key: zod.string(),
+  label: zod.string(),
+  value: zod.string(),
+  page: zod.string(),
+  type: zod.string(),
+  sortOrder: zod.number(),
+  updatedAt: zod.coerce.date(),
+});
+export const GetSiteContentResponse = zod.array(GetSiteContentResponseItem);
+
+/**
+ * @summary Update a site content block value
+ */
+export const UpdateSiteContentParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateSiteContentBody = zod.object({
+  value: zod.string(),
+});
+
+export const UpdateSiteContentResponse = zod.object({
+  id: zod.number(),
+  key: zod.string(),
+  label: zod.string(),
+  value: zod.string(),
+  page: zod.string(),
+  type: zod.string(),
+  sortOrder: zod.number(),
+  updatedAt: zod.coerce.date(),
+});

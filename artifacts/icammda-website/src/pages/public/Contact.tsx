@@ -2,31 +2,21 @@ import { useState } from "react";
 import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
-
-const contactDetails = [
-  {
-    icon: MapPin,
-    title: "Address",
-    lines: ["ICT Centre, Oye-Campus", "Federal University Oye-Ekiti", "Ekiti State, Nigeria"],
-  },
-  {
-    icon: Phone,
-    title: "Phone",
-    lines: ["+234 901 607 3157"],
-    href: "tel:+2349016073157",
-  },
-  {
-    icon: Mail,
-    title: "Email",
-    lines: ["info@icammda.org"],
-    href: "mailto:info@icammda.org",
-  },
-];
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export default function Contact() {
+  const c = useSiteContent();
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+
+  const phone = c("contact.phone", "+234 901 607 3157");
+  const email = c("contact.email", "info@icammda.org");
+  const contactDetails = [
+    { icon: MapPin, title: "Address", lines: [c("contact.address.line1", "ICT Centre, Oye-Campus"), c("contact.address.line2", "Federal University Oye-Ekiti"), c("contact.address.line3", "Ekiti State, Nigeria")] },
+    { icon: Phone, title: "Phone", lines: [phone], href: `tel:${phone.replace(/\s/g, "")}` },
+    { icon: Mail, title: "Email", lines: [email], href: `mailto:${email}` },
+  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -56,7 +46,7 @@ export default function Contact() {
             Get in<br /><em className="text-gradient">Touch</em>
           </h1>
           <p className="text-white/40 text-lg max-w-xl">
-            We welcome partnerships, collaborations, inquiries, and opportunities to work together toward data-driven health solutions for Africa.
+            {c("contact.hero.subtitle", "We welcome partnerships, collaborations, inquiries, and opportunities to work together toward data-driven health solutions for Africa.")}
           </p>
         </div>
       </section>

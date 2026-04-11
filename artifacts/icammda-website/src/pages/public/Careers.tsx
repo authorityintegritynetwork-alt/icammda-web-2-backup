@@ -11,14 +11,17 @@ import {
   Briefcase,
   Users,
 } from "lucide-react";
-
-const cohorts = [
-  { name: "Cohort 1", period: "February – April", deadline: "January 15" },
-  { name: "Cohort 2", period: "June – August", deadline: "May 15" },
-  { name: "Cohort 3", period: "October – December", deadline: "September 15" },
-];
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export default function Careers() {
+  const c = useSiteContent();
+
+  const cohorts = [
+    { name: c("careers.cohorts.01.name", "Cohort 1"), period: c("careers.cohorts.01.period", "February – April"), deadline: c("careers.cohorts.01.deadline", "January 15") },
+    { name: c("careers.cohorts.02.name", "Cohort 2"), period: c("careers.cohorts.02.period", "June – August"), deadline: c("careers.cohorts.02.deadline", "May 15") },
+    { name: c("careers.cohorts.03.name", "Cohort 3"), period: c("careers.cohorts.03.period", "October – December"), deadline: c("careers.cohorts.03.deadline", "September 15") },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <PublicNav />
@@ -31,10 +34,10 @@ export default function Careers() {
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
           <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">Career Paths</p>
           <h1 className="font-serif text-white text-5xl sm:text-6xl md:text-7xl leading-tight mb-6">
-            Join us in shaping<br /><em className="text-gradient">Africa's health future</em>
+            {c("careers.hero.title", "Join us in shaping Africa's health future")}
           </h1>
           <p className="text-white/45 text-lg max-w-2xl leading-relaxed mb-8">
-            Through data, science, and innovation.
+            {c("careers.hero.subtitle", "Through data, science, and innovation.")}
           </p>
           <a
             href="#apply"
@@ -51,16 +54,16 @@ export default function Careers() {
           <div className="md:col-span-3">
             <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-4">Featured Paths</p>
             <h2 className="font-serif text-foreground text-3xl sm:text-4xl leading-snug mb-6">
-              A mission-driven team tackling Africa's most urgent health challenges
+              {c("careers.section.title", "A mission-driven team tackling Africa's most urgent health challenges")}
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              At the International Centre for Applied Mathematical Modelling and Data Analytics (ICAMMDA), we are driven by a mission to advance health in Africa through science, data, and innovation. Our team is made up of passionate professionals working across disciplines to solve complex public health challenges.
+              {c("careers.section.body1", "At the International Centre for Applied Mathematical Modelling and Data Analytics (ICAMMDA), we are driven by a mission to advance health in Africa through science, data, and innovation. Our team is made up of passionate professionals working across disciplines to solve complex public health challenges.")}
             </p>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              We welcome individuals who share our vision of using data-driven solutions to improve lives. Whether you are a modeller, data analyst, epidemiologist, software developer, or health professional — there is a place for you at ICAMMDA.
+              {c("careers.section.body2", "We welcome individuals who share our vision of using data-driven solutions to improve lives. Whether you are a modeller, data analyst, epidemiologist, software developer, or health professional — there is a place for you at ICAMMDA.")}
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              We invite scholars from around the globe to become part of our esteemed team. Our application, interview, and selection processes are conducted at various times throughout the year. To submit your application, please select the appropriate category below.
+              {c("careers.section.body3", "We invite scholars from around the globe to become part of our esteemed team. Our application, interview, and selection processes are conducted at various times throughout the year.")}
             </p>
           </div>
           <div className="md:col-span-2 space-y-4">

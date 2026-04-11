@@ -26,6 +26,8 @@ tags:
     description: Object storage upload and serving endpoints.
   - name: linkedin
     description: LinkedIn post embeds
+  - name: content
+    description: Editable site content (CMS)
 paths:
   /healthz:
     get:
@@ -713,6 +715,59 @@ paths:
         "404":
           description: Not found
 
+  /site-content:
+    get:
+      operationId: getSiteContent
+      tags: [content]
+      summary: Get all site content blocks
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by page key (e.g. home, about, contact)
+      responses:
+        "200":
+          description: List of content blocks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SiteContent"
+
+  /site-content/{id}:
+    patch:
+      operationId: updateSiteContent
+      tags: [content]
+      summary: Update a site content block value
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSiteContentBody"
+      responses:
+        "200":
+          description: Updated content block
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteContent"
+        "400":
+          description: Invalid input
+        "404":
+          description: Not found
+
 components:
   securitySchemes:
     clerkAuth:
@@ -1312,3 +1367,41 @@ components:
           type: integer
       required:
         - id
+
+    SiteContent:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        page:
+          type: string
+        type:
+          type: string
+        sortOrder:
+          type: integer
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - key
+        - label
+        - value
+        - page
+        - type
+        - sortOrder
+        - updatedAt
+
+    UpdateSiteContentBody:
+      type: object
+      properties:
+        value:
+          type: string
+      required:
+        - value

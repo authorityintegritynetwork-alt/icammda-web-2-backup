@@ -13,6 +13,7 @@ import {
   X,
   ExternalLink,
   Linkedin,
+  Type,
 } from "lucide-react";
 
 const navItems = [
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/admin/research", label: "Research", icon: FlaskConical },
   { href: "/admin/partners", label: "Partners", icon: Handshake },
   { href: "/admin/linkedin", label: "LinkedIn Feed", icon: Linkedin },
+  { href: "/admin/content", label: "Page Content", icon: Type },
 ];
 
 interface Props {

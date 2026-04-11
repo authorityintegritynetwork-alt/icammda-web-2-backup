@@ -25,6 +25,7 @@ import type {
   CreateResearchMemberBody,
   CreateTeamMemberBody,
   Event,
+  GetSiteContentParams,
   HealthStatus,
   LinkedInPost,
   ListEventsParams,
@@ -35,6 +36,7 @@ import type {
   ResearchGroup,
   ResearchGroupWithMembers,
   ResearchMember,
+  SiteContent,
   SiteStats,
   TeamMember,
   UpdateEventBody,
@@ -42,6 +44,7 @@ import type {
   UpdatePostBody,
   UpdateResearchGroupBody,
   UpdateResearchMemberBody,
+  UpdateSiteContentBody,
   UpdateTeamMemberBody,
   UploadUrlRequest,
   UploadUrlResponse,
@@ -2994,4 +2997,185 @@ export const useDeleteLinkedinPost = <
   TContext
 > => {
   return useMutation(getDeleteLinkedinPostMutationOptions(options));
+};
+
+/**
+ * @summary Get all site content blocks
+ */
+export const getGetSiteContentUrl = (params?: GetSiteContentParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/site-content?${stringifiedParams}`
+    : `/api/site-content`;
+};
+
+export const getSiteContent = async (
+  params?: GetSiteContentParams,
+  options?: RequestInit,
+): Promise<SiteContent[]> => {
+  return customFetch<SiteContent[]>(getGetSiteContentUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetSiteContentQueryKey = (params?: GetSiteContentParams) => {
+  return [`/api/site-content`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetSiteContentQueryOptions = <
+  TData = Awaited<ReturnType<typeof getSiteContent>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetSiteContentParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getSiteContent>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetSiteContentQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSiteContent>>> = ({
+    signal,
+  }) => getSiteContent(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getSiteContent>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetSiteContentQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getSiteContent>>
+>;
+export type GetSiteContentQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get all site content blocks
+ */
+
+export function useGetSiteContent<
+  TData = Awaited<ReturnType<typeof getSiteContent>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetSiteContentParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getSiteContent>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetSiteContentQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Update a site content block value
+ */
+export const getUpdateSiteContentUrl = (id: number) => {
+  return `/api/site-content/${id}`;
+};
+
+export const updateSiteContent = async (
+  id: number,
+  updateSiteContentBody: UpdateSiteContentBody,
+  options?: RequestInit,
+): Promise<SiteContent> => {
+  return customFetch<SiteContent>(getUpdateSiteContentUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateSiteContentBody),
+  });
+};
+
+export const getUpdateSiteContentMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateSiteContent>>,
+    TError,
+    { id: number; data: BodyType<UpdateSiteContentBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateSiteContent>>,
+  TError,
+  { id: number; data: BodyType<UpdateSiteContentBody> },
+  TContext
+> => {
+  const mutationKey = ["updateSiteContent"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateSiteContent>>,
+    { id: number; data: BodyType<UpdateSiteContentBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateSiteContent(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateSiteContentMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateSiteContent>>
+>;
+export type UpdateSiteContentMutationBody = BodyType<UpdateSiteContentBody>;
+export type UpdateSiteContentMutationError = ErrorType<void>;
+
+/**
+ * @summary Update a site content block value
+ */
+export const useUpdateSiteContent = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateSiteContent>>,
+    TError,
+    { id: number; data: BodyType<UpdateSiteContentBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateSiteContent>>,
+  TError,
+  { id: number; data: BodyType<UpdateSiteContentBody> },
+  TContext
+> => {
+  return useMutation(getUpdateSiteContentMutationOptions(options));
 };

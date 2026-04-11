@@ -9,6 +9,7 @@ import researchRouter from "./research";
 import youtubeRouter from "./youtube";
 import storageRouter from "./storage";
 import linkedinRouter from "./linkedin";
+import contentRouter from "./content";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(researchRouter);
 router.use(youtubeRouter);
 router.use(storageRouter);
 router.use(linkedinRouter);
+router.use("/site-content", contentRouter);
 
 export default router;
