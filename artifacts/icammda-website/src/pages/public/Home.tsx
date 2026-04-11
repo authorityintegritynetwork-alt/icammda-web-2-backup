@@ -7,10 +7,10 @@ import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 
 const activities = [
-  { icon: BookOpen, label: "Book Reading",    desc: "Study key texts in modelling" },
-  { icon: Users,    label: "Journal Club",     desc: "Critique cutting-edge publications" },
-  { icon: BarChart3, label: "Progress Reports", desc: "Research milestone reviews" },
-  { icon: Cpu,      label: "Software Hub",     desc: "R, Python, NetLogo & simulation" },
+  { icon: BookOpen,  label: "Book Reading",     desc: "Study key texts in modelling",        href: "/e-learning" },
+  { icon: Users,     label: "Journal Club",      desc: "Critique cutting-edge publications",  href: "/research" },
+  { icon: BarChart3, label: "Progress Reports",  desc: "Research milestone reviews",          href: "/news" },
+  { icon: Cpu,       label: "Software Hub",      desc: "R, Python, NetLogo & simulation",     href: "/e-learning" },
 ];
 
 const statsData = [
@@ -117,9 +117,9 @@ export default function Home() {
               {/* Floating activity badges */}
               <div className="absolute top-0 -left-6 space-y-2.5">
                 {activities.map((act, i) => (
-                  <a
+                  <Link
                     key={act.label}
-                    href="#activities"
+                    href={act.href}
                     className="glass-dark rounded-xl px-4 py-2.5 flex items-center gap-3 border border-white/6 hover:border-cyan-500/25 transition-all duration-200 group"
                     style={{ animationDelay: `${i * 0.4}s` }}
                   >
@@ -130,7 +130,8 @@ export default function Home() {
                       <p className="text-white/70 text-xs font-semibold leading-none">{act.label}</p>
                       <p className="text-white/30 text-[9px] mt-0.5 leading-none">{act.desc}</p>
                     </div>
-                  </a>
+                    <ChevronRight size={11} className="text-white/20 group-hover:text-cyan-400/60 ml-auto shrink-0 group-hover:translate-x-0.5 transition-all" />
+                  </Link>
                 ))}
               </div>
             </div>
