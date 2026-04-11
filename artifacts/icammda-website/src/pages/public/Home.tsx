@@ -34,13 +34,6 @@ export default function Home() {
     { value: c("home.stats.events", "20+"), label: "Events & Trainings", icon: Calendar },
   ];
 
-  const activities = [
-    { icon: BookOpen,  label: c("home.activities.01.title", "Book Reading"),    desc: c("home.activities.01.desc", "Study key texts in modelling"),       href: "/e-learning" },
-    { icon: Users,     label: c("home.activities.02.title", "Journal Club"),     desc: c("home.activities.02.desc", "Critique cutting-edge publications"), href: "/research" },
-    { icon: BarChart3, label: c("home.activities.03.title", "Progress Reports"), desc: c("home.activities.03.desc", "Research milestone reviews"),         href: "/news" },
-    { icon: Cpu,       label: c("home.activities.04.title", "Software Hub"),     desc: c("home.activities.04.desc", "R, Python, NetLogo & simulation"),    href: "/e-learning" },
-  ];
-
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <PublicNav />
@@ -116,26 +109,6 @@ export default function Home() {
                 />
               </div>
 
-              {/* Floating activity badges */}
-              <div className="absolute top-0 -left-6 space-y-2.5">
-                {activities.map((act, i) => (
-                  <Link
-                    key={act.label}
-                    href={act.href}
-                    className="glass-dark rounded-xl px-4 py-2.5 flex items-center gap-3 border border-white/6 hover:border-cyan-500/25 transition-all duration-200 group"
-                    style={{ animationDelay: `${i * 0.4}s` }}
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-cyan-500/15 flex items-center justify-center shrink-0 group-hover:bg-cyan-500/25 transition-colors">
-                      <act.icon size={13} className="text-cyan-400" />
-                    </div>
-                    <div>
-                      <p className="text-white/70 text-xs font-semibold leading-none">{act.label}</p>
-                      <p className="text-white/30 text-[9px] mt-0.5 leading-none">{act.desc}</p>
-                    </div>
-                    <ChevronRight size={11} className="text-white/20 group-hover:text-cyan-400/60 ml-auto shrink-0 group-hover:translate-x-0.5 transition-all" />
-                  </Link>
-                ))}
-              </div>
             </div>
           </div>
         </div>
