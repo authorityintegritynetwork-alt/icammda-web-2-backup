@@ -55,15 +55,15 @@ export default function Home() {
         {/* Bottom fade to page bg */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#07101e] to-transparent" />
         {/* Subtle top accent line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-400/50 via-50% to-cyan-400/30 to-transparent" />
 
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-24 pb-20 w-full">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               {/* Eyebrow */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/5 mb-8">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span className="text-cyan-400/80 text-[10px] font-semibold tracking-widest uppercase">WAMCAD Member · West Africa</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-400/30 bg-gradient-to-r from-violet-500/10 to-cyan-500/5 mb-8">
+                <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                <span className="text-violet-300/90 text-[10px] font-semibold tracking-widest uppercase">WAMCAD Member · West Africa</span>
               </div>
 
               <h1 className="font-serif text-white text-5xl sm:text-6xl lg:text-[4.5rem] leading-[0.93] tracking-tight mb-8" data-testid="hero-title">
@@ -152,7 +152,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════ RESEARCH FOCUS ═══════════ */}
-      <section className="border-y border-border/60 bg-white" data-testid="research-focus-section">
+      <section className="border-y border-violet-100/60 bg-gradient-to-r from-violet-50/70 via-white to-cyan-50/40" data-testid="research-focus-section">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-10">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-5">
             <div className="flex items-center gap-2.5 shrink-0">
@@ -175,9 +175,9 @@ export default function Home() {
 
       {/* ═══════════ MISSION ═══════════ */}
       <section id="mission" className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-24 md:py-28 scroll-mt-16" data-testid="mission-section">
-        <div className="grid lg:grid-cols-5 gap-16 items-center">
-          <div className="lg:col-span-3">
-            <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-4">Our Mission</p>
+        <div className="grid lg:grid-cols-2 gap-14 items-center">
+          <div>
+            <p className="text-violet-600 text-xs font-bold tracking-widest uppercase mb-4">Our Mission</p>
             <h2 className="font-serif text-foreground text-4xl md:text-5xl leading-tight mb-6">
               Training a Critical Mass<br />
               of Modelling Scientists<br />
@@ -189,27 +189,81 @@ export default function Home() {
             <p className="text-muted-foreground leading-relaxed mb-8">
               We build scientists who are internationally competitive, grant-ready, and deeply networked with partners across Africa and the globe.
             </p>
+            {/* Inline stats strip */}
+            <div className="grid grid-cols-4 gap-4 pt-8 border-t border-border/60 mb-8">
+              {statsData.map((stat) => (
+                <div key={stat.label} data-testid={`mission-stat-${stat.label.toLowerCase().replace(/\s+/g, '-')}`}>
+                  <p className="font-serif text-3xl font-bold text-foreground">{stat.value}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{stat.label}</p>
+                </div>
+              ))}
+            </div>
             <Link href="/about" className="group inline-flex items-center gap-2 text-sm font-semibold text-cyan-600 hover:text-cyan-500 transition-colors">
               Learn about our structure
               <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
-          {/* Stats grid */}
-          <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-            {statsData.map((stat) => (
-              <div
-                key={stat.label}
-                className="group bg-card border border-card-border rounded-2xl p-6 hover-lift"
-                data-testid={`mission-stat-${stat.label.toLowerCase().replace(/\s+/g, '-')}`}
-              >
-                <div className="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center mb-4 group-hover:bg-cyan-100 transition-colors">
-                  <stat.icon size={18} />
-                </div>
-                <p className="font-serif text-3xl font-bold text-foreground">{stat.value}</p>
-                <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
-              </div>
-            ))}
+          {/* Collaboration photo with floating badges */}
+          <div className="relative hidden lg:block" data-testid="mission-photo">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]">
+              <img
+                src="/team-collab.jpg"
+                alt="ICAMMDA researchers collaborating"
+                className="w-full h-full object-cover"
+              />
+              {/* Gradient overlay for mood */}
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-900/20 via-transparent to-cyan-900/10" />
+            </div>
+            {/* Floating badge — bottom left */}
+            <div className="absolute -bottom-5 -left-5 bg-white rounded-2xl shadow-xl border border-border px-5 py-3.5">
+              <p className="font-serif text-2xl font-bold text-foreground">10+</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Active Researchers</p>
+            </div>
+            {/* Floating badge — top right */}
+            <div className="absolute -top-5 -right-5 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl shadow-xl px-5 py-3.5 text-white">
+              <p className="font-serif text-2xl font-bold">3+</p>
+              <p className="text-[10px] text-white/80 mt-0.5">Countries</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════ COMMUNITY ═══════════ */}
+      <section className="relative overflow-hidden" data-testid="community-section">
+        {/* Group photo as full-bleed background */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/team-group.jpg')" }}
+        />
+        {/* Strong left overlay so text is readable, photo breathes on the right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#07101e]/96 via-[#07101e]/80 to-[#07101e]/40" />
+        {/* Subtle purple tint on the right */}
+        <div className="absolute inset-0 bg-gradient-to-l from-violet-900/30 via-transparent to-transparent" />
+
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-28">
+          <div className="max-w-lg">
+            <p className="text-violet-400/80 text-[10px] font-bold tracking-widest uppercase mb-5">Our Community</p>
+            <h2 className="font-serif text-white text-4xl md:text-5xl leading-tight mb-6">
+              Growing a Continent's<br />
+              <em className="not-italic bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">Scientific Capital.</em>
+            </h2>
+            <p className="text-white/50 text-sm leading-relaxed mb-10 max-w-sm">
+              From Federal University Oye-Ekiti to partner institutions across West Africa, our researchers are building the next generation of modelling scientists on the continent — trained, networked, and retained in Africa.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/team">
+                <button className="group flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-all duration-200">
+                  Meet the Team
+                  <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </button>
+              </Link>
+              <Link href="/about">
+                <button className="flex items-center gap-2 border border-white/15 hover:border-white/30 text-white/60 hover:text-white px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200">
+                  Our Structure
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -240,18 +294,24 @@ export default function Home() {
 
             <div className="grid grid-cols-2 gap-3">
               {[
-                { icon: BookOpen, n: "01", title: "Book Reading", desc: "Collaborative study of key texts in mathematical modelling and epidemiology." },
-                { icon: Users, n: "02", title: "Journal Club", desc: "Weekly critique of cutting-edge publications across data science and global health." },
-                { icon: BarChart3, n: "03", title: "Progress Reports", desc: "Regular research updates and milestone reviews across all active projects." },
-                { icon: Cpu, n: "04", title: "Software Hub", desc: "Hands-on mastery in R, Python, NetLogo, and simulation environments." },
+                { icon: BookOpen,  n: "01", title: "Book Reading",    desc: "Collaborative study of key texts in mathematical modelling and epidemiology.",  accent: "cyan" },
+                { icon: Users,     n: "02", title: "Journal Club",     desc: "Weekly critique of cutting-edge publications across data science and global health.", accent: "violet" },
+                { icon: BarChart3, n: "03", title: "Progress Reports", desc: "Regular research updates and milestone reviews across all active projects.",     accent: "violet" },
+                { icon: Cpu,       n: "04", title: "Software Hub",     desc: "Hands-on mastery in R, Python, NetLogo, and simulation environments.",          accent: "cyan" },
               ].map((act) => (
                 <div
                   key={act.title}
-                  className="group bg-white/3 hover:bg-white/6 border border-white/6 hover:border-cyan-500/20 rounded-2xl p-5 transition-all duration-300"
+                  className={`group border rounded-2xl p-5 transition-all duration-300 ${
+                    act.accent === "violet"
+                      ? "bg-violet-500/5 hover:bg-violet-500/10 border-violet-500/10 hover:border-violet-500/30"
+                      : "bg-cyan-500/5 hover:bg-cyan-500/10 border-white/6 hover:border-cyan-500/30"
+                  }`}
                   data-testid={`activity-${act.title.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+                      act.accent === "violet" ? "bg-violet-500/15 text-violet-400" : "bg-cyan-500/10 text-cyan-400"
+                    }`}>
                       <act.icon size={16} />
                     </div>
                     <span className="text-white/20 font-mono text-xs">{act.n}</span>
