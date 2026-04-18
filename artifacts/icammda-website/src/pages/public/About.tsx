@@ -64,10 +64,7 @@ export default function About() {
           <div className="md:col-span-2">
             <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-4">Our Context</p>
             <p className="text-foreground text-lg leading-relaxed mb-4">
-              {c("about.overview.body1", "ICAMMDA is a member of the West Africa Mathematical Modelling Capacity Development (WAMCAD) — an Anglophone–Francophone–Lusophone scientific partnership with a bold vision: train a critical mass of modelling scientists retained within West Africa.")}
-            </p>
-            <p className="text-muted-foreground leading-relaxed">
-              {c("about.overview.body2", "Situated in the ICT Centre of Federal University Oye-Ekiti, our state-of-the-art computing and simulation laboratory hosts seminars, workshops, and trainings on modelling, data analytics, and computational skills.")}
+              {c("about.overview.body1", "International Centre for Applied Mathematical Modelling and Data Analytics (ICAMMDA), Federal University Oye-Ekiti, Ekiti State, Nigeria is a member of the West Africa Mathematical Modelling Capacity Development (WAMCAD) which is an Anglophone – Francophone – Lusophone partnership comprising several International Research Institution: University of Thies, Senegal; University of Conakry, Guinea; Bandim Health Project, Guinea Bissau; University of Ghana and International Centre for Applied Mathematical Modelling and Data Analytics, Federal University Oye-Ekiti, Ekiti State, Nigeria.")}
             </p>
           </div>
           <div className="bg-[#07101e] rounded-2xl p-6">
