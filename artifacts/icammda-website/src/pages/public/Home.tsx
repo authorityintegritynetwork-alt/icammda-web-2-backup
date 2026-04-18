@@ -172,7 +172,7 @@ export default function Home() {
           <div className="relative hidden lg:block" data-testid="mission-photo">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]">
               <img
-                src="/team-collab.jpg"
+                src="/team-collab.png"
                 alt="ICAMMDA researchers collaborating"
                 className="w-full h-full object-cover"
               />
