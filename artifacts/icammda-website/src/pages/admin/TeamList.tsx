@@ -18,8 +18,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/AdminLayout";
 
-const ROLES = ["director", "postdoc", "phd", "msc", "staff"];
-const roleLabel: Record<string, string> = { director: "Director", postdoc: "Post-doctoral Scientist", phd: "PhD Scholar", msc: "MSc Scholar", staff: "Staff" };
+const ROLES = ["director", "postdoc", "phd", "msc", "staff", "nysc"];
+const roleLabel: Record<string, string> = { director: "Director", postdoc: "Post-doctoral Scientist", phd: "PhD Scholar", msc: "MSc Scholar", staff: "Staff", nysc: "Youth Corp (NYSC)" };
 
 const AVATAR_PALETTE = [
   { bg: "#164e63", text: "#a5f3fc" },

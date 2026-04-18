@@ -43,8 +43,9 @@ const ROLE_CONFIG: Record<string, { label: string; icon: typeof Users; bg: strin
   phd: { label: "PhD Scholars", icon: GraduationCap, bg: "bg-teal-50/60 border-teal-200/50", tag: "bg-teal-50 text-teal-700" },
   msc: { label: "MSc Scholars", icon: GraduationCap, bg: "bg-emerald-50/60 border-emerald-200/50", tag: "bg-emerald-50 text-emerald-700" },
   staff: { label: "Staff", icon: Briefcase, bg: "bg-violet-50/60 border-violet-200/50", tag: "bg-violet-50 text-violet-700" },
+  nysc: { label: "Youth Corp (NYSC)", icon: Users, bg: "bg-rose-50/60 border-rose-200/50", tag: "bg-rose-50 text-rose-700" },
 };
-const ROLE_ORDER = ["director", "postdoc", "phd", "msc", "staff"];
+const ROLE_ORDER = ["director", "postdoc", "phd", "msc", "staff", "nysc"];
 
 interface AvatarProps {
   name: string;
