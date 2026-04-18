@@ -18,8 +18,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/AdminLayout";
 
-const ROLES = ["director", "researcher", "postdoc", "staff"];
-const roleLabel: Record<string, string> = { director: "Director", researcher: "Researcher", postdoc: "Postdoctoral Scientist", staff: "Staff" };
+const ROLES = ["director", "postdoc", "phd", "msc", "staff"];
+const roleLabel: Record<string, string> = { director: "Director", postdoc: "Post-doctoral Scientist", phd: "PhD Scholar", msc: "MSc Scholar", staff: "Staff" };
 
 const AVATAR_PALETTE = [
   { bg: "#164e63", text: "#a5f3fc" },
@@ -63,7 +63,7 @@ interface FormState {
   displayOrder: string;
 }
 
-const EMPTY: FormState = { name: "", title: "", role: "researcher", bio: "", email: "", linkedinUrl: "", photoUrl: "", displayOrder: "0" };
+const EMPTY: FormState = { name: "", title: "", role: "phd", bio: "", email: "", linkedinUrl: "", photoUrl: "", displayOrder: "0" };
 
 export default function TeamList() {
   const { data: members, isLoading } = useListTeamMembers();
