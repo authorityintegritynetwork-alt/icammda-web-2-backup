@@ -331,7 +331,7 @@ export default function ResearchAdmin() {
                         group.members.map((member) => (
                           <div key={member.id} className="flex items-center gap-3 bg-background rounded-lg p-2.5 border border-border/60" data-testid={`member-${member.id}`}>
                             {member.photoUrl ? (
-                              <img src={member.photoUrl} alt={member.name} className="w-9 h-9 rounded-full object-cover shrink-0 border border-border" />
+                              <img src={getMemberPhotoSrc(member.photoUrl)} alt={member.name} className="w-9 h-9 rounded-full object-cover shrink-0 border border-border" />
                             ) : (
                               <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                                 <span className="text-primary text-[10px] font-bold">{getInitials(member.name)}</span>
@@ -388,7 +388,7 @@ export default function ResearchAdmin() {
                 {visitors.map((member) => (
                   <div key={member.id} className="flex items-center gap-3 px-4 py-3" data-testid={`visitor-${member.id}`}>
                     {member.photoUrl ? (
-                      <img src={member.photoUrl} alt={member.name} className="w-9 h-9 rounded-full object-cover shrink-0 border border-border" />
+                      <img src={getMemberPhotoSrc(member.photoUrl)} alt={member.name} className="w-9 h-9 rounded-full object-cover shrink-0 border border-border" />
                     ) : (
                       <div className="w-9 h-9 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center shrink-0">
                         <span className="text-violet-400 text-[10px] font-bold">{getInitials(member.name)}</span>
