@@ -9,6 +9,7 @@ export const teamTable = pgTable("team_members", {
   bio: text("bio"),
   photoUrl: text("photo_url"),
   email: text("email"),
+  linkedinUrl: text("linkedin_url"),
   role: text("role").notNull().default("researcher"),
   order: integer("order").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

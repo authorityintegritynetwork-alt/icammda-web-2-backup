@@ -258,6 +258,7 @@ export const ListTeamMembersResponseItem = zod.object({
   bio: zod.string().nullish(),
   photoUrl: zod.string().nullish(),
   email: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
   role: zod.string().describe("director | researcher | staff | postdoc"),
   order: zod.number(),
   createdAt: zod.coerce.date(),
@@ -274,6 +275,7 @@ export const CreateTeamMemberBody = zod.object({
   bio: zod.string().nullish(),
   photoUrl: zod.string().nullish(),
   email: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
   role: zod.string(),
   order: zod.number().optional(),
 });
@@ -291,6 +293,7 @@ export const UpdateTeamMemberBody = zod.object({
   bio: zod.string().nullish(),
   photoUrl: zod.string().nullish(),
   email: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
   role: zod.string().optional(),
   order: zod.number().optional(),
 });
@@ -302,6 +305,7 @@ export const UpdateTeamMemberResponse = zod.object({
   bio: zod.string().nullish(),
   photoUrl: zod.string().nullish(),
   email: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
   role: zod.string().describe("director | researcher | staff | postdoc"),
   order: zod.number(),
   createdAt: zod.coerce.date(),

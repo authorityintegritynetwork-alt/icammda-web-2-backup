@@ -155,6 +155,8 @@ export interface TeamMember {
   photoUrl?: string | null;
   /** @nullable */
   email?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
   /** director | researcher | staff | postdoc */
   role: string;
   order: number;
@@ -171,6 +173,8 @@ export interface CreateTeamMemberBody {
   photoUrl?: string | null;
   /** @nullable */
   email?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
   role: string;
   order?: number;
 }
@@ -184,6 +188,8 @@ export interface UpdateTeamMemberBody {
   photoUrl?: string | null;
   /** @nullable */
   email?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
   role?: string;
   order?: number;
 }

@@ -15,6 +15,8 @@ export interface UpdateTeamMemberBody {
   photoUrl?: string | null;
   /** @nullable */
   email?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
   role?: string;
   order?: number;
 }

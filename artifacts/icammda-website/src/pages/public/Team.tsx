@@ -1,6 +1,8 @@
-import { Users, GraduationCap, Briefcase, Mail } from "lucide-react";
+import { useState } from "react";
+import { Users, GraduationCap, Briefcase, Mail, Linkedin } from "lucide-react";
 import { useListTeamMembers } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 
@@ -86,8 +88,11 @@ function MemberAvatar({ name, photoUrl, size }: AvatarProps) {
   );
 }
 
+type Member = NonNullable<ReturnType<typeof useListTeamMembers>["data"]>[number];
+
 export default function Team() {
   const { data: members, isLoading } = useListTeamMembers();
+  const [selected, setSelected] = useState<Member | null>(null);
 
   const grouped = ROLE_ORDER.reduce<Record<string, NonNullable<typeof members>>>((acc, role) => {
     const group = members?.filter((m) => m.role === role) ?? [];
@@ -145,9 +150,11 @@ export default function Team() {
 
                 <div className={`grid ${role === "director" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"} gap-5`}>
                   {group.map((member) => (
-                    <div
+                    <button
+                      type="button"
                       key={member.id}
-                      className={`border ${config.bg} rounded-2xl p-5 hover-lift transition-all`}
+                      onClick={() => setSelected(member)}
+                      className={`text-left border ${config.bg} rounded-2xl p-5 hover-lift transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500/40`}
                       data-testid={`team-member-${member.id}`}
                     >
                       <MemberAvatar
@@ -167,16 +174,31 @@ export default function Team() {
                           {member.bio}
                         </p>
                       )}
-                      {member.email && (
-                        <a
-                          href={`mailto:${member.email}`}
-                          className="inline-flex items-center gap-1 text-xs text-cyan-600 hover:text-cyan-500 mt-3 transition-colors"
-                        >
-                          <Mail size={11} />
-                          <span className="truncate">{member.email}</span>
-                        </a>
-                      )}
-                    </div>
+                      <div className="flex items-center gap-3 mt-3" onClick={(e) => e.stopPropagation()}>
+                        {member.email && (
+                          <a
+                            href={`mailto:${member.email}`}
+                            onClick={(e) => e.stopPropagation()}
+                            aria-label={`Email ${member.name}`}
+                            className="inline-flex items-center justify-center w-7 h-7 rounded-full text-cyan-600 hover:text-white hover:bg-cyan-600 border border-cyan-200 transition-colors"
+                          >
+                            <Mail size={12} />
+                          </a>
+                        )}
+                        {member.linkedinUrl && (
+                          <a
+                            href={member.linkedinUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            aria-label={`${member.name} on LinkedIn`}
+                            className="inline-flex items-center justify-center w-7 h-7 rounded-full text-[#0A66C2] hover:text-white hover:bg-[#0A66C2] border border-[#0A66C2]/30 transition-colors"
+                          >
+                            <Linkedin size={12} />
+                          </a>
+                        )}
+                      </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -184,6 +206,61 @@ export default function Team() {
           })
         )}
       </section>
+
+      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto" data-testid="member-detail-dialog">
+          {selected && (
+            <>
+              <DialogHeader>
+                <div className="flex items-start gap-4">
+                  <MemberAvatar name={selected.name} photoUrl={selected.photoUrl} size="lg" />
+                  <div className="flex-1 min-w-0">
+                    <DialogTitle className="font-serif text-2xl text-foreground" data-testid="member-detail-name">
+                      {selected.name}
+                    </DialogTitle>
+                    <p className="text-muted-foreground text-sm mt-1">{selected.title}</p>
+                    <span className="inline-block text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-full mt-2 bg-cyan-50 text-cyan-700">
+                      {ROLE_CONFIG[selected.role]?.label ?? selected.role}
+                    </span>
+                  </div>
+                </div>
+              </DialogHeader>
+              {selected.bio && (
+                <div className="mt-2">
+                  <p className="text-cyan-600 text-[10px] font-bold tracking-widest uppercase mb-2">Biography</p>
+                  <p className="text-foreground/85 leading-relaxed whitespace-pre-line text-sm" data-testid="member-detail-bio">
+                    {selected.bio}
+                  </p>
+                </div>
+              )}
+              {(selected.email || selected.linkedinUrl) && (
+                <div className="flex flex-wrap gap-3 mt-4 pt-4 border-t border-border/60">
+                  {selected.email && (
+                    <a
+                      href={`mailto:${selected.email}`}
+                      className="inline-flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-700 transition-colors"
+                    >
+                      <Mail size={14} />
+                      {selected.email}
+                    </a>
+                  )}
+                  {selected.linkedinUrl && (
+                    <a
+                      href={selected.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm text-[#0A66C2] hover:underline"
+                    >
+                      <Linkedin size={14} />
+                      LinkedIn Profile
+                    </a>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <PublicFooter />
     </div>

@@ -58,11 +58,12 @@ interface FormState {
   role: string;
   bio: string;
   email: string;
+  linkedinUrl: string;
   photoUrl: string;
   displayOrder: string;
 }
 
-const EMPTY: FormState = { name: "", title: "", role: "researcher", bio: "", email: "", photoUrl: "", displayOrder: "0" };
+const EMPTY: FormState = { name: "", title: "", role: "researcher", bio: "", email: "", linkedinUrl: "", photoUrl: "", displayOrder: "0" };
 
 export default function TeamList() {
   const { data: members, isLoading } = useListTeamMembers();
@@ -87,6 +88,7 @@ export default function TeamList() {
       role: member.role,
       bio: member.bio ?? "",
       email: member.email ?? "",
+      linkedinUrl: member.linkedinUrl ?? "",
       photoUrl: member.photoUrl ?? "",
       displayOrder: String(member.displayOrder ?? 0),
     });
@@ -142,6 +144,7 @@ export default function TeamList() {
       role: form.role,
       bio: form.bio || undefined,
       email: form.email || undefined,
+      linkedinUrl: form.linkedinUrl || undefined,
       photoUrl: form.photoUrl || undefined,
       displayOrder: parseInt(form.displayOrder, 10) || 0,
     };
@@ -275,6 +278,17 @@ export default function TeamList() {
             <div>
               <Label htmlFor="memberEmail" className="mb-1.5 block">Email</Label>
               <Input id="memberEmail" type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} data-testid="member-email-input" />
+            </div>
+            <div>
+              <Label htmlFor="memberLinkedin" className="mb-1.5 block">LinkedIn URL</Label>
+              <Input
+                id="memberLinkedin"
+                type="url"
+                placeholder="https://www.linkedin.com/in/username"
+                value={form.linkedinUrl}
+                onChange={(e) => setForm((f) => ({ ...f, linkedinUrl: e.target.value }))}
+                data-testid="member-linkedin-input"
+              />
             </div>
 
             <div>

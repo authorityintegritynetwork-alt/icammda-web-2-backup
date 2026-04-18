@@ -16,6 +16,8 @@ export interface TeamMember {
   photoUrl?: string | null;
   /** @nullable */
   email?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
   /** director | researcher | staff | postdoc */
   role: string;
   order: number;

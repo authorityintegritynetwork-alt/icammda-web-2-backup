@@ -1030,6 +1030,8 @@ components:
           type: ["string", "null"]
         email:
           type: ["string", "null"]
+        linkedinUrl:
+          type: ["string", "null"]
         role:
           type: string
           description: "director | researcher | staff | postdoc"
@@ -1063,6 +1065,8 @@ components:
           type: ["string", "null"]
         email:
           type: ["string", "null"]
+        linkedinUrl:
+          type: ["string", "null"]
         role:
           type: string
         order:
@@ -1084,6 +1088,8 @@ components:
         photoUrl:
           type: ["string", "null"]
         email:
+          type: ["string", "null"]
+        linkedinUrl:
           type: ["string", "null"]
         role:
           type: string
