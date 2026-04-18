@@ -116,11 +116,7 @@ export default function About() {
                 <p>{c("about.director.letter.p1", "Welcome to the International Centre for Applied Mathematical Modelling and Data Analytics (ICAMMDA). At ICAMMDA, we believe science and data should do more than sit in reports. They should guide decisions and save lives.")}</p>
                 <p>{c("about.director.letter.p2", "Our team is committed to building tools that address real public health challenges, training Africa's next generation of scientific leaders, and working closely with partners across the continent and beyond.")}</p>
                 <p>{c("about.director.letter.p3", "Our passion is driven by purpose — to create solutions rooted in Africa and relevant to the world. We are building something here that will last generations, and I invite you to be part of it.")}</p>
-                <p className="font-medium text-foreground">
-                  Warm regards,<br />
-                  <strong>Prof Emmanuel Afolabi Bakare</strong><br />
-                  <span className="text-cyan-600 font-normal text-xs">Director, ICAMMDA · Federal University Oye-Ekiti</span>
-                </p>
+                <p className="font-medium text-foreground">Warm regards,</p>
               </div>
             </div>
           </div>
