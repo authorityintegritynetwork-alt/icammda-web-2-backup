@@ -7,6 +7,7 @@
  */
 
 export * from "./createEventBody";
+export * from "./createEventSpeakerBody";
 export * from "./createLinkedInPostBody";
 export * from "./createPartnerBody";
 export * from "./createPostBody";
@@ -16,10 +17,12 @@ export * from "./createResearchPublicationBody";
 export * from "./createTeamMemberBody";
 export * from "./deleteLinkedinPostParams";
 export * from "./event";
+export * from "./eventSpeaker";
 export * from "./getSiteContentParams";
 export * from "./healthStatus";
 export * from "./linkedInPost";
 export * from "./listEventsParams";
+export * from "./listEventSpeakersParams";
 export * from "./listPostsParams";
 export * from "./listResearchMembersParams";
 export * from "./partner";
@@ -32,6 +35,7 @@ export * from "./siteContent";
 export * from "./siteStats";
 export * from "./teamMember";
 export * from "./updateEventBody";
+export * from "./updateEventSpeakerBody";
 export * from "./updatePartnerBody";
 export * from "./updatePostBody";
 export * from "./updateResearchGroupBody";

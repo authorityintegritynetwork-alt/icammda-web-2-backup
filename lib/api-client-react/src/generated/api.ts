@@ -18,6 +18,7 @@ import type {
 
 import type {
   CreateEventBody,
+  CreateEventSpeakerBody,
   CreateLinkedInPostBody,
   CreatePartnerBody,
   CreatePostBody,
@@ -26,9 +27,11 @@ import type {
   CreateResearchPublicationBody,
   CreateTeamMemberBody,
   Event,
+  EventSpeaker,
   GetSiteContentParams,
   HealthStatus,
   LinkedInPost,
+  ListEventSpeakersParams,
   ListEventsParams,
   ListPostsParams,
   ListResearchMembersParams,
@@ -42,6 +45,7 @@ import type {
   SiteStats,
   TeamMember,
   UpdateEventBody,
+  UpdateEventSpeakerBody,
   UpdatePartnerBody,
   UpdatePostBody,
   UpdateResearchGroupBody,
@@ -2358,6 +2362,360 @@ export const useDeleteResearchPublication = <
   TContext
 > => {
   return useMutation(getDeleteResearchPublicationMutationOptions(options));
+};
+
+/**
+ * @summary List event speakers (optionally filter by event)
+ */
+export const getListEventSpeakersUrl = (params?: ListEventSpeakersParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/event-speakers?${stringifiedParams}`
+    : `/api/event-speakers`;
+};
+
+export const listEventSpeakers = async (
+  params?: ListEventSpeakersParams,
+  options?: RequestInit,
+): Promise<EventSpeaker[]> => {
+  return customFetch<EventSpeaker[]>(getListEventSpeakersUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListEventSpeakersQueryKey = (
+  params?: ListEventSpeakersParams,
+) => {
+  return [`/api/event-speakers`, ...(params ? [params] : [])] as const;
+};
+
+export const getListEventSpeakersQueryOptions = <
+  TData = Awaited<ReturnType<typeof listEventSpeakers>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListEventSpeakersParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listEventSpeakers>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListEventSpeakersQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listEventSpeakers>>
+  > = ({ signal }) => listEventSpeakers(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listEventSpeakers>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListEventSpeakersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listEventSpeakers>>
+>;
+export type ListEventSpeakersQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List event speakers (optionally filter by event)
+ */
+
+export function useListEventSpeakers<
+  TData = Awaited<ReturnType<typeof listEventSpeakers>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListEventSpeakersParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listEventSpeakers>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListEventSpeakersQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create an event speaker
+ */
+export const getCreateEventSpeakerUrl = () => {
+  return `/api/event-speakers`;
+};
+
+export const createEventSpeaker = async (
+  createEventSpeakerBody: CreateEventSpeakerBody,
+  options?: RequestInit,
+): Promise<EventSpeaker> => {
+  return customFetch<EventSpeaker>(getCreateEventSpeakerUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createEventSpeakerBody),
+  });
+};
+
+export const getCreateEventSpeakerMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createEventSpeaker>>,
+    TError,
+    { data: BodyType<CreateEventSpeakerBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createEventSpeaker>>,
+  TError,
+  { data: BodyType<CreateEventSpeakerBody> },
+  TContext
+> => {
+  const mutationKey = ["createEventSpeaker"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createEventSpeaker>>,
+    { data: BodyType<CreateEventSpeakerBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createEventSpeaker(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateEventSpeakerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createEventSpeaker>>
+>;
+export type CreateEventSpeakerMutationBody = BodyType<CreateEventSpeakerBody>;
+export type CreateEventSpeakerMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create an event speaker
+ */
+export const useCreateEventSpeaker = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createEventSpeaker>>,
+    TError,
+    { data: BodyType<CreateEventSpeakerBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createEventSpeaker>>,
+  TError,
+  { data: BodyType<CreateEventSpeakerBody> },
+  TContext
+> => {
+  return useMutation(getCreateEventSpeakerMutationOptions(options));
+};
+
+/**
+ * @summary Update an event speaker
+ */
+export const getUpdateEventSpeakerUrl = (id: number) => {
+  return `/api/event-speakers/${id}`;
+};
+
+export const updateEventSpeaker = async (
+  id: number,
+  updateEventSpeakerBody: UpdateEventSpeakerBody,
+  options?: RequestInit,
+): Promise<EventSpeaker> => {
+  return customFetch<EventSpeaker>(getUpdateEventSpeakerUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateEventSpeakerBody),
+  });
+};
+
+export const getUpdateEventSpeakerMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateEventSpeaker>>,
+    TError,
+    { id: number; data: BodyType<UpdateEventSpeakerBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateEventSpeaker>>,
+  TError,
+  { id: number; data: BodyType<UpdateEventSpeakerBody> },
+  TContext
+> => {
+  const mutationKey = ["updateEventSpeaker"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateEventSpeaker>>,
+    { id: number; data: BodyType<UpdateEventSpeakerBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateEventSpeaker(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateEventSpeakerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateEventSpeaker>>
+>;
+export type UpdateEventSpeakerMutationBody = BodyType<UpdateEventSpeakerBody>;
+export type UpdateEventSpeakerMutationError = ErrorType<void>;
+
+/**
+ * @summary Update an event speaker
+ */
+export const useUpdateEventSpeaker = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateEventSpeaker>>,
+    TError,
+    { id: number; data: BodyType<UpdateEventSpeakerBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateEventSpeaker>>,
+  TError,
+  { id: number; data: BodyType<UpdateEventSpeakerBody> },
+  TContext
+> => {
+  return useMutation(getUpdateEventSpeakerMutationOptions(options));
+};
+
+/**
+ * @summary Delete an event speaker
+ */
+export const getDeleteEventSpeakerUrl = (id: number) => {
+  return `/api/event-speakers/${id}`;
+};
+
+export const deleteEventSpeaker = async (
+  id: number,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeleteEventSpeakerUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteEventSpeakerMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteEventSpeaker>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteEventSpeaker>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["deleteEventSpeaker"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteEventSpeaker>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteEventSpeaker(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteEventSpeakerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteEventSpeaker>>
+>;
+
+export type DeleteEventSpeakerMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete an event speaker
+ */
+export const useDeleteEventSpeaker = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteEventSpeaker>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteEventSpeaker>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getDeleteEventSpeakerMutationOptions(options));
 };
 
 /**

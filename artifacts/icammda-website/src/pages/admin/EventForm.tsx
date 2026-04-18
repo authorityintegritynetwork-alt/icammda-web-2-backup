@@ -16,6 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/AdminLayout";
 import RichTextEditor from "@/components/RichTextEditor";
+import EventSpeakersManager from "@/components/admin/EventSpeakersManager";
 
 const EVENT_TYPES = ["Webinar", "Workshop", "Symposium", "Training", "Conference"];
 
@@ -103,7 +104,7 @@ export default function EventForm() {
     if (isEdit && eventId) {
       await updateEvent.mutateAsync({ id: eventId, data: payload });
     } else {
-      await createEvent.mutateAsync(payload);
+      await createEvent.mutateAsync({ data: payload });
     }
     queryClient.invalidateQueries({ queryKey: getListEventsQueryKey() });
     navigate("/admin/events");
@@ -303,6 +304,15 @@ export default function EventForm() {
               Cancel
             </Button>
           </div>
+
+          {isEdit && eventId && (
+            <EventSpeakersManager eventId={eventId} />
+          )}
+          {!isEdit && (
+            <p className="text-xs text-muted-foreground bg-muted/40 border border-border rounded-lg px-3 py-2">
+              💡 Save the event first to add speakers and guests.
+            </p>
+          )}
 
           {(createEvent.isError || updateEvent.isError) && (
             <p className="text-sm text-destructive" data-testid="event-form-error">

@@ -364,6 +364,71 @@ export interface UpdateResearchPublicationBody {
   displayOrder?: number;
 }
 
+export interface EventSpeaker {
+  id: number;
+  eventId: number;
+  name: string;
+  /** @nullable */
+  title?: string | null;
+  /** @nullable */
+  affiliation?: string | null;
+  /** @nullable */
+  bio?: string | null;
+  /** @nullable */
+  photoUrl?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
+  /** @nullable */
+  websiteUrl?: string | null;
+  /** @nullable */
+  email?: string | null;
+  speakerType: string;
+  displayOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateEventSpeakerBody {
+  eventId: number;
+  name: string;
+  /** @nullable */
+  title?: string | null;
+  /** @nullable */
+  affiliation?: string | null;
+  /** @nullable */
+  bio?: string | null;
+  /** @nullable */
+  photoUrl?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
+  /** @nullable */
+  websiteUrl?: string | null;
+  /** @nullable */
+  email?: string | null;
+  speakerType?: string;
+  displayOrder?: number;
+}
+
+export interface UpdateEventSpeakerBody {
+  name?: string;
+  /** @nullable */
+  title?: string | null;
+  /** @nullable */
+  affiliation?: string | null;
+  /** @nullable */
+  bio?: string | null;
+  /** @nullable */
+  photoUrl?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
+  /** @nullable */
+  websiteUrl?: string | null;
+  /** @nullable */
+  email?: string | null;
+  speakerType?: string;
+  displayOrder?: number;
+}
+
 export interface SiteStats {
   totalPosts: number;
   totalEvents: number;
@@ -421,6 +486,10 @@ export type ListEventsParams = {
 
 export type ListResearchMembersParams = {
   visiting?: boolean;
+};
+
+export type ListEventSpeakersParams = {
+  eventId?: number;
 };
 
 export type GetSiteContentParams = {

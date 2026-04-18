@@ -538,6 +538,94 @@ export const DeleteResearchPublicationParams = zod.object({
 });
 
 /**
+ * @summary List event speakers (optionally filter by event)
+ */
+export const ListEventSpeakersQueryParams = zod.object({
+  eventId: zod.coerce.number().optional(),
+});
+
+export const ListEventSpeakersResponseItem = zod.object({
+  id: zod.number(),
+  eventId: zod.number(),
+  name: zod.string(),
+  title: zod.string().nullish(),
+  affiliation: zod.string().nullish(),
+  bio: zod.string().nullish(),
+  photoUrl: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
+  websiteUrl: zod.string().nullish(),
+  email: zod.string().nullish(),
+  speakerType: zod.string(),
+  displayOrder: zod.number(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const ListEventSpeakersResponse = zod.array(
+  ListEventSpeakersResponseItem,
+);
+
+/**
+ * @summary Create an event speaker
+ */
+export const CreateEventSpeakerBody = zod.object({
+  eventId: zod.number(),
+  name: zod.string(),
+  title: zod.string().nullish(),
+  affiliation: zod.string().nullish(),
+  bio: zod.string().nullish(),
+  photoUrl: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
+  websiteUrl: zod.string().nullish(),
+  email: zod.string().nullish(),
+  speakerType: zod.string().optional(),
+  displayOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Update an event speaker
+ */
+export const UpdateEventSpeakerParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateEventSpeakerBody = zod.object({
+  name: zod.string().optional(),
+  title: zod.string().nullish(),
+  affiliation: zod.string().nullish(),
+  bio: zod.string().nullish(),
+  photoUrl: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
+  websiteUrl: zod.string().nullish(),
+  email: zod.string().nullish(),
+  speakerType: zod.string().optional(),
+  displayOrder: zod.number().optional(),
+});
+
+export const UpdateEventSpeakerResponse = zod.object({
+  id: zod.number(),
+  eventId: zod.number(),
+  name: zod.string(),
+  title: zod.string().nullish(),
+  affiliation: zod.string().nullish(),
+  bio: zod.string().nullish(),
+  photoUrl: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
+  websiteUrl: zod.string().nullish(),
+  email: zod.string().nullish(),
+  speakerType: zod.string(),
+  displayOrder: zod.number(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete an event speaker
+ */
+export const DeleteEventSpeakerParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
  * @summary List all partners
  */
 export const ListPartnersResponseItem = zod.object({

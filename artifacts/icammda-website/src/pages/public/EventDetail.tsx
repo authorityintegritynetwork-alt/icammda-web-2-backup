@@ -1,11 +1,121 @@
 import { useState } from "react";
 import { useRoute, Link } from "wouter";
 import { format } from "date-fns";
-import { ArrowLeft, Calendar, MapPin, ExternalLink, CheckCircle, Send } from "lucide-react";
-import { useListEvents } from "@workspace/api-client-react";
+import { ArrowLeft, Calendar, MapPin, ExternalLink, CheckCircle, Send, Linkedin, Globe, Mail, Users } from "lucide-react";
+import { useListEvents, useListEventSpeakers } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
+
+function getPhotoSrc(url?: string | null) {
+  if (!url) return "";
+  if (url.startsWith("/objects/")) return `/api/storage/objects/${url.slice("/objects/".length)}`;
+  return url;
+}
+
+function getInitials(name: string) {
+  return name.split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? "").join("");
+}
+
+type Speaker = {
+  id: number;
+  name: string;
+  title?: string | null;
+  affiliation?: string | null;
+  bio?: string | null;
+  photoUrl?: string | null;
+  linkedinUrl?: string | null;
+  websiteUrl?: string | null;
+  email?: string | null;
+  speakerType: string;
+};
+
+function SpeakerCard({ speaker, onClick }: { speaker: Speaker; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group text-left bg-card border border-card-border rounded-2xl p-5 hover:border-cyan-500/40 hover:shadow-md transition-all"
+      data-testid={`speaker-card-${speaker.id}`}
+    >
+      <div className="flex items-start gap-4">
+        {speaker.photoUrl ? (
+          <img src={getPhotoSrc(speaker.photoUrl)} alt={speaker.name} className="w-16 h-16 rounded-full object-cover shrink-0 border border-border" />
+        ) : (
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/15 to-violet-500/15 border border-border flex items-center justify-center shrink-0">
+            <span className="text-cyan-600 font-bold text-sm">{getInitials(speaker.name)}</span>
+          </div>
+        )}
+        <div className="flex-1 min-w-0">
+          <span className="text-[10px] font-bold tracking-widest uppercase text-cyan-600">{speaker.speakerType}</span>
+          <p className="font-serif text-foreground text-base mt-0.5 group-hover:text-cyan-700 transition-colors">{speaker.name}</p>
+          {speaker.title && <p className="text-xs text-muted-foreground mt-0.5">{speaker.title}</p>}
+          {speaker.affiliation && <p className="text-xs text-muted-foreground/80 mt-0.5 truncate">{speaker.affiliation}</p>}
+        </div>
+      </div>
+      {speaker.bio && (
+        <p className="text-xs text-muted-foreground mt-3 line-clamp-2 leading-relaxed">{speaker.bio}</p>
+      )}
+      <p className="text-[10px] text-cyan-600/70 font-semibold mt-3 group-hover:text-cyan-600 transition-colors">View profile →</p>
+    </button>
+  );
+}
+
+function SpeakerDialog({ speaker, open, onOpenChange }: { speaker: Speaker | null; open: boolean; onOpenChange: (o: boolean) => void }) {
+  if (!speaker) return null;
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto" data-testid="speaker-detail-dialog">
+        <DialogHeader>
+          <DialogTitle className="sr-only">{speaker.name}</DialogTitle>
+          <DialogDescription className="sr-only">{speaker.speakerType} biography and contact details</DialogDescription>
+        </DialogHeader>
+        <div className="flex items-start gap-4 mb-4">
+          {speaker.photoUrl ? (
+            <img src={getPhotoSrc(speaker.photoUrl)} alt={speaker.name} className="w-20 h-20 rounded-full object-cover shrink-0 border border-border" />
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500/15 to-violet-500/15 border border-border flex items-center justify-center shrink-0">
+              <span className="text-cyan-600 font-bold text-base">{getInitials(speaker.name)}</span>
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-cyan-600">{speaker.speakerType}</span>
+            <h3 className="font-serif text-2xl text-foreground mt-1">{speaker.name}</h3>
+            {speaker.title && <p className="text-sm text-foreground/80 mt-0.5">{speaker.title}</p>}
+            {speaker.affiliation && <p className="text-xs text-muted-foreground mt-0.5">{speaker.affiliation}</p>}
+          </div>
+        </div>
+
+        {speaker.bio && (
+          <div className="text-sm text-foreground/85 leading-relaxed whitespace-pre-line border-t border-border pt-4">
+            {speaker.bio}
+          </div>
+        )}
+
+        {(speaker.email || speaker.linkedinUrl || speaker.websiteUrl) && (
+          <div className="flex flex-wrap gap-2 pt-4 border-t border-border mt-4">
+            {speaker.email && (
+              <a href={`mailto:${speaker.email}`} className="inline-flex items-center gap-1.5 text-xs text-cyan-600 hover:underline">
+                <Mail size={12} /> {speaker.email}
+              </a>
+            )}
+            {speaker.linkedinUrl && (
+              <a href={speaker.linkedinUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs text-cyan-600 hover:underline">
+                <Linkedin size={12} /> LinkedIn
+              </a>
+            )}
+            {speaker.websiteUrl && (
+              <a href={speaker.websiteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs text-cyan-600 hover:underline">
+                <Globe size={12} /> Website
+              </a>
+            )}
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 interface CustomField { name: string; label: string; type: string; required: boolean; }
 
@@ -90,6 +200,11 @@ export default function EventDetail() {
   const [, params] = useRoute("/events/:slug");
   const { data: events, isLoading } = useListEvents({ published: true });
   const event = events?.find((e) => e.slug === params?.slug);
+  const { data: speakers } = useListEventSpeakers(
+    event ? { eventId: event.id } : undefined,
+    { query: { enabled: !!event } }
+  );
+  const [activeSpeaker, setActiveSpeaker] = useState<Speaker | null>(null);
 
   const customFields: CustomField[] = (() => {
     if (!event?.customFormFields) return [];
@@ -180,6 +295,20 @@ export default function EventDetail() {
               dangerouslySetInnerHTML={{ __html: event.description }}
               data-testid="event-detail-content"
             />
+
+            {speakers && speakers.length > 0 && (
+              <div className="mt-12" data-testid="event-speakers-section">
+                <div className="flex items-center gap-2 mb-5">
+                  <Users size={18} className="text-cyan-600" />
+                  <h2 className="font-serif text-foreground text-2xl">Speakers & Guests</h2>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {speakers.map((s) => (
+                    <SpeakerCard key={s.id} speaker={s} onClick={() => setActiveSpeaker(s)} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -238,6 +367,8 @@ export default function EventDetail() {
           </div>
         </div>
       </section>
+
+      <SpeakerDialog speaker={activeSpeaker} open={!!activeSpeaker} onOpenChange={(o) => !o && setActiveSpeaker(null)} />
 
       <PublicFooter />
     </div>

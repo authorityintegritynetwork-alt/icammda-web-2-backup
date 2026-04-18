@@ -577,6 +577,90 @@ paths:
         "204":
           description: Deleted
 
+  /event-speakers:
+    get:
+      operationId: listEventSpeakers
+      tags: [events]
+      summary: List event speakers (optionally filter by event)
+      parameters:
+        - name: eventId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of speakers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventSpeaker"
+    post:
+      operationId: createEventSpeaker
+      tags: [events]
+      summary: Create an event speaker
+      security:
+        - clerkAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventSpeakerBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventSpeaker"
+
+  /event-speakers/{id}:
+    patch:
+      operationId: updateEventSpeaker
+      tags: [events]
+      summary: Update an event speaker
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEventSpeakerBody"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventSpeaker"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteEventSpeaker
+      tags: [events]
+      summary: Delete an event speaker
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
   /partners:
     get:
       operationId: listPartners
@@ -1461,6 +1545,101 @@ components:
           type: ["string", "null"]
         abstract:
           type: ["string", "null"]
+        displayOrder:
+          type: integer
+
+    EventSpeaker:
+      type: object
+      properties:
+        id:
+          type: integer
+        eventId:
+          type: integer
+        name:
+          type: string
+        title:
+          type: ["string", "null"]
+        affiliation:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        photoUrl:
+          type: ["string", "null"]
+        linkedinUrl:
+          type: ["string", "null"]
+        websiteUrl:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        speakerType:
+          type: string
+        displayOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - eventId
+        - name
+        - speakerType
+        - displayOrder
+        - createdAt
+        - updatedAt
+
+    CreateEventSpeakerBody:
+      type: object
+      properties:
+        eventId:
+          type: integer
+        name:
+          type: string
+        title:
+          type: ["string", "null"]
+        affiliation:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        photoUrl:
+          type: ["string", "null"]
+        linkedinUrl:
+          type: ["string", "null"]
+        websiteUrl:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        speakerType:
+          type: string
+        displayOrder:
+          type: integer
+      required:
+        - eventId
+        - name
+
+    UpdateEventSpeakerBody:
+      type: object
+      properties:
+        name:
+          type: string
+        title:
+          type: ["string", "null"]
+        affiliation:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        photoUrl:
+          type: ["string", "null"]
+        linkedinUrl:
+          type: ["string", "null"]
+        websiteUrl:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        speakerType:
+          type: string
         displayOrder:
           type: integer
 
