@@ -18,7 +18,7 @@ function getInitials(name: string) {
 
 function getPhotoSrc(url?: string | null) {
   if (!url) return "";
-  if (url.startsWith("/objects/")) return `/api${url}`;
+  if (url.startsWith("/objects/")) return `/api/storage/objects/${url.slice("/objects/".length)}`;
   return url;
 }
 
