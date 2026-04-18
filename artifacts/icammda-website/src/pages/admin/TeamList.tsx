@@ -148,7 +148,7 @@ export default function TeamList() {
     if (editing !== null) {
       await updateMember.mutateAsync({ id: editing, data: payload });
     } else {
-      await createMember.mutateAsync(payload);
+      await createMember.mutateAsync({ data: payload });
     }
     queryClient.invalidateQueries({ queryKey: getListTeamMembersQueryKey() });
     setDialogOpen(false);
