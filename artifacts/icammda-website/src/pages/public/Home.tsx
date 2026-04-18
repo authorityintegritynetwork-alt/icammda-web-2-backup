@@ -86,15 +86,6 @@ export default function Home() {
                 </Link>
               </div>
 
-              {/* Stats strip */}
-              <div className="grid grid-cols-4 gap-5 mt-14 pt-10 border-t border-white/8">
-                {statsData.map((stat) => (
-                  <div key={stat.label} className="text-center" data-testid={`hero-stat-${stat.label}`}>
-                    <p className="text-white font-bold text-2xl leading-none">{stat.value}</p>
-                    <p className="text-white/35 text-[10px] mt-1 leading-snug">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Right side — logo + floating elements */}
