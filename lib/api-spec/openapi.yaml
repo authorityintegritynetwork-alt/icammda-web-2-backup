@@ -499,6 +499,84 @@ paths:
         "204":
           description: Deleted
 
+  /research-publications:
+    get:
+      operationId: listResearchPublications
+      tags: [research]
+      summary: List research publications
+      responses:
+        "200":
+          description: List of publications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResearchPublication"
+    post:
+      operationId: createResearchPublication
+      tags: [research]
+      summary: Create a research publication
+      security:
+        - clerkAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResearchPublicationBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchPublication"
+
+  /research-publications/{id}:
+    patch:
+      operationId: updateResearchPublication
+      tags: [research]
+      summary: Update a publication
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateResearchPublicationBody"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchPublication"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteResearchPublication
+      tags: [research]
+      summary: Delete a publication
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
   /partners:
     get:
       operationId: listPartners
@@ -1306,6 +1384,84 @@ components:
         isVisiting:
           type: boolean
         order:
+          type: integer
+
+    ResearchPublication:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        authors:
+          type: string
+        journal:
+          type: ["string", "null"]
+        year:
+          type: ["integer", "null"]
+        doi:
+          type: ["string", "null"]
+        url:
+          type: ["string", "null"]
+        abstract:
+          type: ["string", "null"]
+        displayOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - authors
+        - displayOrder
+        - createdAt
+        - updatedAt
+
+    CreateResearchPublicationBody:
+      type: object
+      properties:
+        title:
+          type: string
+        authors:
+          type: string
+        journal:
+          type: ["string", "null"]
+        year:
+          type: ["integer", "null"]
+        doi:
+          type: ["string", "null"]
+        url:
+          type: ["string", "null"]
+        abstract:
+          type: ["string", "null"]
+        displayOrder:
+          type: integer
+      required:
+        - title
+        - authors
+
+    UpdateResearchPublicationBody:
+      type: object
+      properties:
+        title:
+          type: string
+        authors:
+          type: string
+        journal:
+          type: ["string", "null"]
+        year:
+          type: ["integer", "null"]
+        doi:
+          type: ["string", "null"]
+        url:
+          type: ["string", "null"]
+        abstract:
+          type: ["string", "null"]
+        displayOrder:
           type: integer
 
     SiteStats:

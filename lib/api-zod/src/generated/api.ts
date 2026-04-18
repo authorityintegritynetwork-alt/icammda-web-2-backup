@@ -465,6 +465,79 @@ export const DeleteResearchMemberParams = zod.object({
 });
 
 /**
+ * @summary List research publications
+ */
+export const ListResearchPublicationsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  authors: zod.string(),
+  journal: zod.string().nullish(),
+  year: zod.number().nullish(),
+  doi: zod.string().nullish(),
+  url: zod.string().nullish(),
+  abstract: zod.string().nullish(),
+  displayOrder: zod.number(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const ListResearchPublicationsResponse = zod.array(
+  ListResearchPublicationsResponseItem,
+);
+
+/**
+ * @summary Create a research publication
+ */
+export const CreateResearchPublicationBody = zod.object({
+  title: zod.string(),
+  authors: zod.string(),
+  journal: zod.string().nullish(),
+  year: zod.number().nullish(),
+  doi: zod.string().nullish(),
+  url: zod.string().nullish(),
+  abstract: zod.string().nullish(),
+  displayOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Update a publication
+ */
+export const UpdateResearchPublicationParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateResearchPublicationBody = zod.object({
+  title: zod.string().optional(),
+  authors: zod.string().optional(),
+  journal: zod.string().nullish(),
+  year: zod.number().nullish(),
+  doi: zod.string().nullish(),
+  url: zod.string().nullish(),
+  abstract: zod.string().nullish(),
+  displayOrder: zod.number().optional(),
+});
+
+export const UpdateResearchPublicationResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  authors: zod.string(),
+  journal: zod.string().nullish(),
+  year: zod.number().nullish(),
+  doi: zod.string().nullish(),
+  url: zod.string().nullish(),
+  abstract: zod.string().nullish(),
+  displayOrder: zod.number(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a publication
+ */
+export const DeleteResearchPublicationParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
  * @summary List all partners
  */
 export const ListPartnersResponseItem = zod.object({

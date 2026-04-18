@@ -313,6 +313,57 @@ export interface UpdateResearchMemberBody {
   order?: number;
 }
 
+export interface ResearchPublication {
+  id: number;
+  title: string;
+  authors: string;
+  /** @nullable */
+  journal?: string | null;
+  /** @nullable */
+  year?: number | null;
+  /** @nullable */
+  doi?: string | null;
+  /** @nullable */
+  url?: string | null;
+  /** @nullable */
+  abstract?: string | null;
+  displayOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateResearchPublicationBody {
+  title: string;
+  authors: string;
+  /** @nullable */
+  journal?: string | null;
+  /** @nullable */
+  year?: number | null;
+  /** @nullable */
+  doi?: string | null;
+  /** @nullable */
+  url?: string | null;
+  /** @nullable */
+  abstract?: string | null;
+  displayOrder?: number;
+}
+
+export interface UpdateResearchPublicationBody {
+  title?: string;
+  authors?: string;
+  /** @nullable */
+  journal?: string | null;
+  /** @nullable */
+  year?: number | null;
+  /** @nullable */
+  doi?: string | null;
+  /** @nullable */
+  url?: string | null;
+  /** @nullable */
+  abstract?: string | null;
+  displayOrder?: number;
+}
+
 export interface SiteStats {
   totalPosts: number;
   totalEvents: number;

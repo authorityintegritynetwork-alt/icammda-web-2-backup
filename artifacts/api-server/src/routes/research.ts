@@ -1,11 +1,13 @@
 import { Router, type IRouter } from "express";
 import { eq, asc } from "drizzle-orm";
-import { db, researchGroupsTable, researchMembersTable } from "@workspace/db";
+import { db, researchGroupsTable, researchMembersTable, researchPublicationsTable } from "@workspace/db";
 import {
   CreateResearchGroupBody,
   UpdateResearchGroupBody,
   CreateResearchMemberBody,
   UpdateResearchMemberBody,
+  CreateResearchPublicationBody,
+  UpdateResearchPublicationBody,
 } from "@workspace/api-zod";
 import { requireAuth } from "../middlewares/requireAuth";
 
@@ -115,6 +117,52 @@ router.delete("/research-members/:id", requireAuth, async (req, res): Promise<vo
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const [member] = await db.delete(researchMembersTable).where(eq(researchMembersTable.id, id)).returning();
   if (!member) { res.status(404).json({ error: "Research member not found" }); return; }
+  res.sendStatus(204);
+});
+
+// ── Research Publications ────────────────────────────────────────────────────
+
+router.get("/research-publications", async (_req, res): Promise<void> => {
+  const pubs = await db
+    .select()
+    .from(researchPublicationsTable)
+    .orderBy(asc(researchPublicationsTable.displayOrder), asc(researchPublicationsTable.createdAt));
+  res.json(pubs);
+});
+
+router.post("/research-publications", requireAuth, async (req, res): Promise<void> => {
+  const parsed = CreateResearchPublicationBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [pub] = await db.insert(researchPublicationsTable).values({
+    title: parsed.data.title,
+    authors: parsed.data.authors,
+    journal: parsed.data.journal ?? null,
+    year: parsed.data.year ?? null,
+    doi: parsed.data.doi ?? null,
+    url: parsed.data.url ?? null,
+    abstract: parsed.data.abstract ?? null,
+    displayOrder: parsed.data.displayOrder ?? 0,
+  }).returning();
+  res.status(201).json(pub);
+});
+
+router.patch("/research-publications/:id", requireAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id as string, 10);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
+  const parsed = UpdateResearchPublicationBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const updates = Object.fromEntries(Object.entries(parsed.data).filter(([, v]) => v !== undefined));
+  if (Object.keys(updates).length === 0) { res.status(400).json({ error: "No fields to update" }); return; }
+  const [pub] = await db.update(researchPublicationsTable).set(updates).where(eq(researchPublicationsTable.id, id)).returning();
+  if (!pub) { res.status(404).json({ error: "Publication not found" }); return; }
+  res.json(pub);
+});
+
+router.delete("/research-publications/:id", requireAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id as string, 10);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
+  const [pub] = await db.delete(researchPublicationsTable).where(eq(researchPublicationsTable.id, id)).returning();
+  if (!pub) { res.status(404).json({ error: "Publication not found" }); return; }
   res.sendStatus(204);
 });
 

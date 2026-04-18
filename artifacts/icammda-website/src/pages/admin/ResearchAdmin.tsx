@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Plus, Edit, Trash2, FlaskConical, Users, ChevronDown, ChevronRight, Upload, Loader2 } from "lucide-react";
+import { Plus, Edit, Trash2, FlaskConical, Users, ChevronDown, ChevronRight, Upload, Loader2, BookOpen, ExternalLink } from "lucide-react";
 import {
   useListResearchGroups,
   useListResearchMembers,
@@ -9,8 +9,13 @@ import {
   useCreateResearchMember,
   useUpdateResearchMember,
   useDeleteResearchMember,
+  useListResearchPublications,
+  useCreateResearchPublication,
+  useUpdateResearchPublication,
+  useDeleteResearchPublication,
   getListResearchGroupsQueryKey,
   getListResearchMembersQueryKey,
+  getListResearchPublicationsQueryKey,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -111,6 +116,63 @@ export default function ResearchAdmin() {
     if (url.startsWith("/objects/")) return `/api${url}`;
     return url;
   };
+
+  // ── Publications state ─────────────────────────────────────────────────────
+  const { data: publications, isLoading: pubsLoading } = useListResearchPublications();
+  const createPub = useCreateResearchPublication();
+  const updatePub = useUpdateResearchPublication();
+  const deletePub = useDeleteResearchPublication();
+
+  const EMPTY_PUB = { title: "", authors: "", journal: "", year: "", doi: "", url: "", abstract: "", displayOrder: "0" };
+  const [pubDialog, setPubDialog] = useState(false);
+  const [editingPub, setEditingPub] = useState<number | null>(null);
+  const [pubForm, setPubForm] = useState(EMPTY_PUB);
+
+  const openCreatePub = () => { setEditingPub(null); setPubForm(EMPTY_PUB); setPubDialog(true); };
+  const openEditPub = (p: NonNullable<typeof publications>[0]) => {
+    setEditingPub(p.id);
+    setPubForm({
+      title: p.title,
+      authors: p.authors,
+      journal: p.journal ?? "",
+      year: p.year != null ? String(p.year) : "",
+      doi: p.doi ?? "",
+      url: p.url ?? "",
+      abstract: p.abstract ?? "",
+      displayOrder: String(p.displayOrder ?? 0),
+    });
+    setPubDialog(true);
+  };
+
+  const handleSavePub = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const yearNum = pubForm.year.trim() ? parseInt(pubForm.year, 10) : null;
+    const payload = {
+      title: pubForm.title.trim(),
+      authors: pubForm.authors.trim(),
+      journal: pubForm.journal.trim() || null,
+      year: Number.isFinite(yearNum as number) ? (yearNum as number) : null,
+      doi: pubForm.doi.trim() || null,
+      url: pubForm.url.trim() || null,
+      abstract: pubForm.abstract.trim() || null,
+      displayOrder: parseInt(pubForm.displayOrder, 10) || 0,
+    };
+    if (editingPub !== null) {
+      await updatePub.mutateAsync({ id: editingPub, data: payload });
+    } else {
+      await createPub.mutateAsync({ data: payload });
+    }
+    queryClient.invalidateQueries({ queryKey: getListResearchPublicationsQueryKey() });
+    setPubDialog(false);
+  };
+
+  const handleDeletePub = async (id: number, title: string) => {
+    if (!confirm(`Delete publication "${title}"?`)) return;
+    await deletePub.mutateAsync({ id });
+    queryClient.invalidateQueries({ queryKey: getListResearchPublicationsQueryKey() });
+  };
+
+  const savingPub = createPub.isPending || updatePub.isPending;
 
   const { data: visitingMembers, isLoading: visitorsLoading } = useListResearchMembers({ visiting: true } as Parameters<typeof useListResearchMembers>[0]);
 
@@ -351,6 +413,114 @@ export default function ResearchAdmin() {
           </div>
         </div>
       </div>
+
+      {/* ── Publications section ── */}
+      <div className="mt-10">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h3 className="text-base font-semibold text-foreground">Publications</h3>
+            <p className="text-xs text-muted-foreground">Journal articles, book chapters, and other research outputs.</p>
+          </div>
+          <Button size="sm" variant="outline" onClick={openCreatePub} data-testid="add-publication-btn">
+            <Plus size={13} className="mr-1.5" /> Add Publication
+          </Button>
+        </div>
+        <div className="bg-card border border-card-border rounded-xl overflow-hidden">
+          {pubsLoading ? (
+            <div className="p-4 space-y-2"><Skeleton className="h-12 rounded-lg" /><Skeleton className="h-12 rounded-lg" /></div>
+          ) : !publications || publications.length === 0 ? (
+            <div className="text-center py-10 text-muted-foreground">
+              <BookOpen size={30} className="mx-auto mb-2 opacity-20" />
+              <p className="text-sm">No publications yet.</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-border">
+              {publications.map((p) => (
+                <div key={p.id} className="flex items-start gap-3 px-4 py-3" data-testid={`publication-${p.id}`}>
+                  <div className="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <BookOpen size={14} className="text-cyan-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground leading-snug">{p.title}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5 truncate">{p.authors}</p>
+                    <p className="text-[11px] text-muted-foreground/80 mt-0.5 truncate">
+                      {p.journal && <span className="italic">{p.journal}</span>}
+                      {p.journal && p.year ? " · " : ""}
+                      {p.year && <span>{p.year}</span>}
+                      {(p.doi || p.url) && (p.journal || p.year) ? " · " : ""}
+                      {p.doi && <span className="font-mono">DOI: {p.doi}</span>}
+                    </p>
+                  </div>
+                  <div className="flex gap-1 shrink-0">
+                    {p.url && (
+                      <a href={p.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center h-7 w-7 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground" aria-label="Open link">
+                        <ExternalLink size={11} />
+                      </a>
+                    )}
+                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => openEditPub(p)} data-testid={`edit-publication-${p.id}`}>
+                      <Edit size={11} />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0 hover:text-destructive" onClick={() => handleDeletePub(p.id, p.title)} data-testid={`delete-publication-${p.id}`}>
+                      <Trash2 size={11} />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Publication Dialog */}
+      <Dialog open={pubDialog} onOpenChange={setPubDialog}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto" data-testid="publication-dialog">
+          <DialogHeader>
+            <DialogTitle>{editingPub !== null ? "Edit Publication" : "Add Publication"}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSavePub} className="space-y-4 mt-2">
+            <div>
+              <Label htmlFor="pubTitle" className="mb-1.5 block">Title <span className="text-destructive">*</span></Label>
+              <Textarea id="pubTitle" required rows={2} value={pubForm.title} onChange={(e) => setPubForm((f) => ({ ...f, title: e.target.value }))} className="resize-none" placeholder="Full publication title" data-testid="pub-title-input" />
+            </div>
+            <div>
+              <Label htmlFor="pubAuthors" className="mb-1.5 block">Authors <span className="text-destructive">*</span></Label>
+              <Input id="pubAuthors" required value={pubForm.authors} onChange={(e) => setPubForm((f) => ({ ...f, authors: e.target.value }))} placeholder="e.g. Smith J., Doe A., Adebayo O." data-testid="pub-authors-input" />
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="col-span-2">
+                <Label htmlFor="pubJournal" className="mb-1.5 block">Journal / Source</Label>
+                <Input id="pubJournal" value={pubForm.journal} onChange={(e) => setPubForm((f) => ({ ...f, journal: e.target.value }))} placeholder="e.g. The Lancet" data-testid="pub-journal-input" />
+              </div>
+              <div>
+                <Label htmlFor="pubYear" className="mb-1.5 block">Year</Label>
+                <Input id="pubYear" type="number" value={pubForm.year} onChange={(e) => setPubForm((f) => ({ ...f, year: e.target.value }))} placeholder="2025" data-testid="pub-year-input" />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="pubDoi" className="mb-1.5 block">DOI</Label>
+              <Input id="pubDoi" value={pubForm.doi} onChange={(e) => setPubForm((f) => ({ ...f, doi: e.target.value }))} placeholder="10.xxxx/xxxxxx" data-testid="pub-doi-input" />
+            </div>
+            <div>
+              <Label htmlFor="pubUrl" className="mb-1.5 block">Link / URL</Label>
+              <Input id="pubUrl" type="url" value={pubForm.url} onChange={(e) => setPubForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://doi.org/..." data-testid="pub-url-input" />
+            </div>
+            <div>
+              <Label htmlFor="pubAbstract" className="mb-1.5 block">Abstract / Summary</Label>
+              <Textarea id="pubAbstract" rows={4} value={pubForm.abstract} onChange={(e) => setPubForm((f) => ({ ...f, abstract: e.target.value }))} className="resize-none" placeholder="Optional short abstract or summary..." data-testid="pub-abstract-input" />
+            </div>
+            <div>
+              <Label htmlFor="pubOrder" className="mb-1.5 block">Display Order</Label>
+              <Input id="pubOrder" type="number" value={pubForm.displayOrder} onChange={(e) => setPubForm((f) => ({ ...f, displayOrder: e.target.value }))} data-testid="pub-order-input" />
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setPubDialog(false)}>Cancel</Button>
+              <Button type="submit" disabled={savingPub} data-testid="publication-dialog-save">
+                {savingPub ? "Saving..." : editingPub !== null ? "Update Publication" : "Create Publication"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Group Dialog */}
       <Dialog open={groupDialog} onOpenChange={setGroupDialog}>

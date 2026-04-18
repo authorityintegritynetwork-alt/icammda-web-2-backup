@@ -1,7 +1,7 @@
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
-import { FlaskConical, Microscope, Bug, Droplets, Brain, Heart, Users } from "lucide-react";
-import { useListResearchGroups, useListResearchMembers } from "@workspace/api-client-react";
+import { FlaskConical, Microscope, Bug, Droplets, Brain, Heart, Users, BookOpen, ExternalLink } from "lucide-react";
+import { useListResearchGroups, useListResearchMembers, useListResearchPublications } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
@@ -65,6 +65,7 @@ export default function Research() {
   const c = useSiteContent();
   const { data: groups, isLoading: groupsLoading } = useListResearchGroups();
   const { data: visitingMembers, isLoading: visitorsLoading } = useListResearchMembers({ visiting: true } as Parameters<typeof useListResearchMembers>[0]);
+  const { data: publications, isLoading: pubsLoading } = useListResearchPublications();
 
   const researchAreas = [
     { icon: Bug,      title: c("research.areas.01.title", "Malaria Modelling & Forecasting"),        description: c("research.areas.01.desc", "Supporting targeted interventions and early warning systems across endemic regions through advanced compartmental and agent-based models.") },
@@ -223,6 +224,85 @@ export default function Research() {
             )}
           </div>
         )}
+      </section>
+
+      {/* ═══════════ PUBLICATIONS ═══════════ */}
+      <section className="relative py-20 overflow-hidden border-t border-border/60">
+        <div className="absolute inset-0 bg-gradient-to-b from-cyan-50/30 to-transparent dark:from-cyan-500/5" />
+        <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="mb-12">
+            <p className="text-cyan-600 text-xs font-bold tracking-widest uppercase mb-3">Scholarly Outputs</p>
+            <h2 className="font-serif text-foreground text-3xl sm:text-4xl mb-4">Publications</h2>
+            <p className="text-muted-foreground max-w-2xl leading-relaxed">
+              Peer-reviewed journal articles, book chapters, and research reports authored by ICAMMDA scientists and collaborators.
+            </p>
+          </div>
+
+          {pubsLoading ? (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
+            </div>
+          ) : !publications || publications.length === 0 ? (
+            <div className="text-center py-16 border border-dashed border-border rounded-2xl">
+              <BookOpen className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
+              <p className="text-muted-foreground text-sm">Publications will appear here as they are added.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {publications.map((p) => {
+                const link = p.url || (p.doi ? `https://doi.org/${p.doi}` : null);
+                const Wrapper: React.ElementType = link ? "a" : "div";
+                const wrapperProps = link
+                  ? { href: link, target: "_blank", rel: "noopener noreferrer" }
+                  : {};
+                return (
+                  <Wrapper
+                    key={p.id}
+                    {...wrapperProps}
+                    className={`group block bg-card border border-border/70 rounded-2xl p-5 sm:p-6 transition-all ${link ? "hover:border-cyan-500/50 hover:shadow-md cursor-pointer" : ""}`}
+                    data-testid={`publication-${p.id}`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
+                        <BookOpen className="w-4 h-4 text-cyan-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-serif text-foreground text-lg leading-snug group-hover:text-cyan-700 transition-colors">
+                          {p.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm mt-1.5">{p.authors}</p>
+                        {(p.journal || p.year) && (
+                          <p className="text-muted-foreground/80 text-xs mt-1.5">
+                            {p.journal && <span className="italic">{p.journal}</span>}
+                            {p.journal && p.year ? " · " : ""}
+                            {p.year && <span className="font-medium">{p.year}</span>}
+                          </p>
+                        )}
+                        {p.abstract && (
+                          <p className="text-foreground/70 text-sm leading-relaxed mt-3 line-clamp-3">
+                            {p.abstract}
+                          </p>
+                        )}
+                        {(p.doi || link) && (
+                          <div className="flex flex-wrap items-center gap-3 mt-3 pt-3 border-t border-border/60">
+                            {p.doi && (
+                              <span className="text-[11px] font-mono text-muted-foreground">DOI: {p.doi}</span>
+                            )}
+                            {link && (
+                              <span className="inline-flex items-center gap-1 text-cyan-600 text-xs font-semibold group-hover:text-cyan-700">
+                                Read publication <ExternalLink size={11} />
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Wrapper>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </section>
 
       <PublicFooter />

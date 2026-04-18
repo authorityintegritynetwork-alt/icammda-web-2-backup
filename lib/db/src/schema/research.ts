@@ -23,5 +23,20 @@ export const researchMembersTable = pgTable("research_members", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
 
+export const researchPublicationsTable = pgTable("research_publications", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  authors: text("authors").notNull(),
+  journal: text("journal"),
+  year: integer("year"),
+  doi: text("doi"),
+  url: text("url"),
+  abstract: text("abstract"),
+  displayOrder: integer("display_order").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
+});
+
 export type ResearchGroup = typeof researchGroupsTable.$inferSelect;
 export type ResearchMember = typeof researchMembersTable.$inferSelect;
+export type ResearchPublication = typeof researchPublicationsTable.$inferSelect;
