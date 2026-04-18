@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Plus, Edit, Trash2, FlaskConical, Users, ChevronDown, ChevronRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { Plus, Edit, Trash2, FlaskConical, Users, ChevronDown, ChevronRight, Upload, Loader2 } from "lucide-react";
 import {
   useListResearchGroups,
   useListResearchMembers,
@@ -70,6 +70,47 @@ export default function ResearchAdmin() {
   const [editingMember, setEditingMember] = useState<number | null>(null);
   const [memberTargetGroupId, setMemberTargetGroupId] = useState<number | null>(null);
   const [memberForm, setMemberForm] = useState(EMPTY_MEMBER);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const memberFileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleMemberPhotoUpload = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Photo must be smaller than 5 MB.");
+      return;
+    }
+    setUploadingPhoto(true);
+    try {
+      const urlRes = await fetch("/api/storage/uploads/request-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
+      });
+      if (!urlRes.ok) throw new Error("Failed to get upload URL");
+      const { uploadURL, objectPath } = await urlRes.json();
+      const uploadRes = await fetch(uploadURL, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      if (!uploadRes.ok) throw new Error("Upload failed");
+      setMemberForm((f) => ({ ...f, photoUrl: objectPath }));
+    } catch (err) {
+      alert("Photo upload failed. Please try again or paste a URL manually.");
+      console.error(err);
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
+
+  const getMemberPhotoSrc = (url: string) => {
+    if (!url) return "";
+    if (url.startsWith("/objects/")) return `/api${url}`;
+    return url;
+  };
 
   const { data: visitingMembers, isLoading: visitorsLoading } = useListResearchMembers({ visiting: true } as Parameters<typeof useListResearchMembers>[0]);
 
@@ -364,14 +405,71 @@ export default function ResearchAdmin() {
               <Input id="memberEmail" type="email" value={memberForm.email} onChange={(e) => setMemberForm((f) => ({ ...f, email: e.target.value }))} data-testid="member-email-input" />
             </div>
             <div>
-              <Label htmlFor="memberPhoto" className="mb-1.5 block">Photo URL</Label>
-              <Input id="memberPhoto" type="url" value={memberForm.photoUrl} onChange={(e) => setMemberForm((f) => ({ ...f, photoUrl: e.target.value }))} placeholder="https://..." data-testid="member-photo-input" />
-              {memberForm.photoUrl && (
-                <div className="mt-2 flex items-center gap-2">
-                  <img src={memberForm.photoUrl} alt="Preview" className="w-10 h-10 rounded-full object-cover border border-border" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                  <span className="text-xs text-muted-foreground">Preview</span>
+              <Label className="mb-2 block">Photo</Label>
+              <div className="flex items-start gap-3">
+                <div className="w-16 h-16 rounded-full overflow-hidden shrink-0 border border-border bg-muted flex items-center justify-center">
+                  {memberForm.photoUrl ? (
+                    <img
+                      src={getMemberPhotoSrc(memberForm.photoUrl)}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                    />
+                  ) : (
+                    <Users className="w-6 h-6 text-muted-foreground/40" />
+                  )}
                 </div>
-              )}
+                <div className="flex-1 space-y-2">
+                  <input
+                    ref={memberFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleMemberPhotoUpload(file);
+                      e.target.value = "";
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => memberFileInputRef.current?.click()}
+                    disabled={uploadingPhoto}
+                    data-testid="member-photo-upload"
+                  >
+                    {uploadingPhoto ? (
+                      <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />Uploading...</>
+                    ) : (
+                      <><Upload className="w-3.5 h-3.5 mr-1.5" />Upload photo</>
+                    )}
+                  </Button>
+                  {memberForm.photoUrl && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-green-600">Photo set</span>
+                      <button
+                        type="button"
+                        onClick={() => setMemberForm((f) => ({ ...f, photoUrl: "" }))}
+                        className="text-xs text-muted-foreground hover:text-destructive underline"
+                      >
+                        remove
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mt-3">
+                <Label htmlFor="memberPhotoUrl" className="mb-1.5 block text-xs text-muted-foreground">Or paste an image URL</Label>
+                <Input
+                  id="memberPhotoUrl"
+                  type="url"
+                  value={memberForm.photoUrl}
+                  onChange={(e) => setMemberForm((f) => ({ ...f, photoUrl: e.target.value }))}
+                  placeholder="https://..."
+                  data-testid="member-photo-input"
+                />
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Switch
