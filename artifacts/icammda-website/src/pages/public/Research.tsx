@@ -16,6 +16,12 @@ function getInitials(name: string) {
     .join("");
 }
 
+function getPhotoSrc(url?: string | null) {
+  if (!url) return "";
+  if (url.startsWith("/objects/")) return `/api${url}`;
+  return url;
+}
+
 function MemberCard({ member, variant = "cyan" }: { member: { id: number; name: string; role: string; email?: string | null; photoUrl?: string | null; affiliation?: string | null }; variant?: "cyan" | "violet" }) {
   const colors = variant === "violet"
     ? "from-violet-600/30 to-violet-800/40 border-violet-500/20 text-violet-300"
@@ -25,7 +31,7 @@ function MemberCard({ member, variant = "cyan" }: { member: { id: number; name: 
     <div className="flex items-center gap-4 bg-muted/40 rounded-xl p-4 border border-border/60">
       {member.photoUrl ? (
         <img
-          src={member.photoUrl}
+          src={getPhotoSrc(member.photoUrl)}
           alt={member.name}
           className="w-11 h-11 rounded-full object-cover shrink-0 border border-border"
         />
