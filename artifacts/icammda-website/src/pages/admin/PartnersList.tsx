@@ -62,7 +62,7 @@ export default function PartnersList() {
     if (editing !== null) {
       await updatePartner.mutateAsync({ id: editing, data: payload });
     } else {
-      await createPartner.mutateAsync(payload);
+      await createPartner.mutateAsync({ data: payload });
     }
     queryClient.invalidateQueries({ queryKey: getListPartnersQueryKey() });
     setDialogOpen(false);
@@ -118,9 +118,9 @@ export default function PartnersList() {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm text-foreground truncate" data-testid={`partner-name-${partner.id}`}>{partner.name}</p>
-                      {partner.website && (
-                        <a href={partner.website} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline truncate block">
-                          {partner.website.replace(/^https?:\/\//, "")}
+                      {partner.websiteUrl && (
+                        <a href={partner.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline truncate block">
+                          {partner.websiteUrl.replace(/^https?:\/\//, "")}
                         </a>
                       )}
                     </div>
