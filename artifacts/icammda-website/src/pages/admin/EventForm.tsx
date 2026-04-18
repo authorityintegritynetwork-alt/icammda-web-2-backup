@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/AdminLayout";
+import RichTextEditor from "@/components/RichTextEditor";
 
 const EVENT_TYPES = ["Webinar", "Workshop", "Symposium", "Training", "Conference"];
 
@@ -213,17 +214,15 @@ export default function EventForm() {
           </div>
 
           <div>
-            <Label htmlFor="description" className="mb-1.5 block">Description (HTML) <span className="text-destructive">*</span></Label>
-            <Textarea
-              id="description"
-              required
-              rows={10}
+            <Label htmlFor="description" className="mb-1.5 block">Description <span className="text-destructive">*</span></Label>
+            <RichTextEditor
               value={form.description}
-              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              placeholder="<p>Event description...</p>"
-              className="font-mono text-sm"
-              data-testid="event-description-input"
+              onChange={(html) => setForm((f) => ({ ...f, description: html }))}
+              placeholder="Describe the event..."
+              minHeight={240}
+              testId="event-description-input"
             />
+            <p className="text-xs text-muted-foreground mt-1">Use the toolbar to format text, add headings, lists, links and more.</p>
           </div>
 
           {/* Registration form */}

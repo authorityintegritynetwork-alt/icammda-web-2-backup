@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/AdminLayout";
+import RichTextEditor from "@/components/RichTextEditor";
 
 const CATEGORIES = ["News", "Recent Training", "Upcoming Training"];
 
@@ -186,18 +187,15 @@ export default function PostForm() {
           </div>
 
           <div>
-            <Label htmlFor="content" className="mb-1.5 block">Content (HTML) <span className="text-destructive">*</span></Label>
-            <Textarea
-              id="content"
-              required
-              rows={12}
+            <Label htmlFor="content" className="mb-1.5 block">Content <span className="text-destructive">*</span></Label>
+            <RichTextEditor
               value={form.content}
-              onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))}
-              placeholder="<p>Post content...</p>"
-              className="font-mono text-sm"
-              data-testid="post-content-input"
+              onChange={(html) => setForm((f) => ({ ...f, content: html }))}
+              placeholder="Write the post content..."
+              minHeight={280}
+              testId="post-content-input"
             />
-            <p className="text-xs text-muted-foreground mt-1">Supports HTML markup.</p>
+            <p className="text-xs text-muted-foreground mt-1">Use the toolbar to format text, add headings, lists, links and more.</p>
           </div>
 
           <div className="flex flex-wrap gap-6 pt-2">
