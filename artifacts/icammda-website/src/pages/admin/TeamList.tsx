@@ -313,33 +313,29 @@ export default function TeamList() {
                   >
                     {uploading ? (
                       <><Loader2 size={13} className="mr-1.5 animate-spin" /> Uploading {uploadProgress}%</>
+                    ) : form.photoUrl ? (
+                      <><Upload size={13} className="mr-1.5" /> Replace Photo</>
                     ) : (
                       <><Upload size={13} className="mr-1.5" /> Upload Photo</>
                     )}
                   </Button>
-                  <div className="flex gap-2">
-                    <Input
-                      id="memberPhoto"
-                      type="url"
-                      value={form.photoUrl}
-                      onChange={(e) => setForm((f) => ({ ...f, photoUrl: e.target.value }))}
-                      placeholder="Or paste a URL…"
-                      className="text-xs"
-                      data-testid="member-photo-input"
-                    />
-                    {form.photoUrl && (
+                  {form.photoUrl ? (
+                    <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground bg-muted/40 rounded-md px-2.5 py-1.5">
+                      <span className="truncate">Photo uploaded</span>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-9 w-9 p-0 shrink-0"
+                        className="h-6 w-6 p-0 shrink-0"
                         onClick={() => setForm((f) => ({ ...f, photoUrl: "" }))}
+                        data-testid="remove-photo-btn"
                       >
-                        <X size={13} />
+                        <X size={12} />
                       </Button>
-                    )}
-                  </div>
-                  <p className="text-[11px] text-muted-foreground">JPG, PNG, WebP · max 5 MB</p>
+                    </div>
+                  ) : (
+                    <p className="text-[11px] text-muted-foreground">JPG or PNG, up to 5MB.</p>
+                  )}
                 </div>
               </div>
             </div>
