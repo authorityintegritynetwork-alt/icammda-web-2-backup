@@ -102,7 +102,7 @@ export default function Careers() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
 
             {/* ── Internship Application ── */}
             <div className="bg-white/5 border border-white/8 rounded-2xl p-7 flex flex-col hover:border-cyan-500/25 hover:bg-white/7 transition-all duration-300">
@@ -162,40 +162,6 @@ export default function Careers() {
                 <a
                   href="mailto:careers@icammda.org?subject=Visiting Scholar Application"
                   className="inline-flex items-center gap-2 text-violet-400 text-sm font-semibold hover:text-violet-300 transition-colors"
-                >
-                  Apply Now <ArrowRight size={13} />
-                </a>
-              </div>
-            </div>
-
-            {/* ── Graduate Internship Training ── */}
-            <div className="bg-white/5 border border-white/8 rounded-2xl p-7 flex flex-col hover:border-green-500/25 hover:bg-white/7 transition-all duration-300">
-              <div className="w-11 h-11 rounded-xl bg-green-500/15 border border-green-500/20 flex items-center justify-center mb-5 shrink-0">
-                <GraduationCap className="w-5 h-5 text-green-400" />
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-green-400 mb-3">Graduate Internship Training</span>
-              <h3 className="text-white font-semibold text-lg leading-snug mb-4">
-                Real-world experience for BSc &amp; MSc graduates
-              </h3>
-              <p className="text-white/50 text-sm leading-relaxed mb-5">
-                Our Graduate Internship Program is designed for BSc and MSc graduates who wish to apply their skills to real-world health challenges.
-              </p>
-              <ul className="space-y-2.5 flex-1">
-                {[
-                  "Hands-on experience with applied modelling, data analysis, and health systems research",
-                  "Contribute to active projects that influence policy and practice",
-                  "Duration: 3–12 months (flexible)",
-                ].map((item) => (
-                  <li key={item} className="flex gap-2 items-start text-white/45 text-xs leading-relaxed">
-                    <CheckCircle2 size={12} className="text-green-400 shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 pt-5 border-t border-white/8">
-                <a
-                  href="mailto:careers@icammda.org?subject=Graduate Internship Application"
-                  className="inline-flex items-center gap-2 text-green-400 text-sm font-semibold hover:text-green-300 transition-colors"
                 >
                   Apply Now <ArrowRight size={13} />
                 </a>
