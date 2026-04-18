@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "Zy_AhIbULzZKE6lXRlujm"
@@ -24,3 +23,15 @@ id = "mKUXbDuKGJs37WSqEkKnJ"
 uri = "file://artifacts/icammda-website/public/research-desk.png"
 type = "image"
 title = "research desk mathematical health"
+
+[[outputs]]
+id = "dx_06C3I50OlIBWMKwZSt"
+uri = "file://attached_assets/stock_images/team-collab.jpg"
+type = "image"
+title = "scientists collaborating laptop lab"
+
+[[outputs]]
+id = "K0odRSouLdXOl6ssy-fMo"
+uri = "file://attached_assets/stock_images/team-group.jpg"
+type = "image"
+title = "university group photo students researchers"
