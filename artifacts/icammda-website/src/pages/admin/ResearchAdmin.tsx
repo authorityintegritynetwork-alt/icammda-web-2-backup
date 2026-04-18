@@ -629,17 +629,19 @@ export default function ResearchAdmin() {
                   )}
                 </div>
               </div>
-              <div className="mt-3">
-                <Label htmlFor="memberPhotoUrl" className="mb-1.5 block text-xs text-muted-foreground">Or paste an image URL</Label>
-                <Input
-                  id="memberPhotoUrl"
-                  type="url"
-                  value={memberForm.photoUrl}
-                  onChange={(e) => setMemberForm((f) => ({ ...f, photoUrl: e.target.value }))}
-                  placeholder="https://..."
-                  data-testid="member-photo-input"
-                />
-              </div>
+              {!memberForm.photoUrl?.startsWith("/objects/") && (
+                <div className="mt-3">
+                  <Label htmlFor="memberPhotoUrl" className="mb-1.5 block text-xs text-muted-foreground">Or paste an image URL (optional)</Label>
+                  <Input
+                    id="memberPhotoUrl"
+                    type="text"
+                    value={memberForm.photoUrl}
+                    onChange={(e) => setMemberForm((f) => ({ ...f, photoUrl: e.target.value }))}
+                    placeholder="https://..."
+                    data-testid="member-photo-input"
+                  />
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-3">
               <Switch
