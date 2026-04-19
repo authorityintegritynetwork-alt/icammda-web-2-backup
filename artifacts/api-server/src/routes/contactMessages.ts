@@ -4,6 +4,7 @@ import { db, contactMessagesTable } from "@workspace/db";
 import { CreateContactMessageBody, UpdateContactMessageBody } from "@workspace/api-zod";
 import { requireAdmin } from "../middlewares/requireAdmin";
 import { contactFormLimiter } from "../middlewares/rateLimits";
+import { sendContactNotification } from "../lib/contactNotifier";
 
 const router: IRouter = Router();
 
@@ -23,6 +24,16 @@ router.post("/contact-messages", contactFormLimiter, async (req, res): Promise<v
     message: message.trim(),
     ipAddress: ip,
   }).returning();
+
+  void sendContactNotification({
+    id: created.id,
+    name: created.name,
+    email: created.email,
+    subject: created.subject,
+    message: created.message,
+    createdAt: created.createdAt instanceof Date ? created.createdAt : new Date(created.createdAt),
+  });
+
   res.status(201).json({ id: created.id, success: true });
 });
 
