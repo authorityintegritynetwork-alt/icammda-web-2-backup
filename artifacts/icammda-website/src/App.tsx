@@ -21,6 +21,8 @@ const Contact = lazy(() => import("@/pages/public/Contact"));
 const Research = lazy(() => import("@/pages/public/Research"));
 const ELearning = lazy(() => import("@/pages/public/ELearning"));
 const Careers = lazy(() => import("@/pages/public/Careers"));
+const Privacy = lazy(() => import("@/pages/public/Privacy"));
+const Terms = lazy(() => import("@/pages/public/Terms"));
 
 // Lazy: admin pages should never load for public visitors
 const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
@@ -176,6 +178,8 @@ function ClerkProviderWithRoutes() {
                 <Route path="/careers" component={Careers} />
                 <Route path="/team" component={Team} />
                 <Route path="/contact" component={Contact} />
+                <Route path="/privacy" component={Privacy} />
+                <Route path="/terms" component={Terms} />
 
                 {/* Auth */}
                 <Route path="/sign-in/*?" component={SignInPage} />

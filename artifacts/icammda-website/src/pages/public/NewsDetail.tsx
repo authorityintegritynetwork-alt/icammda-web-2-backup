@@ -7,6 +7,7 @@ import DOMPurify from "isomorphic-dompurify";
 import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { absoluteUrl, stripHtml, truncate, ORGANIZATION } from "@/lib/seo";
 
 export default function NewsDetail() {
@@ -81,9 +82,15 @@ export default function NewsDetail() {
       <PublicNav />
 
       {/* Hero */}
-      <section className="bg-[#07101e] pt-28 pb-16">
+      <section id="main-content" tabIndex={-1} className="bg-[#07101e] pt-28 pb-16 outline-none">
         <div className="max-w-3xl mx-auto px-5 sm:px-8">
-          <Link href="/news" className="inline-flex items-center gap-2 text-white/40 hover:text-cyan-400 text-xs font-medium mb-8 transition-colors" data-testid="back-to-news">
+          <Breadcrumbs
+            items={[
+              { label: "News & Events", href: "/news" },
+              { label: post.title },
+            ]}
+          />
+          <Link href="/news" className="inline-flex items-center gap-2 text-white/40 hover:text-cyan-400 text-xs font-medium mt-6 mb-8 transition-colors" data-testid="back-to-news">
             <ArrowLeft size={13} /> Back to News
           </Link>
           <span className="text-[10px] font-bold tracking-widest uppercase text-cyan-400 bg-cyan-400/10 px-2.5 py-1 rounded-full">{post.category}</span>

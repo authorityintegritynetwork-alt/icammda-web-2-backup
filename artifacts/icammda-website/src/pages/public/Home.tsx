@@ -59,7 +59,7 @@ export default function Home() {
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative overflow-hidden min-h-screen flex items-center" data-testid="hero-section">
+      <section id="main-content" tabIndex={-1} className="relative overflow-hidden min-h-screen flex items-center outline-none" data-testid="hero-section">
         {/* Full-bleed scientific background image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"

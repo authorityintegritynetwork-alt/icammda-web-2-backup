@@ -27,6 +27,15 @@ export default function PublicNav() {
   const isHome = location === "/";
 
   return (
+    <>
+      {/* Skip link for keyboard / screen-reader users */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-cyan-500 focus:text-[#07101e] focus:font-bold focus:text-sm focus:shadow-lg focus:outline-none"
+        data-testid="skip-to-content"
+      >
+        Skip to main content
+      </a>
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${
         scrolled || open || !isHome
@@ -128,5 +137,6 @@ export default function PublicNav() {
         </div>
       )}
     </header>
+    </>
   );
 }

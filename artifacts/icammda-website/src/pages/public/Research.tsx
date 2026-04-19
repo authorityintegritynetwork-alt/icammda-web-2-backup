@@ -94,7 +94,7 @@ export default function Research() {
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative overflow-hidden pt-32 pb-24">
+      <section id="main-content" tabIndex={-1} className="relative overflow-hidden pt-32 pb-24 outline-none">
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/section-bg.png')" }} />
         <div className="absolute inset-0 bg-gradient-to-r from-[#07101e]/97 via-[#07101e]/92 to-[#07101e]/80" />
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />

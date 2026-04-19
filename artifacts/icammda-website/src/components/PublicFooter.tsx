@@ -96,7 +96,17 @@ export default function PublicFooter() {
         {/* Bottom bar */}
         <div className="border-t border-white/8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] text-white/20">
           <p>&copy; {new Date().getFullYear()} ICAMMDA, Federal University Oye-Ekiti. All rights reserved.</p>
-          <p>WAMCAD Member Institution · Ekiti State, Nigeria</p>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:text-cyan-400 transition-colors" data-testid="footer-link-privacy">
+              Privacy Policy
+            </Link>
+            <span aria-hidden="true" className="text-white/15">·</span>
+            <Link href="/terms" className="hover:text-cyan-400 transition-colors" data-testid="footer-link-terms">
+              Terms of Use
+            </Link>
+            <span aria-hidden="true" className="text-white/15">·</span>
+            <span>WAMCAD Member · Ekiti State, Nigeria</span>
+          </div>
         </div>
       </div>
     </footer>
