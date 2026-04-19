@@ -27,11 +27,18 @@ export const requireAdmin = async (req: Request, res: Response, next: NextFuncti
 
   try {
     const user = await clerkClient.users.getUser(userId);
-    const emails = (user.emailAddresses ?? [])
-      .map((e) => e.emailAddress?.toLowerCase())
-      .filter(Boolean) as string[];
-    const isAdmin = emails.some((e) => adminEmails.includes(e));
-    if (!isAdmin) {
+    const primaryId = user.primaryEmailAddressId;
+    const primary = (user.emailAddresses ?? []).find((e) => e.id === primaryId);
+    const primaryEmail = primary?.emailAddress?.toLowerCase();
+    const isVerified = primary?.verification?.status === "verified";
+
+    if (!primaryEmail || !isVerified) {
+      logger.warn({ userId, hasPrimary: !!primaryEmail, isVerified }, "Admin denied: no verified primary email");
+      res.status(403).json({ error: "Forbidden: a verified primary email is required" });
+      return;
+    }
+
+    if (!adminEmails.includes(primaryEmail)) {
       res.status(403).json({ error: "Forbidden: admin access required" });
       return;
     }
