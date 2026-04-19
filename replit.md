@@ -71,17 +71,57 @@ All routes prefixed with `/api`:
 
 ## Environment Variables
 
-- `DATABASE_URL` — PostgreSQL connection string
+**Core (always required):**
+- `DATABASE_URL` — PostgreSQL connection string (works with Neon, Supabase, RDS, Koyeb-managed Postgres, etc.)
 - `CLERK_SECRET_KEY` — Clerk backend auth key
-- `VITE_CLERK_PUBLISHABLE_KEY` — Clerk frontend key
-- `VITE_CLERK_PROXY_URL` — Clerk proxy URL
-- `SESSION_SECRET` — Session secret
+- `VITE_CLERK_PUBLISHABLE_KEY` — Clerk frontend key (build-time)
+- `SESSION_SECRET` — Random 32+ byte string
+- `ADMIN_EMAILS` — Comma-separated list of admin email addresses
+
+**Email (Resend) — direct, no Replit connector:**
+- `RESEND_API_KEY` — from https://resend.com
+- `RESEND_FROM_EMAIL` — verified sender, e.g. `ICAMMDA <noreply@icammda.org>`
+
+**Object storage (S3-compatible — Cloudflare R2 recommended):**
+- `S3_BUCKET` — bucket name
+- `S3_REGION` — `auto` for R2, real region for AWS, etc.
+- `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY`
+- `S3_ENDPOINT` — required for R2/B2/MinIO; omit for AWS S3
+  - R2: `https://<account-id>.r2.cloudflarestorage.com`
+- `S3_FORCE_PATH_STYLE` — `true` for MinIO; default `false`
+- `S3_UPLOAD_PREFIX` — folder inside bucket (default `uploads`)
+
+**Optional:**
+- `CORS_ORIGIN` — comma-separated allowed origins for cross-origin clients (default: same-origin only)
+- `SITE_URL` — canonical site URL (used in sitemap/SEO/email links)
+- `VITE_API_BASE_URL` — only set if API and web are deployed on different origins
+- `VITE_CLERK_PROXY_URL` — only when using Clerk's proxy on a custom domain
+- `YOUTUBE_API_KEY` — for the e-learning video feed
+- `WEB_DIST_PATH` — overrides the auto-discovered SPA build directory
+
+## Deployment (Koyeb / any Docker host)
+
+The `Dockerfile` at the repo root produces **a single container** that serves both the API at `/api/*` and the React SPA at `/`:
+
+1. Push the repo to GitHub (use the Git tool in the workspace).
+2. On Koyeb → New App → Deploy from GitHub → choose this repo and branch `main`.
+3. Build method: **Dockerfile**. Instance: smallest is fine to start.
+4. Set all required env vars from the lists above.
+5. Set the port to **8080** (or expose `$PORT`; the app reads it).
+6. Add your custom domain (`icammda.org`) and follow Koyeb's DNS instructions.
+7. Run database migrations once: `pnpm --filter @workspace/db push --force` against the production `DATABASE_URL`.
+
+There are **no Replit-specific runtime dependencies left** in the deployed code:
+- Object storage uses the AWS SDK against any S3-compatible endpoint.
+- Resend uses `RESEND_API_KEY` directly.
+- The web build no longer imports any `@replit/*` Vite plugins.
 
 ## Seed Data
 
 Run `pnpm dlx tsx artifacts/api-server/src/seed.ts` from workspace root to seed test content.
 
-## Workflows
+## Workflows (development)
 
 - `artifacts/api-server: API Server` — Express API on port 8080
 - `artifacts/icammda-website: web` — Vite dev server (frontend)
+- `artifacts/mockup-sandbox: Component Preview Server` — Replit-only design tool, not deployed
