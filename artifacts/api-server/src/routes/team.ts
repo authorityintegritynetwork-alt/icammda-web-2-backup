@@ -7,7 +7,7 @@ import {
   UpdateTeamMemberParams,
   DeleteTeamMemberParams,
 } from "@workspace/api-zod";
-import { requireAuth } from "../middlewares/requireAuth";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
 
@@ -16,10 +16,13 @@ router.get("/team", async (req, res): Promise<void> => {
     .select()
     .from(teamTable)
     .orderBy(asc(teamTable.order), asc(teamTable.createdAt));
-  res.json(members);
+  // Strip emails from public response to prevent harvesting by spam bots.
+  // Admin views fetch members individually or use authenticated endpoints if added later.
+  const publicMembers = members.map(({ email: _email, ...rest }) => rest);
+  res.json(publicMembers);
 });
 
-router.post("/team", requireAuth, async (req, res): Promise<void> => {
+router.post("/team", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreateTeamMemberBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -32,7 +35,7 @@ router.post("/team", requireAuth, async (req, res): Promise<void> => {
   res.status(201).json(member);
 });
 
-router.patch("/team/:id", requireAuth, async (req, res): Promise<void> => {
+router.patch("/team/:id", requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) {
@@ -61,7 +64,7 @@ router.patch("/team/:id", requireAuth, async (req, res): Promise<void> => {
   res.json(member);
 });
 
-router.delete("/team/:id", requireAuth, async (req, res): Promise<void> => {
+router.delete("/team/:id", requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) {

@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { eq, asc } from "drizzle-orm";
 import { db, linkedinPostsTable } from "@workspace/db";
 import { CreateLinkedinPostBody, DeleteLinkedinPostParams } from "@workspace/api-zod";
-import { requireAuth } from "../middlewares/requireAuth";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
 
@@ -33,7 +33,7 @@ router.get("/linkedin-posts", async (_req, res): Promise<void> => {
   res.json(posts);
 });
 
-router.post("/linkedin-posts", requireAuth, async (req, res): Promise<void> => {
+router.post("/linkedin-posts", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreateLinkedinPostBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -53,7 +53,7 @@ router.post("/linkedin-posts", requireAuth, async (req, res): Promise<void> => {
   res.status(201).json(post);
 });
 
-router.delete("/linkedin-posts/:id", requireAuth, async (req, res): Promise<void> => {
+router.delete("/linkedin-posts/:id", requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) {

@@ -6,6 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./contactMessage";
+export * from "./createContactMessage201";
+export * from "./createContactMessageBody";
 export * from "./createEventBody";
 export * from "./createEventSpeakerBody";
 export * from "./createLinkedInPostBody";
@@ -34,6 +37,7 @@ export * from "./researchPublication";
 export * from "./siteContent";
 export * from "./siteStats";
 export * from "./teamMember";
+export * from "./updateContactMessageBody";
 export * from "./updateEventBody";
 export * from "./updateEventSpeakerBody";
 export * from "./updatePartnerBody";

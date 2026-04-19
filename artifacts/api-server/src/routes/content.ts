@@ -2,7 +2,7 @@ import { Router } from "express";
 import { db } from "@workspace/db";
 import { siteContent } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
-import { requireAuth } from "../middlewares/requireAuth";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router = Router();
 
@@ -131,7 +131,7 @@ router.get("/", async (req, res) => {
 });
 
 /* ─── PATCH /site-content/:id ────────────────────────────────────────────── */
-router.patch("/:id", requireAuth, async (req, res) => {
+router.patch("/:id", requireAdmin, async (req, res) => {
   const id = Number(req.params.id);
   const { value } = req.body as { value?: string };
 

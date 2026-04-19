@@ -9,7 +9,7 @@ import {
   DeletePostParams,
   ListPostsQueryParams,
 } from "@workspace/api-zod";
-import { requireAuth } from "../middlewares/requireAuth";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
 
@@ -42,7 +42,7 @@ router.get("/posts", async (req, res): Promise<void> => {
   res.json(posts);
 });
 
-router.post("/posts", requireAuth, async (req, res): Promise<void> => {
+router.post("/posts", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreatePostBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -71,7 +71,7 @@ router.get("/posts/:id", async (req, res): Promise<void> => {
   res.json(post);
 });
 
-router.patch("/posts/:id", requireAuth, async (req, res): Promise<void> => {
+router.patch("/posts/:id", requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) {
@@ -100,7 +100,7 @@ router.patch("/posts/:id", requireAuth, async (req, res): Promise<void> => {
   res.json(post);
 });
 
-router.delete("/posts/:id", requireAuth, async (req, res): Promise<void> => {
+router.delete("/posts/:id", requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) {

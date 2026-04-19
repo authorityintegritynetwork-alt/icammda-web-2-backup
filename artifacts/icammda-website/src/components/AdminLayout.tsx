@@ -14,10 +14,12 @@ import {
   ExternalLink,
   Linkedin,
   Type,
+  Inbox,
 } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/messages", label: "Messages", icon: Inbox },
   { href: "/admin/posts", label: "Posts", icon: FileText },
   { href: "/admin/events", label: "Events", icon: Calendar },
   { href: "/admin/team", label: "Team", icon: Users },

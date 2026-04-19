@@ -5,6 +5,7 @@ import { ArrowLeft, Calendar, MapPin, ExternalLink, CheckCircle, Send, Linkedin,
 import { useListEvents, useListEventSpeakers } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import DOMPurify from "isomorphic-dompurify";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 
@@ -292,7 +293,7 @@ export default function EventDetail() {
             )}
             <div
               className="prose prose-slate prose-headings:font-serif prose-headings:font-normal prose-a:text-cyan-600 max-w-none"
-              dangerouslySetInnerHTML={{ __html: event.description }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.description) }}
               data-testid="event-detail-content"
             />
 

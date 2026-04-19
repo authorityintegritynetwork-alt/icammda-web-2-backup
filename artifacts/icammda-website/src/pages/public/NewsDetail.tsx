@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { ArrowLeft, User, Calendar } from "lucide-react";
 import { useListPosts } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import DOMPurify from "isomorphic-dompurify";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 
@@ -80,7 +81,7 @@ export default function NewsDetail() {
         )}
         <div
           className="prose prose-slate prose-headings:font-serif prose-headings:font-normal prose-a:text-cyan-600 max-w-none"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
           data-testid="news-detail-content"
         />
       </article>

@@ -661,6 +661,88 @@ paths:
         "204":
           description: Deleted
 
+  /contact-messages:
+    post:
+      operationId: createContactMessage
+      tags: [contact]
+      summary: Submit a public contact form message (rate-limited)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContactMessageBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: integer }
+                  success: { type: boolean }
+                required: [id, success]
+    get:
+      operationId: listContactMessages
+      tags: [contact]
+      summary: List all contact messages (admin only)
+      security:
+        - clerkAuth: []
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContactMessage"
+
+  /contact-messages/{id}:
+    patch:
+      operationId: updateContactMessage
+      tags: [contact]
+      summary: Mark a contact message as read/unread (admin only)
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContactMessageBody"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactMessage"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteContactMessage
+      tags: [contact]
+      summary: Delete a contact message (admin only)
+      security:
+        - clerkAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
   /partners:
     get:
       operationId: listPartners
@@ -1547,6 +1629,33 @@ components:
           type: ["string", "null"]
         displayOrder:
           type: integer
+
+    ContactMessage:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string }
+        subject: { type: string }
+        message: { type: string }
+        isRead: { type: boolean }
+        ipAddress: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+      required: [id, name, email, subject, message, isRead, createdAt]
+
+    CreateContactMessageBody:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        email: { type: string, format: email }
+        subject: { type: string, minLength: 1 }
+        message: { type: string, minLength: 1 }
+      required: [name, email, subject, message]
+
+    UpdateContactMessageBody:
+      type: object
+      properties:
+        isRead: { type: boolean }
 
     EventSpeaker:
       type: object

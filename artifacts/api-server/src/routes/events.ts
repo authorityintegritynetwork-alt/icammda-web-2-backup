@@ -9,7 +9,7 @@ import {
   DeleteEventParams,
   ListEventsQueryParams,
 } from "@workspace/api-zod";
-import { requireAuth } from "../middlewares/requireAuth";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
 
@@ -46,7 +46,7 @@ router.get("/events", async (req, res): Promise<void> => {
   res.json(events);
 });
 
-router.post("/events", requireAuth, async (req, res): Promise<void> => {
+router.post("/events", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreateEventBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -86,7 +86,7 @@ router.get("/events/:id", async (req, res): Promise<void> => {
   res.json(event);
 });
 
-router.patch("/events/:id", requireAuth, async (req, res): Promise<void> => {
+router.patch("/events/:id", requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) {
@@ -113,7 +113,7 @@ router.patch("/events/:id", requireAuth, async (req, res): Promise<void> => {
   res.json(event);
 });
 
-router.delete("/events/:id", requireAuth, async (req, res): Promise<void> => {
+router.delete("/events/:id", requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) {

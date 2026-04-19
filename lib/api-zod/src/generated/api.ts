@@ -626,6 +626,63 @@ export const DeleteEventSpeakerParams = zod.object({
 });
 
 /**
+ * @summary Submit a public contact form message (rate-limited)
+ */
+
+export const CreateContactMessageBody = zod.object({
+  name: zod.string().min(1),
+  email: zod.string().email(),
+  subject: zod.string().min(1),
+  message: zod.string().min(1),
+});
+
+/**
+ * @summary List all contact messages (admin only)
+ */
+export const ListContactMessagesResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  email: zod.string(),
+  subject: zod.string(),
+  message: zod.string(),
+  isRead: zod.boolean(),
+  ipAddress: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+});
+export const ListContactMessagesResponse = zod.array(
+  ListContactMessagesResponseItem,
+);
+
+/**
+ * @summary Mark a contact message as read/unread (admin only)
+ */
+export const UpdateContactMessageParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateContactMessageBody = zod.object({
+  isRead: zod.boolean().optional(),
+});
+
+export const UpdateContactMessageResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  email: zod.string(),
+  subject: zod.string(),
+  message: zod.string(),
+  isRead: zod.boolean(),
+  ipAddress: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a contact message (admin only)
+ */
+export const DeleteContactMessageParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
  * @summary List all partners
  */
 export const ListPartnersResponseItem = zod.object({

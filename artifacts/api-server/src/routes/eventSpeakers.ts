@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { eq, asc } from "drizzle-orm";
 import { db, eventSpeakersTable } from "@workspace/db";
 import { CreateEventSpeakerBody, UpdateEventSpeakerBody } from "@workspace/api-zod";
-import { requireAuth } from "../middlewares/requireAuth";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
 
@@ -25,7 +25,7 @@ router.get("/event-speakers", async (req, res): Promise<void> => {
   res.json(speakers);
 });
 
-router.post("/event-speakers", requireAuth, async (req, res): Promise<void> => {
+router.post("/event-speakers", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreateEventSpeakerBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const [speaker] = await db.insert(eventSpeakersTable).values({
@@ -44,7 +44,7 @@ router.post("/event-speakers", requireAuth, async (req, res): Promise<void> => {
   res.status(201).json(speaker);
 });
 
-router.patch("/event-speakers/:id", requireAuth, async (req, res): Promise<void> => {
+router.patch("/event-speakers/:id", requireAdmin, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id as string, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const parsed = UpdateEventSpeakerBody.safeParse(req.body);
@@ -56,7 +56,7 @@ router.patch("/event-speakers/:id", requireAuth, async (req, res): Promise<void>
   res.json(speaker);
 });
 
-router.delete("/event-speakers/:id", requireAuth, async (req, res): Promise<void> => {
+router.delete("/event-speakers/:id", requireAdmin, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id as string, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const [speaker] = await db.delete(eventSpeakersTable).where(eq(eventSpeakersTable.id, id)).returning();

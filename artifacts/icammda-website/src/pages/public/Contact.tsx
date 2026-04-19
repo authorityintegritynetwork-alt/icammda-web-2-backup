@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { useCreateContactMessage } from "@workspace/api-client-react";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 import { useSiteContent } from "@/hooks/useSiteContent";
@@ -8,7 +9,9 @@ export default function Contact() {
   const c = useSiteContent();
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const createMessage = useCreateContactMessage();
+  const sending = createMessage.isPending;
 
   const phone = c("contact.phone", "+234 901 607 3157");
   const email = c("contact.email", "info@icammda.org");
@@ -23,10 +26,23 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSending(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    setSending(false);
-    setSent(true);
+    setErrorMsg(null);
+    try {
+      await createMessage.mutateAsync({
+        data: {
+          name: form.name.trim(),
+          email: form.email.trim(),
+          subject: form.subject.trim(),
+          message: form.message.trim(),
+        },
+      });
+      setSent(true);
+    } catch (err) {
+      const message = (err as { response?: { data?: { error?: string } }; message?: string })?.response?.data?.error
+        ?? (err as Error)?.message
+        ?? "Could not send your message. Please try again, or email us directly.";
+      setErrorMsg(message);
+    }
   };
 
   return (
@@ -99,6 +115,12 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5" data-testid="contact-form">
+                {errorMsg && (
+                  <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-red-800 rounded-xl px-4 py-3 text-sm" data-testid="contact-error">
+                    <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                    <span>{errorMsg}</span>
+                  </div>
+                )}
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="text-xs font-semibold text-foreground/70 tracking-wide mb-1.5 block">

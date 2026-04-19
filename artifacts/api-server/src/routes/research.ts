@@ -9,7 +9,7 @@ import {
   CreateResearchPublicationBody,
   UpdateResearchPublicationBody,
 } from "@workspace/api-zod";
-import { requireAuth } from "../middlewares/requireAuth";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
 
@@ -34,7 +34,7 @@ router.get("/research-groups", async (_req, res): Promise<void> => {
   res.json(result);
 });
 
-router.post("/research-groups", requireAuth, async (req, res): Promise<void> => {
+router.post("/research-groups", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreateResearchGroupBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -48,7 +48,7 @@ router.post("/research-groups", requireAuth, async (req, res): Promise<void> => 
   res.status(201).json({ ...group, members: [] });
 });
 
-router.patch("/research-groups/:id", requireAuth, async (req, res): Promise<void> => {
+router.patch("/research-groups/:id", requireAdmin, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id as string, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const parsed = UpdateResearchGroupBody.safeParse(req.body);
@@ -60,7 +60,7 @@ router.patch("/research-groups/:id", requireAuth, async (req, res): Promise<void
   res.json(group);
 });
 
-router.delete("/research-groups/:id", requireAuth, async (req, res): Promise<void> => {
+router.delete("/research-groups/:id", requireAdmin, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id as string, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const [group] = await db.delete(researchGroupsTable).where(eq(researchGroupsTable.id, id)).returning();
@@ -84,7 +84,7 @@ router.get("/research-members", async (req, res): Promise<void> => {
   }
 });
 
-router.post("/research-members", requireAuth, async (req, res): Promise<void> => {
+router.post("/research-members", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreateResearchMemberBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const [member] = await db.insert(researchMembersTable).values({
@@ -100,7 +100,7 @@ router.post("/research-members", requireAuth, async (req, res): Promise<void> =>
   res.status(201).json(member);
 });
 
-router.patch("/research-members/:id", requireAuth, async (req, res): Promise<void> => {
+router.patch("/research-members/:id", requireAdmin, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id as string, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const parsed = UpdateResearchMemberBody.safeParse(req.body);
@@ -112,7 +112,7 @@ router.patch("/research-members/:id", requireAuth, async (req, res): Promise<voi
   res.json(member);
 });
 
-router.delete("/research-members/:id", requireAuth, async (req, res): Promise<void> => {
+router.delete("/research-members/:id", requireAdmin, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id as string, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const [member] = await db.delete(researchMembersTable).where(eq(researchMembersTable.id, id)).returning();
@@ -130,7 +130,7 @@ router.get("/research-publications", async (_req, res): Promise<void> => {
   res.json(pubs);
 });
 
-router.post("/research-publications", requireAuth, async (req, res): Promise<void> => {
+router.post("/research-publications", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreateResearchPublicationBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const [pub] = await db.insert(researchPublicationsTable).values({
@@ -146,7 +146,7 @@ router.post("/research-publications", requireAuth, async (req, res): Promise<voi
   res.status(201).json(pub);
 });
 
-router.patch("/research-publications/:id", requireAuth, async (req, res): Promise<void> => {
+router.patch("/research-publications/:id", requireAdmin, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id as string, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const parsed = UpdateResearchPublicationBody.safeParse(req.body);
@@ -158,7 +158,7 @@ router.patch("/research-publications/:id", requireAuth, async (req, res): Promis
   res.json(pub);
 });
 
-router.delete("/research-publications/:id", requireAuth, async (req, res): Promise<void> => {
+router.delete("/research-publications/:id", requireAdmin, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id as string, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const [pub] = await db.delete(researchPublicationsTable).where(eq(researchPublicationsTable.id, id)).returning();

@@ -7,7 +7,7 @@ import {
   UpdatePartnerParams,
   DeletePartnerParams,
 } from "@workspace/api-zod";
-import { requireAuth } from "../middlewares/requireAuth";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
 
@@ -19,7 +19,7 @@ router.get("/partners", async (req, res): Promise<void> => {
   res.json(partners);
 });
 
-router.post("/partners", requireAuth, async (req, res): Promise<void> => {
+router.post("/partners", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreatePartnerBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -32,7 +32,7 @@ router.post("/partners", requireAuth, async (req, res): Promise<void> => {
   res.status(201).json(partner);
 });
 
-router.patch("/partners/:id", requireAuth, async (req, res): Promise<void> => {
+router.patch("/partners/:id", requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) {
@@ -61,7 +61,7 @@ router.patch("/partners/:id", requireAuth, async (req, res): Promise<void> => {
   res.json(partner);
 });
 
-router.delete("/partners/:id", requireAuth, async (req, res): Promise<void> => {
+router.delete("/partners/:id", requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) {

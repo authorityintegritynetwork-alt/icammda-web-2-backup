@@ -17,6 +17,9 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  ContactMessage,
+  CreateContactMessage201,
+  CreateContactMessageBody,
   CreateEventBody,
   CreateEventSpeakerBody,
   CreateLinkedInPostBody,
@@ -44,6 +47,7 @@ import type {
   SiteContent,
   SiteStats,
   TeamMember,
+  UpdateContactMessageBody,
   UpdateEventBody,
   UpdateEventSpeakerBody,
   UpdatePartnerBody,
@@ -2716,6 +2720,340 @@ export const useDeleteEventSpeaker = <
   TContext
 > => {
   return useMutation(getDeleteEventSpeakerMutationOptions(options));
+};
+
+/**
+ * @summary Submit a public contact form message (rate-limited)
+ */
+export const getCreateContactMessageUrl = () => {
+  return `/api/contact-messages`;
+};
+
+export const createContactMessage = async (
+  createContactMessageBody: CreateContactMessageBody,
+  options?: RequestInit,
+): Promise<CreateContactMessage201> => {
+  return customFetch<CreateContactMessage201>(getCreateContactMessageUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createContactMessageBody),
+  });
+};
+
+export const getCreateContactMessageMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createContactMessage>>,
+    TError,
+    { data: BodyType<CreateContactMessageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createContactMessage>>,
+  TError,
+  { data: BodyType<CreateContactMessageBody> },
+  TContext
+> => {
+  const mutationKey = ["createContactMessage"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createContactMessage>>,
+    { data: BodyType<CreateContactMessageBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createContactMessage(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateContactMessageMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createContactMessage>>
+>;
+export type CreateContactMessageMutationBody =
+  BodyType<CreateContactMessageBody>;
+export type CreateContactMessageMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Submit a public contact form message (rate-limited)
+ */
+export const useCreateContactMessage = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createContactMessage>>,
+    TError,
+    { data: BodyType<CreateContactMessageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createContactMessage>>,
+  TError,
+  { data: BodyType<CreateContactMessageBody> },
+  TContext
+> => {
+  return useMutation(getCreateContactMessageMutationOptions(options));
+};
+
+/**
+ * @summary List all contact messages (admin only)
+ */
+export const getListContactMessagesUrl = () => {
+  return `/api/contact-messages`;
+};
+
+export const listContactMessages = async (
+  options?: RequestInit,
+): Promise<ContactMessage[]> => {
+  return customFetch<ContactMessage[]>(getListContactMessagesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListContactMessagesQueryKey = () => {
+  return [`/api/contact-messages`] as const;
+};
+
+export const getListContactMessagesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listContactMessages>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listContactMessages>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListContactMessagesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listContactMessages>>
+  > = ({ signal }) => listContactMessages({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listContactMessages>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListContactMessagesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listContactMessages>>
+>;
+export type ListContactMessagesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all contact messages (admin only)
+ */
+
+export function useListContactMessages<
+  TData = Awaited<ReturnType<typeof listContactMessages>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listContactMessages>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListContactMessagesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Mark a contact message as read/unread (admin only)
+ */
+export const getUpdateContactMessageUrl = (id: number) => {
+  return `/api/contact-messages/${id}`;
+};
+
+export const updateContactMessage = async (
+  id: number,
+  updateContactMessageBody: UpdateContactMessageBody,
+  options?: RequestInit,
+): Promise<ContactMessage> => {
+  return customFetch<ContactMessage>(getUpdateContactMessageUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateContactMessageBody),
+  });
+};
+
+export const getUpdateContactMessageMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateContactMessage>>,
+    TError,
+    { id: number; data: BodyType<UpdateContactMessageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateContactMessage>>,
+  TError,
+  { id: number; data: BodyType<UpdateContactMessageBody> },
+  TContext
+> => {
+  const mutationKey = ["updateContactMessage"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateContactMessage>>,
+    { id: number; data: BodyType<UpdateContactMessageBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateContactMessage(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateContactMessageMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateContactMessage>>
+>;
+export type UpdateContactMessageMutationBody =
+  BodyType<UpdateContactMessageBody>;
+export type UpdateContactMessageMutationError = ErrorType<void>;
+
+/**
+ * @summary Mark a contact message as read/unread (admin only)
+ */
+export const useUpdateContactMessage = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateContactMessage>>,
+    TError,
+    { id: number; data: BodyType<UpdateContactMessageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateContactMessage>>,
+  TError,
+  { id: number; data: BodyType<UpdateContactMessageBody> },
+  TContext
+> => {
+  return useMutation(getUpdateContactMessageMutationOptions(options));
+};
+
+/**
+ * @summary Delete a contact message (admin only)
+ */
+export const getDeleteContactMessageUrl = (id: number) => {
+  return `/api/contact-messages/${id}`;
+};
+
+export const deleteContactMessage = async (
+  id: number,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeleteContactMessageUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteContactMessageMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteContactMessage>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteContactMessage>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["deleteContactMessage"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteContactMessage>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteContactMessage(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteContactMessageMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteContactMessage>>
+>;
+
+export type DeleteContactMessageMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete a contact message (admin only)
+ */
+export const useDeleteContactMessage = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteContactMessage>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteContactMessage>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getDeleteContactMessageMutationOptions(options));
 };
 
 /**

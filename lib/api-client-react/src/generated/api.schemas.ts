@@ -364,6 +364,32 @@ export interface UpdateResearchPublicationBody {
   displayOrder?: number;
 }
 
+export interface ContactMessage {
+  id: number;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  isRead: boolean;
+  /** @nullable */
+  ipAddress?: string | null;
+  createdAt: string;
+}
+
+export interface CreateContactMessageBody {
+  /** @minLength 1 */
+  name: string;
+  email: string;
+  /** @minLength 1 */
+  subject: string;
+  /** @minLength 1 */
+  message: string;
+}
+
+export interface UpdateContactMessageBody {
+  isRead?: boolean;
+}
+
 export interface EventSpeaker {
   id: number;
   eventId: number;
@@ -490,6 +516,11 @@ export type ListResearchMembersParams = {
 
 export type ListEventSpeakersParams = {
   eventId?: number;
+};
+
+export type CreateContactMessage201 = {
+  id: number;
+  success: boolean;
 };
 
 export type GetSiteContentParams = {
