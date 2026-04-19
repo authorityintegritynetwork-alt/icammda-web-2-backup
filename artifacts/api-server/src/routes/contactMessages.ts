@@ -9,6 +9,15 @@ import { sendContactNotification } from "../lib/contactNotifier";
 const router: IRouter = Router();
 
 router.post("/contact-messages", contactFormLimiter, async (req, res): Promise<void> => {
+  // Honeypot: bots tend to fill every visible/hidden field. Real users leave this blank.
+  // Silently respond with success so spammers don't realise they were caught.
+  const honeypot = typeof req.body?.website === "string" ? req.body.website.trim() : "";
+  if (honeypot.length > 0) {
+    req.log.warn({ ip: req.ip }, "Honeypot triggered on contact form — message dropped");
+    res.status(201).json({ id: 0, success: true });
+    return;
+  }
+
   const parsed = CreateContactMessageBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const { name, email, subject, message } = parsed.data;

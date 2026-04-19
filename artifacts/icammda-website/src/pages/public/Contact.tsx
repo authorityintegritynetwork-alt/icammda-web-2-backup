@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from "lucide-react";
-import { useCreateContactMessage } from "@workspace/api-client-react";
 import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
@@ -9,10 +8,10 @@ import { useSiteContent } from "@/hooks/useSiteContent";
 export default function Contact() {
   const c = useSiteContent();
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [website, setWebsite] = useState(""); // honeypot
   const [sent, setSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const createMessage = useCreateContactMessage();
-  const sending = createMessage.isPending;
+  const [sending, setSending] = useState(false);
 
   const phone = c("contact.phone", "+234 901 607 3157");
   const email = c("contact.email", "info@icammda.org");
@@ -28,21 +27,37 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+    setSending(true);
     try {
-      await createMessage.mutateAsync({
-        data: {
+      // Mirror the api-client-react base URL resolution so cross-origin API
+      // deployments (VITE_API_BASE_URL) and base-path mounting both work.
+      const apiBase = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
+      const url = apiBase
+        ? `${apiBase}/api/contact-messages`
+        : `${import.meta.env.BASE_URL}api/contact-messages`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           name: form.name.trim(),
           email: form.email.trim(),
           subject: form.subject.trim(),
           message: form.message.trim(),
-        },
+          website, // honeypot — must be empty
+        }),
       });
+      if (!res.ok) {
+        let serverMsg: string | undefined;
+        try { serverMsg = (await res.json())?.error; } catch { /* ignore */ }
+        throw new Error(serverMsg ?? `Request failed (${res.status})`);
+      }
       setSent(true);
     } catch (err) {
-      const message = (err as { response?: { data?: { error?: string } }; message?: string })?.response?.data?.error
-        ?? (err as Error)?.message
+      const message = (err as Error)?.message
         ?? "Could not send your message. Please try again, or email us directly.";
       setErrorMsg(message);
+    } finally {
+      setSending(false);
     }
   };
 
@@ -120,6 +135,19 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5" data-testid="contact-form">
+                {/* Honeypot — visually & semantically hidden from real users; bots fill it */}
+                <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
+                  <label htmlFor="contact-website-hp">Website (leave blank)</label>
+                  <input
+                    id="contact-website-hp"
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
+                </div>
                 {errorMsg && (
                   <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-red-800 rounded-xl px-4 py-3 text-sm" data-testid="contact-error">
                     <AlertCircle size={16} className="shrink-0 mt-0.5" />
