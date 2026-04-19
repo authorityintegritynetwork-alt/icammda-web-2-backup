@@ -1,34 +1,40 @@
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { ClerkProvider, SignIn, Show, useClerk, useUser } from "@clerk/react";
 import { Switch, Route, useLocation, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import PageLoader from "@/components/PageLoader";
 
+// Eager: above-the-fold landing page + 404 (rendered if user lands somewhere bad)
 import Home from "@/pages/public/Home";
-import About from "@/pages/public/About";
-import NewsEvents from "@/pages/public/NewsEvents";
-import NewsDetail from "@/pages/public/NewsDetail";
-import EventDetail from "@/pages/public/EventDetail";
-import Team from "@/pages/public/Team";
-import Contact from "@/pages/public/Contact";
-import Research from "@/pages/public/Research";
-import ELearning from "@/pages/public/ELearning";
-import Careers from "@/pages/public/Careers";
-
-import Dashboard from "@/pages/admin/Dashboard";
-import PostsList from "@/pages/admin/PostsList";
-import PostForm from "@/pages/admin/PostForm";
-import EventsList from "@/pages/admin/EventsList";
-import EventForm from "@/pages/admin/EventForm";
-import TeamList from "@/pages/admin/TeamList";
-import PartnersList from "@/pages/admin/PartnersList";
-import ResearchAdmin from "@/pages/admin/ResearchAdmin";
-import LinkedInAdmin from "@/pages/admin/LinkedInAdmin";
-import ContentAdmin from "@/pages/admin/ContentAdmin";
-import ContactMessages from "@/pages/admin/ContactMessages";
-
 import NotFound from "@/pages/not-found";
+
+// Lazy: every other public page (most visitors only see Home before navigating)
+const About = lazy(() => import("@/pages/public/About"));
+const NewsEvents = lazy(() => import("@/pages/public/NewsEvents"));
+const NewsDetail = lazy(() => import("@/pages/public/NewsDetail"));
+const EventDetail = lazy(() => import("@/pages/public/EventDetail"));
+const Team = lazy(() => import("@/pages/public/Team"));
+const Contact = lazy(() => import("@/pages/public/Contact"));
+const Research = lazy(() => import("@/pages/public/Research"));
+const ELearning = lazy(() => import("@/pages/public/ELearning"));
+const Careers = lazy(() => import("@/pages/public/Careers"));
+
+// Lazy: admin pages should never load for public visitors
+const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
+const PostsList = lazy(() => import("@/pages/admin/PostsList"));
+const PostForm = lazy(() => import("@/pages/admin/PostForm"));
+const EventsList = lazy(() => import("@/pages/admin/EventsList"));
+const EventForm = lazy(() => import("@/pages/admin/EventForm"));
+const TeamList = lazy(() => import("@/pages/admin/TeamList"));
+const PartnersList = lazy(() => import("@/pages/admin/PartnersList"));
+const ResearchAdmin = lazy(() => import("@/pages/admin/ResearchAdmin"));
+const LinkedInAdmin = lazy(() => import("@/pages/admin/LinkedInAdmin"));
+const ContentAdmin = lazy(() => import("@/pages/admin/ContentAdmin"));
+const ContactMessages = lazy(() => import("@/pages/admin/ContactMessages"));
+
 import { setBaseUrl, setAuthTokenGetter } from "@workspace/api-client-react";
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -55,6 +61,10 @@ function stripBase(path: string): string {
 
 if (!clerkPubKey) {
   throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY in .env file");
+}
+
+function EventsTab() {
+  return <NewsEvents defaultTab="events" />;
 }
 
 function SignInPage() {
@@ -151,28 +161,32 @@ function ClerkProviderWithRoutes() {
         <ClerkQueryClientCacheInvalidator />
         <ClerkAuthTokenSetter />
         <TooltipProvider>
-          <Switch>
-            {/* Public Routes */}
-            <Route path="/" component={Home} />
-            <Route path="/about" component={About} />
-            <Route path="/news" component={NewsEvents} />
-            <Route path="/news/:slug" component={NewsDetail} />
-            <Route path="/events" component={() => <NewsEvents defaultTab="events" />} />
-            <Route path="/events/:slug" component={EventDetail} />
-            <Route path="/research" component={Research} />
-            <Route path="/e-learning" component={ELearning} />
-            <Route path="/careers" component={Careers} />
-            <Route path="/team" component={Team} />
-            <Route path="/contact" component={Contact} />
+          <ErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <Switch>
+                {/* Public Routes */}
+                <Route path="/" component={Home} />
+                <Route path="/about" component={About} />
+                <Route path="/news" component={NewsEvents} />
+                <Route path="/news/:slug" component={NewsDetail} />
+                <Route path="/events" component={EventsTab} />
+                <Route path="/events/:slug" component={EventDetail} />
+                <Route path="/research" component={Research} />
+                <Route path="/e-learning" component={ELearning} />
+                <Route path="/careers" component={Careers} />
+                <Route path="/team" component={Team} />
+                <Route path="/contact" component={Contact} />
 
-            {/* Auth */}
-            <Route path="/sign-in/*?" component={SignInPage} />
+                {/* Auth */}
+                <Route path="/sign-in/*?" component={SignInPage} />
 
-            {/* Admin Routes */}
-            <Route path="/admin/*?" component={AdminRoutes} />
+                {/* Admin Routes */}
+                <Route path="/admin/*?" component={AdminRoutes} />
 
-            <Route component={NotFound} />
-          </Switch>
+                <Route component={NotFound} />
+              </Switch>
+            </Suspense>
+          </ErrorBoundary>
           <Toaster />
         </TooltipProvider>
       </QueryClientProvider>
