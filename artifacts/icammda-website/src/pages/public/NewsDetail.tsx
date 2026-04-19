@@ -4,8 +4,10 @@ import { ArrowLeft, User, Calendar } from "lucide-react";
 import { useListPosts } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import DOMPurify from "isomorphic-dompurify";
+import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
+import { absoluteUrl, stripHtml, truncate, ORGANIZATION } from "@/lib/seo";
 
 export default function NewsDetail() {
   const [, params] = useRoute("/news/:slug");
@@ -33,6 +35,7 @@ export default function NewsDetail() {
   if (!post) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
+        <SEO title="Post not found" noIndex />
         <PublicNav />
         <div className="max-w-3xl mx-auto px-5 py-32 text-center" data-testid="post-not-found">
           <p className="font-serif text-2xl text-foreground mb-3">Post not found.</p>
@@ -43,8 +46,38 @@ export default function NewsDetail() {
     );
   }
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: post.title,
+    description: truncate(stripHtml(post.content), 200),
+    image: post.imageUrl ? [absoluteUrl(post.imageUrl)] : undefined,
+    datePublished: new Date(post.createdAt).toISOString(),
+    dateModified: new Date(post.updatedAt ?? post.createdAt).toISOString(),
+    author: post.authorName
+      ? { "@type": "Person", name: post.authorName }
+      : { "@type": "Organization", name: ORGANIZATION.name },
+    publisher: {
+      "@type": "Organization",
+      name: ORGANIZATION.name,
+      logo: { "@type": "ImageObject", url: ORGANIZATION.logo },
+    },
+    mainEntityOfPage: absoluteUrl(`/news/${post.slug}`),
+    articleSection: post.category,
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title={post.title}
+        description={truncate(stripHtml(post.content), 200)}
+        type="article"
+        image={post.imageUrl ?? undefined}
+        canonical={`/news/${post.slug}`}
+        publishedTime={new Date(post.createdAt).toISOString()}
+        modifiedTime={new Date(post.updatedAt ?? post.createdAt).toISOString()}
+        jsonLd={articleSchema}
+      />
       <PublicNav />
 
       {/* Hero */}

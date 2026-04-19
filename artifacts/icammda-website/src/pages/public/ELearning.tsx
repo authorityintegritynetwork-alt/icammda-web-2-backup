@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -216,6 +217,10 @@ export default function ELearning() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="eLearning"
+        description="Free open-access lectures, workshops, and training videos in mathematical modelling, biostatistics, R, and Python from the ICAMMDA YouTube channel."
+      />
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}

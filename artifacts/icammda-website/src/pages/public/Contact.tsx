@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { useCreateContactMessage } from "@workspace/api-client-react";
+import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 import { useSiteContent } from "@/hooks/useSiteContent";
@@ -47,6 +48,10 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="Contact"
+        description="Get in touch with ICAMMDA — for research collaboration, training enrolment, partnership inquiries, or general questions."
+      />
       <PublicNav />
 
       {/* Hero */}

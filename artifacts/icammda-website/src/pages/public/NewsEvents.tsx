@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { Calendar, MapPin, ArrowUpRight, Newspaper, CalendarDays } from "lucide-react";
 import { useListPosts, useListEvents } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 
@@ -56,6 +57,10 @@ export default function NewsEvents({ defaultTab = "all" }: Props) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="News & Events"
+        description="Latest news, announcements, and upcoming events from ICAMMDA — including workshops, conferences, training programmes, and research milestones."
+      />
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}

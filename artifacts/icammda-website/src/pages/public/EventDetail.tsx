@@ -6,8 +6,10 @@ import { useListEvents, useListEventSpeakers } from "@workspace/api-client-react
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import DOMPurify from "isomorphic-dompurify";
+import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
+import { absoluteUrl, stripHtml, truncate, ORGANIZATION } from "@/lib/seo";
 
 function getPhotoSrc(url?: string | null) {
   if (!url) return "";
@@ -235,6 +237,7 @@ export default function EventDetail() {
   if (!event) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
+        <SEO title="Event not found" noIndex />
         <PublicNav />
         <div className="max-w-5xl mx-auto px-5 py-32 text-center" data-testid="event-not-found">
           <p className="font-serif text-2xl text-foreground mb-3">Event not found.</p>
@@ -245,8 +248,38 @@ export default function EventDetail() {
     );
   }
 
+  const eventSchema = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.title,
+    description: truncate(stripHtml(event.description ?? ""), 200),
+    image: event.imageUrl ? [absoluteUrl(event.imageUrl)] : undefined,
+    startDate: event.startDate ? new Date(event.startDate).toISOString() : undefined,
+    endDate: event.endDate ? new Date(event.endDate).toISOString() : undefined,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: event.location?.toLowerCase().includes("online") || event.location?.toLowerCase().includes("virtual")
+      ? "https://schema.org/OnlineEventAttendanceMode"
+      : "https://schema.org/OfflineEventAttendanceMode",
+    location: event.location
+      ? { "@type": "Place", name: event.location, address: event.location }
+      : { "@type": "Place", name: "Federal University Oye-Ekiti", address: "Oye-Ekiti, Ekiti State, Nigeria" },
+    organizer: {
+      "@type": "Organization",
+      name: ORGANIZATION.name,
+      url: ORGANIZATION.url,
+    },
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title={event.title}
+        description={truncate(stripHtml(event.description ?? ""), 200)}
+        type="article"
+        image={event.imageUrl ?? undefined}
+        canonical={`/events/${event.slug}`}
+        jsonLd={eventSchema}
+      />
       <PublicNav />
 
       {/* Hero */}

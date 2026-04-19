@@ -3,9 +3,11 @@ import { ArrowUpRight, BookOpen, Users, BarChart3, Cpu, Calendar, ChevronRight, 
 import { format } from "date-fns";
 import { useGetRecentPosts, useGetUpcomingEvents, useListPartners, useListLinkedinPosts } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { buildOrganizationSchema, SITE_URL } from "@/lib/seo";
 
 const researchAreas = [
   "Malaria Modelling",
@@ -34,8 +36,26 @@ export default function Home() {
     { value: c("home.stats.events", "20+"), label: "Events & Trainings", icon: Calendar },
   ];
 
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "ICAMMDA",
+    url: SITE_URL,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE_URL}/news?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="ICAMMDA — Mathematical Modelling & Data Analytics Research Centre"
+        description="ICAMMDA is the International Centre for Applied Mathematical Modelling and Data Analytics at Federal University Oye-Ekiti, Nigeria. Research, training, and partnerships in epidemiology, biostatistics, and applied mathematics across West Africa."
+        canonical="/"
+        jsonLd={[buildOrganizationSchema(), websiteSchema]}
+      />
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}

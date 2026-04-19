@@ -3,6 +3,7 @@ import { Users, GraduationCap, Briefcase, Mail, Linkedin } from "lucide-react";
 import { useListTeamMembers } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 
@@ -104,6 +105,10 @@ export default function Team() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="Our Team"
+        description="Meet the directors, faculty, postdocs, and students at ICAMMDA driving research and capacity building in mathematical modelling and data analytics."
+      />
       <PublicNav />
 
       <section className="relative overflow-hidden pt-32 pb-20">

@@ -4,6 +4,7 @@ import { useListTeamMembers } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
+import SEO from "@/components/SEO";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const wamcadPartners = [
@@ -28,6 +29,10 @@ export default function About() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="About ICAMMDA"
+        description="Learn about ICAMMDA's mission, structure, and impact: research, capacity building, international partnerships, and community mentorship across West Africa."
+      />
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}

@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 import { Link } from "wouter";
@@ -24,6 +25,10 @@ export default function Careers() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="Careers & Opportunities"
+        description="PhD positions, postdoctoral fellowships, internships, and research opportunities at ICAMMDA, Federal University Oye-Ekiti."
+      />
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}

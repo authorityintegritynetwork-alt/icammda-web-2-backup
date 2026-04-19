@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import PublicNav from "@/components/PublicNav";
 import PublicFooter from "@/components/PublicFooter";
 import { FlaskConical, Microscope, Bug, Droplets, Brain, Heart, Users, BookOpen, ExternalLink } from "lucide-react";
@@ -86,6 +87,10 @@ export default function Research() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="Research"
+        description="Explore ICAMMDA's research groups, publications, and projects in mathematical modelling, infectious disease epidemiology, biostatistics, and applied data analytics."
+      />
       <PublicNav />
 
       {/* ═══════════ HERO ═══════════ */}
