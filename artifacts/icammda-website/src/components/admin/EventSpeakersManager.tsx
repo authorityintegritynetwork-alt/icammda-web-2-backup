@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { Plus, Edit, Trash2, Users, Upload, Loader2, X } from "lucide-react";
+import { useAuth } from "@clerk/react";
 import {
   useListEventSpeakers,
   useCreateEventSpeaker,
@@ -49,6 +50,7 @@ export default function EventSpeakersManager({ eventId }: { eventId: number }) {
   const updateSpeaker = useUpdateEventSpeaker();
   const deleteSpeaker = useDeleteEventSpeaker();
   const queryClient = useQueryClient();
+  const { getToken } = useAuth();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<number | null>(null);
@@ -79,9 +81,13 @@ export default function EventSpeakersManager({ eventId }: { eventId: number }) {
   const handlePhotoUpload = async (file: File) => {
     setUploading(true);
     try {
+      const token = await getToken();
       const urlRes = await fetch("/api/storage/uploads/request-url", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
       });
       if (!urlRes.ok) throw new Error("Failed to get upload URL");

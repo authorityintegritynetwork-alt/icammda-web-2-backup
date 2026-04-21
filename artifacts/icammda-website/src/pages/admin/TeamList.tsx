@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { Plus, Edit, Trash2, Users, Upload, X, Loader2 } from "lucide-react";
+import { useAuth } from "@clerk/react";
 import {
   useListTeamMembers,
   useCreateTeamMember,
@@ -71,6 +72,7 @@ export default function TeamList() {
   const updateMember = useUpdateTeamMember();
   const deleteMember = useDeleteTeamMember();
   const queryClient = useQueryClient();
+  const { getToken } = useAuth();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<number | null>(null);
@@ -108,9 +110,13 @@ export default function TeamList() {
     setUploading(true);
     setUploadProgress(10);
     try {
+      const token = await getToken();
       const urlRes = await fetch("/api/storage/uploads/request-url", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
       });
       if (!urlRes.ok) throw new Error("Failed to get upload URL");

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Plus, Edit, Trash2, FlaskConical, Users, ChevronDown, ChevronRight, Upload, Loader2, BookOpen, ExternalLink } from "lucide-react";
+import { useAuth } from "@clerk/react";
 import {
   useListResearchGroups,
   useListResearchMembers,
@@ -64,6 +65,7 @@ export default function ResearchAdmin() {
   const updateMember = useUpdateResearchMember();
   const deleteMember = useDeleteResearchMember();
   const queryClient = useQueryClient();
+  const { getToken } = useAuth();
 
   const [expandedGroups, setExpandedGroups] = useState<Set<number>>(new Set());
 
@@ -89,9 +91,13 @@ export default function ResearchAdmin() {
     }
     setUploadingPhoto(true);
     try {
+      const token = await getToken();
       const urlRes = await fetch("/api/storage/uploads/request-url", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
       });
       if (!urlRes.ok) throw new Error("Failed to get upload URL");
