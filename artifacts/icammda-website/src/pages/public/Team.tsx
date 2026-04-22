@@ -56,7 +56,7 @@ interface AvatarProps {
 
 function MemberAvatar({ name, photoUrl, size }: AvatarProps) {
   const src = getPhotoSrc(photoUrl);
-  const dim = size === "lg" ? "w-20 h-20" : "w-16 h-16";
+  const dim = size === "lg" ? "w-28 h-28" : "w-24 h-24";
   const textSize = size === "lg" ? "text-xl" : "text-base";
   const color = getAvatarColor(name);
 
