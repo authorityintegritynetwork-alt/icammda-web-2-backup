@@ -60,7 +60,9 @@ app.use(
               "https://clerk-telemetry.com",
               "https://www.googleapis.com",
               "https://i.ytimg.com",
+              "https://*.r2.cloudflarestorage.com",
             ],
+            "worker-src": ["'self'", "blob:"],
             "frame-src": [
               "'self'",
               "https://*.clerk.accounts.dev",
