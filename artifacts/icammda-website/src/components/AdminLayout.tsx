@@ -15,6 +15,7 @@ import {
   Linkedin,
   Type,
   Inbox,
+  ClipboardList,
 } from "lucide-react";
 
 const navItems = [
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/admin/messages", label: "Messages", icon: Inbox },
   { href: "/admin/posts", label: "Posts", icon: FileText },
   { href: "/admin/events", label: "Events", icon: Calendar },
+  { href: "/admin/forms", label: "Forms", icon: ClipboardList },
   { href: "/admin/team", label: "Team", icon: Users },
   { href: "/admin/research", label: "Research", icon: FlaskConical },
   { href: "/admin/partners", label: "Partners", icon: Handshake },

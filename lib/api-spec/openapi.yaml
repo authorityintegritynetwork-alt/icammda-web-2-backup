@@ -28,6 +28,8 @@ tags:
     description: LinkedIn post embeds
   - name: content
     description: Editable site content (CMS)
+  - name: forms
+    description: Custom forms and submissions
 paths:
   /healthz:
     get:
@@ -1012,6 +1014,246 @@ paths:
         "404":
           description: Not found
 
+
+  # ============================================================
+  # FORMS
+  # ============================================================
+  /forms:
+    get:
+      operationId: listForms
+      tags: [forms]
+      summary: List all forms (admin)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Form" }
+    post:
+      operationId: createForm
+      tags: [forms]
+      summary: Create a form (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateFormBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Form" }
+
+  /forms/{id}:
+    get:
+      operationId: getForm
+      tags: [forms]
+      summary: Get form with fields (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FormWithFields" }
+    patch:
+      operationId: updateForm
+      tags: [forms]
+      summary: Update form metadata (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateFormBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Form" }
+    delete:
+      operationId: deleteForm
+      tags: [forms]
+      summary: Delete a form (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204": { description: Deleted }
+
+  /forms/{id}/fields:
+    put:
+      operationId: replaceFormFields
+      tags: [forms]
+      summary: Replace all fields for a form (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fields]
+              properties:
+                fields:
+                  type: array
+                  items: { $ref: "#/components/schemas/FormFieldInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/FormField" }
+
+  /forms/{id}/submissions:
+    get:
+      operationId: listFormSubmissions
+      tags: [forms]
+      summary: List submissions for a form (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/FormSubmission" }
+
+  /forms/submissions/{submissionId}:
+    patch:
+      operationId: updateFormSubmission
+      tags: [forms]
+      summary: Update submission status / notes (admin)
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { type: string }
+                notes: { type: string, nullable: true }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FormSubmission" }
+    delete:
+      operationId: deleteFormSubmission
+      tags: [forms]
+      summary: Delete a submission (admin)
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204": { description: Deleted }
+
+  /public/events/{eventId}/forms:
+    get:
+      operationId: listEventForms
+      tags: [forms]
+      summary: List published forms linked to an event (public)
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, slug, title]
+                  properties:
+                    id: { type: integer }
+                    slug: { type: string }
+                    title: { type: string }
+                    description: { type: string, nullable: true }
+
+  /public/forms/{slug}:
+    get:
+      operationId: getPublicForm
+      tags: [forms]
+      summary: Get a published form by slug (public)
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PublicForm" }
+
+  /public/forms/{slug}/submit:
+    post:
+      operationId: submitPublicForm
+      tags: [forms]
+      summary: Submit a form (public)
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data: { type: object, additionalProperties: true }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string }
+                  message: { type: string }
+
 components:
   securitySchemes:
     clerkAuth:
@@ -1855,3 +2097,136 @@ components:
           type: string
       required:
         - value
+    Form:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        slug: { type: string }
+        description: { type: string, nullable: true }
+        status: { type: string }
+        eventId: { type: integer, nullable: true }
+        capacity: { type: integer, nullable: true }
+        closeDate: { type: string, format: date-time, nullable: true }
+        waitlistEnabled: { type: boolean }
+        successMessage: { type: string, nullable: true }
+        confirmationEmailSubject: { type: string, nullable: true }
+        confirmationEmailBody: { type: string, nullable: true }
+        approvalEmailSubject: { type: string, nullable: true }
+        approvalEmailBody: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+      required: [id, title, slug, status, waitlistEnabled, createdAt, updatedAt]
+
+    FormField:
+      type: object
+      properties:
+        id: { type: integer }
+        formId: { type: integer }
+        fieldKey: { type: string }
+        type: { type: string }
+        label: { type: string }
+        helpText: { type: string, nullable: true }
+        placeholder: { type: string, nullable: true }
+        required: { type: boolean }
+        options: { type: object, nullable: true, additionalProperties: true }
+        validation: { type: object, nullable: true, additionalProperties: true }
+        conditional: { type: object, nullable: true, additionalProperties: true }
+        order: { type: integer }
+      required: [id, formId, fieldKey, type, label, required, order]
+
+    FormFieldInput:
+      type: object
+      properties:
+        fieldKey: { type: string }
+        type: { type: string }
+        label: { type: string }
+        helpText: { type: string, nullable: true }
+        placeholder: { type: string, nullable: true }
+        required: { type: boolean }
+        options: { type: object, nullable: true, additionalProperties: true }
+        validation: { type: object, nullable: true, additionalProperties: true }
+        conditional: { type: object, nullable: true, additionalProperties: true }
+        order: { type: integer }
+      required: [fieldKey, type, label]
+
+    FormWithFields:
+      allOf:
+        - $ref: "#/components/schemas/Form"
+        - type: object
+          properties:
+            fields:
+              type: array
+              items: { $ref: "#/components/schemas/FormField" }
+            submissionCount: { type: integer }
+          required: [fields, submissionCount]
+
+    PublicForm:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        slug: { type: string }
+        description: { type: string, nullable: true }
+        status: { type: string }
+        capacity: { type: integer, nullable: true }
+        closeDate: { type: string, format: date-time, nullable: true }
+        waitlistEnabled: { type: boolean }
+        successMessage: { type: string, nullable: true }
+        isFull: { type: boolean }
+        isClosed: { type: boolean }
+        fields:
+          type: array
+          items: { $ref: "#/components/schemas/FormField" }
+      required: [id, title, slug, status, waitlistEnabled, isFull, isClosed, fields]
+
+    CreateFormBody:
+      type: object
+      required: [title, slug]
+      properties:
+        title: { type: string, minLength: 1 }
+        slug: { type: string, minLength: 1 }
+        description: { type: string, nullable: true }
+        status: { type: string }
+        eventId: { type: integer, nullable: true }
+        capacity: { type: integer, nullable: true }
+        closeDate: { type: string, format: date-time, nullable: true }
+        waitlistEnabled: { type: boolean }
+        successMessage: { type: string, nullable: true }
+        confirmationEmailSubject: { type: string, nullable: true }
+        confirmationEmailBody: { type: string, nullable: true }
+        approvalEmailSubject: { type: string, nullable: true }
+        approvalEmailBody: { type: string, nullable: true }
+
+    UpdateFormBody:
+      type: object
+      properties:
+        title: { type: string }
+        slug: { type: string }
+        description: { type: string, nullable: true }
+        status: { type: string }
+        eventId: { type: integer, nullable: true }
+        capacity: { type: integer, nullable: true }
+        closeDate: { type: string, format: date-time, nullable: true }
+        waitlistEnabled: { type: boolean }
+        successMessage: { type: string, nullable: true }
+        confirmationEmailSubject: { type: string, nullable: true }
+        confirmationEmailBody: { type: string, nullable: true }
+        approvalEmailSubject: { type: string, nullable: true }
+        approvalEmailBody: { type: string, nullable: true }
+
+    FormSubmission:
+      type: object
+      properties:
+        id: { type: integer }
+        formId: { type: integer }
+        data: { type: object, additionalProperties: true }
+        status: { type: string }
+        notes: { type: string, nullable: true }
+        submitterEmail: { type: string, nullable: true }
+        submitterName: { type: string, nullable: true }
+        ipAddress: { type: string, nullable: true }
+        userAgent: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+      required: [id, formId, data, status, createdAt, updatedAt]

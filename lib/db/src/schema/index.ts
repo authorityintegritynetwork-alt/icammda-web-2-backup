@@ -6,3 +6,4 @@ export * from "./research";
 export * from "./linkedin";
 export * from "./content";
 export * from "./contact";
+export * from "./forms";

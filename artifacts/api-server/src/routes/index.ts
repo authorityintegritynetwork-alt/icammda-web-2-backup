@@ -13,6 +13,7 @@ import storageRouter from "./storage";
 import linkedinRouter from "./linkedin";
 import contentRouter from "./content";
 import sitemapRouter from "./sitemap";
+import formsRouter from "./forms";
 
 const router: IRouter = Router();
 
@@ -30,5 +31,6 @@ router.use(storageRouter);
 router.use(linkedinRouter);
 router.use("/site-content", contentRouter);
 router.use(sitemapRouter);
+router.use(formsRouter);
 
 export default router;

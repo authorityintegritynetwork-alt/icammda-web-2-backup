@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRoute, Link } from "wouter";
 import { format } from "date-fns";
 import { ArrowLeft, Calendar, MapPin, ExternalLink, CheckCircle, Send, Linkedin, Globe, Mail, Users } from "lucide-react";
-import { useListEvents, useListEventSpeakers } from "@workspace/api-client-react";
+import { useListEvents, useListEventSpeakers, useListEventForms } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import DOMPurify from "isomorphic-dompurify";
@@ -378,6 +378,9 @@ export default function EventDetail() {
               </div>
             </div>
 
+            {/* Registration via Form Builder (linked) */}
+            <EventLinkedForms eventId={event.id} />
+
             {/* Registration */}
             {event.formType !== "none" && (
               <div className="bg-card border border-card-border rounded-2xl p-5">
@@ -412,6 +415,26 @@ export default function EventDetail() {
       <SpeakerDialog speaker={activeSpeaker} open={!!activeSpeaker} onOpenChange={(o) => !o && setActiveSpeaker(null)} />
 
       <PublicFooter />
+    </div>
+  );
+}
+
+function EventLinkedForms({ eventId }: { eventId: number }) {
+  const { data: forms } = useListEventForms(eventId);
+  if (!forms || forms.length === 0) return null;
+  return (
+    <div className="bg-card border border-card-border rounded-2xl p-5">
+      <p className="font-serif text-foreground text-base mb-4">Register</p>
+      <div className="space-y-2">
+        {forms.map((f) => (
+          <Link key={f.id} href={`/forms/${f.slug}`}>
+            <a className="group flex items-center justify-between gap-3 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold px-4 py-3 rounded-xl text-sm transition-all" data-testid={`builder-form-link-${f.slug}`}>
+              <span>{f.title}</span>
+              <Send size={13} className="group-hover:translate-x-0.5 transition-transform" />
+            </a>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

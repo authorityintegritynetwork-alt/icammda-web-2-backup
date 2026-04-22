@@ -36,6 +36,10 @@ const ResearchAdmin = lazy(() => import("@/pages/admin/ResearchAdmin"));
 const LinkedInAdmin = lazy(() => import("@/pages/admin/LinkedInAdmin"));
 const ContentAdmin = lazy(() => import("@/pages/admin/ContentAdmin"));
 const ContactMessages = lazy(() => import("@/pages/admin/ContactMessages"));
+const FormsList = lazy(() => import("@/pages/admin/FormsList"));
+const FormBuilder = lazy(() => import("@/pages/admin/FormBuilder"));
+const FormSubmissions = lazy(() => import("@/pages/admin/FormSubmissions"));
+const FormSubmit = lazy(() => import("@/pages/public/FormSubmit"));
 
 import { setBaseUrl, setAuthTokenGetter } from "@workspace/api-client-react";
 
@@ -127,6 +131,9 @@ function AdminRoutes() {
           <Route path="/admin/linkedin" component={LinkedInAdmin} />
           <Route path="/admin/content" component={ContentAdmin} />
           <Route path="/admin/messages" component={ContactMessages} />
+          <Route path="/admin/forms" component={FormsList} />
+          <Route path="/admin/forms/:id/edit" component={FormBuilder} />
+          <Route path="/admin/forms/:id/submissions" component={FormSubmissions} />
           <Route component={NotFound} />
         </Switch>
       </Show>
@@ -180,6 +187,7 @@ function ClerkProviderWithRoutes() {
                 <Route path="/contact" component={Contact} />
                 <Route path="/privacy" component={Privacy} />
                 <Route path="/terms" component={Terms} />
+                <Route path="/forms/:slug" component={FormSubmit} />
 
                 {/* Auth */}
                 <Route path="/sign-in/*?" component={SignInPage} />

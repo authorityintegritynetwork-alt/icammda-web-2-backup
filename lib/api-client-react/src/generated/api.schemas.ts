@@ -500,6 +500,135 @@ export interface UpdateSiteContentBody {
   value: string;
 }
 
+export interface Form {
+  id: number;
+  title: string;
+  slug: string;
+  description?: string | null;
+  status: string;
+  eventId?: number | null;
+  capacity?: number | null;
+  closeDate?: string | null;
+  waitlistEnabled: boolean;
+  successMessage?: string | null;
+  confirmationEmailSubject?: string | null;
+  confirmationEmailBody?: string | null;
+  approvalEmailSubject?: string | null;
+  approvalEmailBody?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type FormFieldOptions = { [key: string]: unknown } | null;
+
+export type FormFieldValidation = { [key: string]: unknown } | null;
+
+export type FormFieldConditional = { [key: string]: unknown } | null;
+
+export interface FormField {
+  id: number;
+  formId: number;
+  fieldKey: string;
+  type: string;
+  label: string;
+  helpText?: string | null;
+  placeholder?: string | null;
+  required: boolean;
+  options?: FormFieldOptions;
+  validation?: FormFieldValidation;
+  conditional?: FormFieldConditional;
+  order: number;
+}
+
+export type FormFieldInputOptions = { [key: string]: unknown } | null;
+
+export type FormFieldInputValidation = { [key: string]: unknown } | null;
+
+export type FormFieldInputConditional = { [key: string]: unknown } | null;
+
+export interface FormFieldInput {
+  fieldKey: string;
+  type: string;
+  label: string;
+  helpText?: string | null;
+  placeholder?: string | null;
+  required?: boolean;
+  options?: FormFieldInputOptions;
+  validation?: FormFieldInputValidation;
+  conditional?: FormFieldInputConditional;
+  order?: number;
+}
+
+export type FormWithFields = Form & {
+  fields: FormField[];
+  submissionCount: number;
+};
+
+export interface PublicForm {
+  id: number;
+  title: string;
+  slug: string;
+  description?: string | null;
+  status: string;
+  capacity?: number | null;
+  closeDate?: string | null;
+  waitlistEnabled: boolean;
+  successMessage?: string | null;
+  isFull: boolean;
+  isClosed: boolean;
+  fields: FormField[];
+}
+
+export interface CreateFormBody {
+  /** @minLength 1 */
+  title: string;
+  /** @minLength 1 */
+  slug: string;
+  description?: string | null;
+  status?: string;
+  eventId?: number | null;
+  capacity?: number | null;
+  closeDate?: string | null;
+  waitlistEnabled?: boolean;
+  successMessage?: string | null;
+  confirmationEmailSubject?: string | null;
+  confirmationEmailBody?: string | null;
+  approvalEmailSubject?: string | null;
+  approvalEmailBody?: string | null;
+}
+
+export interface UpdateFormBody {
+  title?: string;
+  slug?: string;
+  description?: string | null;
+  status?: string;
+  eventId?: number | null;
+  capacity?: number | null;
+  closeDate?: string | null;
+  waitlistEnabled?: boolean;
+  successMessage?: string | null;
+  confirmationEmailSubject?: string | null;
+  confirmationEmailBody?: string | null;
+  approvalEmailSubject?: string | null;
+  approvalEmailBody?: string | null;
+}
+
+export type FormSubmissionData = { [key: string]: unknown };
+
+export interface FormSubmission {
+  id: number;
+  formId: number;
+  data: FormSubmissionData;
+  status: string;
+  notes?: string | null;
+  submitterEmail?: string | null;
+  submitterName?: string | null;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type ListPostsParams = {
   category?: string;
   published?: boolean;
@@ -528,4 +657,31 @@ export type GetSiteContentParams = {
    * Filter by page key (e.g. home, about, contact)
    */
   page?: string;
+};
+
+export type ReplaceFormFieldsBody = {
+  fields: FormFieldInput[];
+};
+
+export type UpdateFormSubmissionBody = {
+  status?: string;
+  notes?: string | null;
+};
+
+export type ListEventForms200Item = {
+  id: number;
+  slug: string;
+  title: string;
+  description?: string | null;
+};
+
+export type SubmitPublicFormBodyData = { [key: string]: unknown };
+
+export type SubmitPublicFormBody = {
+  data: SubmitPublicFormBodyData;
+};
+
+export type SubmitPublicForm201 = {
+  status?: string;
+  message?: string;
 };

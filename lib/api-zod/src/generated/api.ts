@@ -903,3 +903,305 @@ export const UpdateSiteContentResponse = zod.object({
   sortOrder: zod.number(),
   updatedAt: zod.coerce.date(),
 });
+
+/**
+ * @summary List all forms (admin)
+ */
+export const ListFormsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.string(),
+  eventId: zod.number().nullish(),
+  capacity: zod.number().nullish(),
+  closeDate: zod.coerce.date().nullish(),
+  waitlistEnabled: zod.boolean(),
+  successMessage: zod.string().nullish(),
+  confirmationEmailSubject: zod.string().nullish(),
+  confirmationEmailBody: zod.string().nullish(),
+  approvalEmailSubject: zod.string().nullish(),
+  approvalEmailBody: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const ListFormsResponse = zod.array(ListFormsResponseItem);
+
+/**
+ * @summary Create a form (admin)
+ */
+
+export const CreateFormBody = zod.object({
+  title: zod.string().min(1),
+  slug: zod.string().min(1),
+  description: zod.string().nullish(),
+  status: zod.string().optional(),
+  eventId: zod.number().nullish(),
+  capacity: zod.number().nullish(),
+  closeDate: zod.coerce.date().nullish(),
+  waitlistEnabled: zod.boolean().optional(),
+  successMessage: zod.string().nullish(),
+  confirmationEmailSubject: zod.string().nullish(),
+  confirmationEmailBody: zod.string().nullish(),
+  approvalEmailSubject: zod.string().nullish(),
+  approvalEmailBody: zod.string().nullish(),
+});
+
+/**
+ * @summary Get form with fields (admin)
+ */
+export const GetFormParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetFormResponse = zod
+  .object({
+    id: zod.number(),
+    title: zod.string(),
+    slug: zod.string(),
+    description: zod.string().nullish(),
+    status: zod.string(),
+    eventId: zod.number().nullish(),
+    capacity: zod.number().nullish(),
+    closeDate: zod.coerce.date().nullish(),
+    waitlistEnabled: zod.boolean(),
+    successMessage: zod.string().nullish(),
+    confirmationEmailSubject: zod.string().nullish(),
+    confirmationEmailBody: zod.string().nullish(),
+    approvalEmailSubject: zod.string().nullish(),
+    approvalEmailBody: zod.string().nullish(),
+    createdAt: zod.coerce.date(),
+    updatedAt: zod.coerce.date(),
+  })
+  .and(
+    zod.object({
+      fields: zod.array(
+        zod.object({
+          id: zod.number(),
+          formId: zod.number(),
+          fieldKey: zod.string(),
+          type: zod.string(),
+          label: zod.string(),
+          helpText: zod.string().nullish(),
+          placeholder: zod.string().nullish(),
+          required: zod.boolean(),
+          options: zod.record(zod.string(), zod.unknown()).nullish(),
+          validation: zod.record(zod.string(), zod.unknown()).nullish(),
+          conditional: zod.record(zod.string(), zod.unknown()).nullish(),
+          order: zod.number(),
+        }),
+      ),
+      submissionCount: zod.number(),
+    }),
+  );
+
+/**
+ * @summary Update form metadata (admin)
+ */
+export const UpdateFormParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateFormBody = zod.object({
+  title: zod.string().optional(),
+  slug: zod.string().optional(),
+  description: zod.string().nullish(),
+  status: zod.string().optional(),
+  eventId: zod.number().nullish(),
+  capacity: zod.number().nullish(),
+  closeDate: zod.coerce.date().nullish(),
+  waitlistEnabled: zod.boolean().optional(),
+  successMessage: zod.string().nullish(),
+  confirmationEmailSubject: zod.string().nullish(),
+  confirmationEmailBody: zod.string().nullish(),
+  approvalEmailSubject: zod.string().nullish(),
+  approvalEmailBody: zod.string().nullish(),
+});
+
+export const UpdateFormResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.string(),
+  eventId: zod.number().nullish(),
+  capacity: zod.number().nullish(),
+  closeDate: zod.coerce.date().nullish(),
+  waitlistEnabled: zod.boolean(),
+  successMessage: zod.string().nullish(),
+  confirmationEmailSubject: zod.string().nullish(),
+  confirmationEmailBody: zod.string().nullish(),
+  approvalEmailSubject: zod.string().nullish(),
+  approvalEmailBody: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a form (admin)
+ */
+export const DeleteFormParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary Replace all fields for a form (admin)
+ */
+export const ReplaceFormFieldsParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const ReplaceFormFieldsBody = zod.object({
+  fields: zod.array(
+    zod.object({
+      fieldKey: zod.string(),
+      type: zod.string(),
+      label: zod.string(),
+      helpText: zod.string().nullish(),
+      placeholder: zod.string().nullish(),
+      required: zod.boolean().optional(),
+      options: zod.record(zod.string(), zod.unknown()).nullish(),
+      validation: zod.record(zod.string(), zod.unknown()).nullish(),
+      conditional: zod.record(zod.string(), zod.unknown()).nullish(),
+      order: zod.number().optional(),
+    }),
+  ),
+});
+
+export const ReplaceFormFieldsResponseItem = zod.object({
+  id: zod.number(),
+  formId: zod.number(),
+  fieldKey: zod.string(),
+  type: zod.string(),
+  label: zod.string(),
+  helpText: zod.string().nullish(),
+  placeholder: zod.string().nullish(),
+  required: zod.boolean(),
+  options: zod.record(zod.string(), zod.unknown()).nullish(),
+  validation: zod.record(zod.string(), zod.unknown()).nullish(),
+  conditional: zod.record(zod.string(), zod.unknown()).nullish(),
+  order: zod.number(),
+});
+export const ReplaceFormFieldsResponse = zod.array(
+  ReplaceFormFieldsResponseItem,
+);
+
+/**
+ * @summary List submissions for a form (admin)
+ */
+export const ListFormSubmissionsParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const ListFormSubmissionsResponseItem = zod.object({
+  id: zod.number(),
+  formId: zod.number(),
+  data: zod.record(zod.string(), zod.unknown()),
+  status: zod.string(),
+  notes: zod.string().nullish(),
+  submitterEmail: zod.string().nullish(),
+  submitterName: zod.string().nullish(),
+  ipAddress: zod.string().nullish(),
+  userAgent: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const ListFormSubmissionsResponse = zod.array(
+  ListFormSubmissionsResponseItem,
+);
+
+/**
+ * @summary Update submission status / notes (admin)
+ */
+export const UpdateFormSubmissionParams = zod.object({
+  submissionId: zod.coerce.number(),
+});
+
+export const UpdateFormSubmissionBody = zod.object({
+  status: zod.string().optional(),
+  notes: zod.string().nullish(),
+});
+
+export const UpdateFormSubmissionResponse = zod.object({
+  id: zod.number(),
+  formId: zod.number(),
+  data: zod.record(zod.string(), zod.unknown()),
+  status: zod.string(),
+  notes: zod.string().nullish(),
+  submitterEmail: zod.string().nullish(),
+  submitterName: zod.string().nullish(),
+  ipAddress: zod.string().nullish(),
+  userAgent: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a submission (admin)
+ */
+export const DeleteFormSubmissionParams = zod.object({
+  submissionId: zod.coerce.number(),
+});
+
+/**
+ * @summary List published forms linked to an event (public)
+ */
+export const ListEventFormsParams = zod.object({
+  eventId: zod.coerce.number(),
+});
+
+export const ListEventFormsResponseItem = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  title: zod.string(),
+  description: zod.string().nullish(),
+});
+export const ListEventFormsResponse = zod.array(ListEventFormsResponseItem);
+
+/**
+ * @summary Get a published form by slug (public)
+ */
+export const GetPublicFormParams = zod.object({
+  slug: zod.coerce.string(),
+});
+
+export const GetPublicFormResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.string(),
+  capacity: zod.number().nullish(),
+  closeDate: zod.coerce.date().nullish(),
+  waitlistEnabled: zod.boolean(),
+  successMessage: zod.string().nullish(),
+  isFull: zod.boolean(),
+  isClosed: zod.boolean(),
+  fields: zod.array(
+    zod.object({
+      id: zod.number(),
+      formId: zod.number(),
+      fieldKey: zod.string(),
+      type: zod.string(),
+      label: zod.string(),
+      helpText: zod.string().nullish(),
+      placeholder: zod.string().nullish(),
+      required: zod.boolean(),
+      options: zod.record(zod.string(), zod.unknown()).nullish(),
+      validation: zod.record(zod.string(), zod.unknown()).nullish(),
+      conditional: zod.record(zod.string(), zod.unknown()).nullish(),
+      order: zod.number(),
+    }),
+  ),
+});
+
+/**
+ * @summary Submit a form (public)
+ */
+export const SubmitPublicFormParams = zod.object({
+  slug: zod.coerce.string(),
+});
+
+export const SubmitPublicFormBody = zod.object({
+  data: zod.record(zod.string(), zod.unknown()),
+});
