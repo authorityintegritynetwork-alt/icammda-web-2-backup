@@ -25,7 +25,7 @@ COPY artifacts/icammda-website/package.json artifacts/icammda-website/
 COPY lib lib
 COPY scripts scripts
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # Now copy the rest of the source
 COPY . .
