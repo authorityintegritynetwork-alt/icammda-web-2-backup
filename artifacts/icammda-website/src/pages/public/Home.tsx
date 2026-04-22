@@ -51,7 +51,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="ICAMMDA — Mathematical Modelling & Data Analytics Research Centre"
+        title="International Centre for Applied Mathematical Modelling and Data Analytics - ICAMMDA"
         description="ICAMMDA is the International Centre for Applied Mathematical Modelling and Data Analytics at Federal University Oye-Ekiti, Nigeria. Research, training, and partnerships in epidemiology, biostatistics, and applied mathematics across West Africa."
         canonical="/"
         jsonLd={[buildOrganizationSchema(), websiteSchema]}
