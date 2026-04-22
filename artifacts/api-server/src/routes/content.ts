@@ -146,7 +146,7 @@ router.patch("/:id", requireAdmin, async (req, res) => {
     .returning();
 
   if (!updated) return res.status(404).json({ error: "Not found" });
-  res.json(updated);
+  return res.json(updated);
 });
 
 export default router;
