@@ -63,12 +63,14 @@ function getClient(): S3Client {
   const accessKeyId = requireEnv("S3_ACCESS_KEY_ID");
   const secretAccessKey = requireEnv("S3_SECRET_ACCESS_KEY");
 
-  cachedClient = new S3Client({
-    region: REGION,
-    endpoint: ENDPOINT,
-    forcePathStyle: FORCE_PATH_STYLE,
-    credentials: { accessKeyId, secretAccessKey },
-  });
+ cachedClient = new S3Client({
+  region: REGION,
+  endpoint: ENDPOINT,
+  forcePathStyle: FORCE_PATH_STYLE,
+  credentials: { accessKeyId, secretAccessKey },
+  requestChecksumCalculation: "WHEN_REQUIRED",
+  responseChecksumValidation: "WHEN_REQUIRED",
+});
   return cachedClient;
 }
 
