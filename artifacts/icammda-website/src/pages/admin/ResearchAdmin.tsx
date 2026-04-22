@@ -78,6 +78,7 @@ export default function ResearchAdmin() {
   const [memberTargetGroupId, setMemberTargetGroupId] = useState<number | null>(null);
   const [memberForm, setMemberForm] = useState(EMPTY_MEMBER);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [localPreview, setLocalPreview] = useState<string>("");
   const memberFileInputRef = useRef<HTMLInputElement>(null);
 
   const handleMemberPhotoUpload = async (file: File) => {
@@ -89,6 +90,8 @@ export default function ResearchAdmin() {
       alert("Photo must be smaller than 5 MB.");
       return;
     }
+    const blobUrl = URL.createObjectURL(file);
+    setLocalPreview((prev) => { if (prev) URL.revokeObjectURL(prev); return blobUrl; });
     setUploadingPhoto(true);
     try {
       const token = await getToken();
@@ -220,16 +223,22 @@ export default function ResearchAdmin() {
     invalidate();
   };
 
+  const clearLocalPreview = () => {
+    setLocalPreview((prev) => { if (prev) URL.revokeObjectURL(prev); return ""; });
+  };
+
   const openCreateMember = (groupId: number | null) => {
     setEditingMember(null);
     setMemberTargetGroupId(groupId);
     setMemberForm({ ...EMPTY_MEMBER, isVisiting: groupId === null });
+    clearLocalPreview();
     setMemberDialog(true);
   };
 
   const openEditMember = (m: ResearchMember) => {
     setEditingMember(m.id);
     setMemberTargetGroupId(m.groupId ?? null);
+    clearLocalPreview();
     setMemberForm({
       name: m.name,
       role: m.role,
@@ -584,12 +593,12 @@ export default function ResearchAdmin() {
               <Label className="mb-2 block">Photo</Label>
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-full overflow-hidden shrink-0 border border-border bg-muted flex items-center justify-center">
-                  {memberForm.photoUrl ? (
+                  {localPreview || memberForm.photoUrl ? (
                     <img
-                      src={getMemberPhotoSrc(memberForm.photoUrl)}
+                      key={localPreview || memberForm.photoUrl}
+                      src={localPreview || getMemberPhotoSrc(memberForm.photoUrl)}
                       alt="Preview"
                       className="w-full h-full object-cover"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                     />
                   ) : (
                     <Users className="w-6 h-6 text-muted-foreground/40" />
