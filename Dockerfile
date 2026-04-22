@@ -14,6 +14,10 @@ FROM node:${NODE_VERSION}-bookworm-slim AS builder
 ENV PNPM_HOME=/root/.local/share/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable && corepack prepare pnpm@latest --activate
+ARG VITE_CLERK_PUBLISHABLE_KEY
+ENV VITE_CLERK_PUBLISHABLE_KEY=pk_test_YXdhcmUtYnVnLTMuY2xlcmsuYWNjb3VudHMuZGV2JA
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=/api
 
 WORKDIR /app
 
