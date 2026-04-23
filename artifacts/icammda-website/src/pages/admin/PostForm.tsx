@@ -85,7 +85,7 @@ export default function PostForm() {
     if (isEdit && postId) {
       await updatePost.mutateAsync({ id: postId, data: payload });
     } else {
-      await createPost.mutateAsync(payload);
+      await createPost.mutateAsync({ data: payload });
     }
     queryClient.invalidateQueries({ queryKey: getListPostsQueryKey() });
     navigate("/admin/posts");
