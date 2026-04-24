@@ -41,8 +41,8 @@ function getPhotoSrc(photoUrl: string | null | undefined): string | null {
 const ROLE_CONFIG: Record<string, { label: string; icon: typeof Users; bg: string; tag: string }> = {
   director: { label: "Director", icon: GraduationCap, bg: "bg-amber-50/60 border-amber-200/50", tag: "bg-amber-50 text-amber-700" },
   postdoc: { label: "Post-doctoral Scientists", icon: GraduationCap, bg: "bg-cyan-50/60 border-cyan-200/50", tag: "bg-cyan-50 text-cyan-700" },
-  phd: { label: "PhD Scholars", icon: GraduationCap, bg: "bg-teal-50/60 border-teal-200/50", tag: "bg-teal-50 text-teal-700" },
-  msc: { label: "MSc Scholars", icon: GraduationCap, bg: "bg-emerald-50/60 border-emerald-200/50", tag: "bg-emerald-50 text-emerald-700" },
+  phd: { label: "PhD Scholar", icon: GraduationCap, bg: "bg-teal-50/60 border-teal-200/50", tag: "bg-teal-50 text-teal-700" },
+  msc: { label: "MSc Scholar", icon: GraduationCap, bg: "bg-emerald-50/60 border-emerald-200/50", tag: "bg-emerald-50 text-emerald-700" },
   staff: { label: "Staff", icon: Briefcase, bg: "bg-violet-50/60 border-violet-200/50", tag: "bg-violet-50 text-violet-700" },
   nysc: { label: "Youth Corp (NYSC)", icon: Users, bg: "bg-rose-50/60 border-rose-200/50", tag: "bg-rose-50 text-rose-700" },
 };
