@@ -1,10 +1,13 @@
 modules = ["nodejs-20", "web"]
 
 [[artifacts]]
-id = "artifacts/api-server"
+id = "artifacts/icammda-website"
 
 [[artifacts]]
-id = "artifacts/mockup-sandbox"
+id = "3B4_FFSkEVBkAeYMFRJ2e"
+
+[[artifacts]]
+id = "XegfDyZt7HqfW2Bb8Ghoy"
 
 [deployment]
 router = "application"
@@ -16,6 +19,27 @@ env = { "CI" = "true" }
 
 [workflows]
 runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "ICAMMDA Dev Server"
+
+[[workflows.workflow]]
+name = "ICAMMDA Dev Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd /home/runner/workspace && COREPACK_ENABLE_STRICT=0 pnpm install --frozen-lockfile --prefer-offline 2>/dev/null; PORT=8080 NODE_ENV=production node --enable-source-maps artifacts/api-server/dist/index.mjs"
+waitForPort = 8080
 
 [agent]
 stack = "PNPM_WORKSPACE"

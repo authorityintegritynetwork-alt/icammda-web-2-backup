@@ -1,0 +1,1 @@
+- [ICAMMDA pnpm setup quirks](pnpm-setup-quirks.md) — packageManager version mismatch + @clerk/shared firewall block + artifact workflows not auto-registered after GitHub import; fixes documented.

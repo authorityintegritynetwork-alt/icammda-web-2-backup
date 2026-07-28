@@ -120,8 +120,23 @@ There are **no Replit-specific runtime dependencies left** in the deployed code:
 
 Run `pnpm dlx tsx artifacts/api-server/src/seed.ts` from workspace root to seed test content.
 
-## Workflows (development)
+## Workflows (Replit)
 
-- `artifacts/api-server: API Server` — Express API on port 8080
-- `artifacts/icammda-website: web` — Vite dev server (frontend)
-- `artifacts/mockup-sandbox: Component Preview Server` — Replit-only design tool, not deployed
+One workflow runs everything: **ICAMMDA Dev Server** at port 8080.
+
+The Express server runs in `NODE_ENV=production` and serves the pre-built React SPA from
+`artifacts/icammda-website/dist/public` as well as all `/api/*` routes.
+
+**After changing frontend code**, rebuild the SPA before restarting the workflow:
+```
+COREPACK_ENABLE_STRICT=0 pnpm --filter @workspace/icammda-website run build
+```
+
+**After changing API server code**, rebuild the server before restarting:
+```
+COREPACK_ENABLE_STRICT=0 pnpm --filter @workspace/api-server run build
+```
+
+**Note on pnpm**: The `packageManager` field in `package.json` is set to `pnpm@10.26.1`
+(matching the Nix-provided binary). Always prefix pnpm calls with `COREPACK_ENABLE_STRICT=0`
+to avoid the corepack bootstrap, which crashes in this Nix sandbox.
