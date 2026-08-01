@@ -123,7 +123,9 @@ export default function Careers() {
               </p>
               <div className="mt-6 pt-5 border-t border-white/8">
                 <a
-                  href="mailto:careers@icammda.org?subject=Internship Application"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSc0pkp4VvfNN5jsIuQEf1tzyskKNDwoGWA_Mu4Eb2MmPAzcRQ/viewform?usp=send_form"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-cyan-400 text-sm font-semibold hover:text-cyan-300 transition-colors"
                 >
                   Apply Now <ArrowRight size={13} />
