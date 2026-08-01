@@ -1,0 +1,100 @@
+#18 1.371 src/components/ui/label.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+#18 1.374 src/components/ui/select.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+#18 4.240 ✓ 2307 modules transformed.
+#18 4.511 rendering chunks...
+#18 4.671 computing gzip size...
+#18 4.699 dist/public/index.html                            1.64 kB │ gzip:   0.72 kB
+#18 4.699 dist/public/assets/index-B-3LbBxK.css           186.43 kB │ gzip:  27.27 kB
+#18 4.699 dist/public/assets/loader-circle-PByg74km.js      0.14 kB │ gzip:   0.15 kB
+#18 4.699 dist/public/assets/plus-DM4OS8jd.js               0.15 kB │ gzip:   0.15 kB
+#18 4.699 dist/public/assets/arrow-left-DCJw0Dw0.js         0.16 kB │ gzip:   0.16 kB
+#18 4.699 dist/public/assets/circle-check-DEAuyg_y.js       0.18 kB │ gzip:   0.17 kB
+#18 4.699 dist/public/assets/briefcase-DW7MGEcp.js          0.22 kB │ gzip:   0.20 kB
+#18 4.700 dist/public/assets/upload-oWDEFdqn.js             0.23 kB │ gzip:   0.19 kB
+#18 4.700 dist/public/assets/index-B9PF1Avk.js              0.23 kB │ gzip:   0.17 kB
+#18 4.700 dist/public/assets/circle-alert-R2AaIhHh.js       0.25 kB │ gzip:   0.19 kB
+#18 4.700 dist/public/assets/eye-Dc4huqTJ.js                0.26 kB │ gzip:   0.20 kB
+#18 4.700 dist/public/assets/list-DyzFarLG.js               0.30 kB │ gzip:   0.19 kB
+#18 4.700 dist/public/assets/square-pen-BtOg8H2g.js         0.32 kB │ gzip:   0.24 kB
+#18 4.700 dist/public/assets/save-C-q52g9N.js               0.33 kB │ gzip:   0.23 kB
+#18 4.700 dist/public/assets/trash-2-BxDyZzsy.js            0.33 kB │ gzip:   0.22 kB
+#18 4.700 dist/public/assets/eye-off-CV-QC18e.js            0.43 kB │ gzip:   0.27 kB
+#18 4.700 dist/public/assets/send-DN2ckV42.js               0.44 kB │ gzip:   0.30 kB
+#18 4.700 dist/public/assets/textarea-D4kkW4KA.js           0.46 kB │ gzip:   0.32 kB
+#18 4.700 dist/public/assets/input-CEpvfErX.js              0.56 kB │ gzip:   0.35 kB
+#18 4.700 dist/public/assets/badge-CepZ6D3K.js              0.74 kB │ gzip:   0.40 kB
+#18 4.700 dist/public/assets/label-DicCSoTA.js              0.92 kB │ gzip:   0.57 kB
+#18 4.700 dist/public/assets/Breadcrumbs-D05tLctT.js        1.53 kB │ gzip:   0.76 kB
+#18 4.700 dist/public/assets/switch-BBSjptxu.js             2.49 kB │ gzip:   1.25 kB
+#18 4.700 dist/public/assets/button-83MvSntS.js             2.96 kB │ gzip:   1.34 kB
+#18 4.700 dist/public/assets/PostsList-OPZ_lrS_.js          3.91 kB │ gzip:   1.38 kB
+#18 4.700 dist/public/assets/ContentAdmin-C-DWX9JI.js       3.94 kB │ gzip:   1.61 kB
+#18 4.700 dist/public/assets/EventsList-GpEEewrE.js         4.28 kB │ gzip:   1.47 kB
+#18 4.700 dist/public/assets/Dashboard-BuL7INIw.js          4.91 kB │ gzip:   1.44 kB
+#18 4.700 dist/public/assets/NewsDetail-BYWwTzIy.js         4.93 kB │ gzip:   1.82 kB
+#18 4.700 dist/public/assets/LinkedInAdmin-C7BoT37L.js      5.11 kB │ gzip:   1.90 kB
+#18 4.700 dist/public/assets/Terms-C-8efB7l.js              5.20 kB │ gzip:   2.21 kB
+#18 4.700 dist/public/assets/FormsList-ATQxAf9-.js          5.24 kB │ gzip:   2.09 kB
+#18 4.700 dist/public/assets/PostForm-XJf-lXA-.js           5.79 kB │ gzip:   1.97 kB
+#18 4.700 dist/public/assets/PartnersList-CxnWlEza.js       5.96 kB │ gzip:   2.09 kB
+#18 4.700 dist/public/assets/ContactMessages-CFkh9JCR.js    5.98 kB │ gzip:   2.32 kB
+#18 4.700 dist/public/assets/AdminLayout-BSExwrIB.js        5.98 kB │ gzip:   2.24 kB
+#18 4.700 dist/public/assets/Privacy-dertxWbc.js            6.00 kB │ gzip:   2.33 kB
+#18 4.700 dist/public/assets/dialog-CQ_qlBmT.js             7.09 kB │ gzip:   2.60 kB
+#18 4.700 dist/public/assets/Team-DJTuKtlj.js               8.33 kB │ gzip:   3.07 kB
+#18 4.700 dist/public/assets/Contact-HCLS-8Bv.js            8.55 kB │ gzip:   2.84 kB
+#18 4.700 dist/public/assets/About-BPhvc_gb.js              9.73 kB │ gzip:   3.17 kB
+#18 4.700 dist/public/assets/Careers-DsBtB_xu.js           10.35 kB │ gzip:   3.05 kB
+#18 4.700 dist/public/assets/TeamList-DqhQtPB7.js          10.73 kB │ gzip:   3.73 kB
+#18 4.700 dist/public/assets/FormSubmit-DPogq6eq.js        11.93 kB │ gzip:   4.38 kB
+#18 4.700 dist/public/assets/ELearning-ByXn8zQK.js         12.68 kB │ gzip:   4.07 kB
+#18 4.700 dist/public/assets/EventDetail-BsxZjnE1.js       13.89 kB │ gzip:   4.05 kB
+#18 4.700 dist/public/assets/NewsEvents-DQVcsNXd.js        14.75 kB │ gzip:   3.28 kB
+#18 4.700 dist/public/assets/Research-D9jcadW-.js          15.54 kB │ gzip:   4.86 kB
+#18 4.701 dist/public/assets/index-B5vZYuGl.js             16.75 kB │ gzip:   6.37 kB
+#18 4.701 dist/public/assets/EventForm-Bt3PZ85y.js         17.99 kB │ gzip:   5.22 kB
+#18 4.701 dist/public/assets/select-BeOsOJ_V.js            21.08 kB │ gzip:   7.39 kB
+#18 4.701 dist/public/assets/ResearchAdmin-CCXaUowz.js     21.93 kB │ gzip:   5.62 kB
+#18 4.701 dist/public/assets/browser-D-_DCHMh.js           22.92 kB │ gzip:   8.77 kB
+#18 4.701 dist/public/assets/FormBuilder-BK1JqjFs.js       71.84 kB │ gzip:  23.63 kB
+#18 4.701 dist/public/assets/FormSubmissions-DjQMKjcW.js  289.47 kB │ gzip:  97.47 kB
+#18 4.701 dist/public/assets/RichTextEditor-CGQDoEry.js   376.38 kB │ gzip: 120.13 kB
+#18 4.701 dist/public/assets/index-lnW5xFID.js            514.24 kB │ gzip: 153.26 kB
+#18 4.701 
+#18 4.701 (!) Some chunks are larger than 500 kB after minification. Consider:
+#18 4.701 - Using dynamic import() to code-split the application
+#18 4.701 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+#18 4.701 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#18 4.701 ✓ built in 4.16s
+#18 4.980 
+#18 4.980 > @workspace/api-server@0.0.0 build /app/artifacts/api-server
+#18 4.980 > node ./build.mjs
+#18 4.980 
+#18 5.176 
+#18 5.176   dist/index.mjs                       4.5mb ⚠️
+#18 5.176   dist/pino-worker.mjs               153.4kb
+#18 5.176   dist/pino-file.mjs                 142.0kb
+#18 5.176   dist/pino-pretty.mjs               114.6kb
+#18 5.176   dist/thread-stream-worker.mjs        7.3kb
+#18 5.176   dist/index.mjs.map                   7.7mb
+#18 5.176   dist/pino-worker.mjs.map           256.9kb
+#18 5.176   dist/pino-file.mjs.map             229.0kb
+#18 5.176   dist/pino-pretty.mjs.map           203.9kb
+#18 5.176   dist/thread-stream-worker.mjs.map   12.0kb
+#18 5.176 
+#18 5.176 ⚡ Done in 153ms
+#18 DONE 5.2s
+
+#19 [builder 12/12] RUN pnpm --filter @workspace/api-server deploy --prod /prod-api
+#19 0.316  ERR_PNPM_DEPLOY_NONINJECTED_WORKSPACE  By default, starting from pnpm v10, we only deploy from workspaces that have "inject-workspace-packages=true" set
+#19 0.316 
+#19 0.316 If you want to deploy without using injected dependencies, run "pnpm deploy" with the "--legacy" flag or set "force-legacy-deploy" to true
+#19 ERROR: process "/bin/sh -c pnpm --filter @workspace/api-server deploy --prod /prod-api" did not complete successfully: exit code: 1
+------
+ > [builder 12/12] RUN pnpm --filter @workspace/api-server deploy --prod /prod-api:
+0.316  ERR_PNPM_DEPLOY_NONINJECTED_WORKSPACE  By default, starting from pnpm v10, we only deploy from workspaces that have "inject-workspace-packages=true" set
+0.316 
+0.316 If you want to deploy without using injected dependencies, run "pnpm deploy" with the "--legacy" flag or set "force-legacy-deploy" to true
+------
+error: failed to solve: process "/bin/sh -c pnpm --filter @workspace/api-server deploy --prod /prod-api" did not complete successfully: exit code: 1
+Build failed ❌
