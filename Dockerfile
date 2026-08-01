@@ -15,7 +15,7 @@ ENV PNPM_HOME=/root/.local/share/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable && corepack prepare pnpm@latest --activate
 ARG VITE_CLERK_PUBLISHABLE_KEY
-ENV VITE_CLERK_PUBLISHABLE_KEY=pk_test_YXdhcmUtYnVnLTMuY2xlcmsuYWNjb3VudHMuZGV2JA
+ENV VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY}
 ARG VITE_API_BASE_URL=
 ENV VITE_API_BASE_URL=
 
@@ -39,7 +39,7 @@ RUN pnpm --filter @workspace/icammda-website build \
  && pnpm --filter @workspace/api-server build
 
 # Prune dev-deps to keep only production deps for the runtime stage
-RUN pnpm --filter @workspace/api-server deploy --prod /prod-api
+RUN pnpm --filter @workspace/api-server deploy --prod /prod-api --legacy
 
 
 # ---- 2. Runtime ------------------------------------------------------------
